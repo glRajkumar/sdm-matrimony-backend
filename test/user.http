@@ -1,4 +1,20 @@
-@host = http://localhost:5000
+@host = http://localhost:5000/users
 
-###
-GET {{host}}
+### register
+POST {{host}}/register
+Content-Type: application/json
+
+{
+  "username": "raj",
+  "password": "bjjhjjj"
+}
+
+
+### login
+POST {{host}}/login
+Content-Type: application/json
+
+{
+  "username": "raj",
+  "password": "bjjhjjj"
+}
