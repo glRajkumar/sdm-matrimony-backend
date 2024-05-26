@@ -18,7 +18,8 @@
     "@fastify/jwt": "^8.0.1",
     "bcryptjs": "^2.4.3",
     "fastify": "^4.27.0",
-    "fastify-plugin": "^4.5.1"
+    "fastify-plugin": "^4.5.1",
+    "mongoose": "^8.4.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

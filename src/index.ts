@@ -1,23 +1,20 @@
-import fastify, { FastifyInstance } from 'fastify';
+import fastify from 'fastify';
 import fastifyPlugin from 'fastify-plugin';
 import cors from '@fastify/cors';
 import env from '@fastify/env';
-import jwt from '@fastify/jwt';
+
+import authenticator from './plugins/authenticator.js';
+import connectDb from './plugins/connectDb.js';
 
 import envOptions from './schemas/env.js';
 import userRoutes from './routes/user.js';
 
 const app = fastify()
 
-async function authenticator(fastify: FastifyInstance) {
-  fastify.register(jwt, {
-    secret: fastify.config.jwtSecretKey
-  })
-}
-
 app
   .register(env, envOptions)
   .register(cors)
+  .register(fastifyPlugin(connectDb))
   .register(fastifyPlugin(authenticator))
   .register(userRoutes, { prefix: "/users" })
 
