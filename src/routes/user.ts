@@ -1,10 +1,9 @@
 import { FastifyInstance } from 'fastify';
-import { registerUser, loginUser } from '../controllers/user.js';
-import { createUserSchema, loginUserSchema } from '../schemas/user.js';
+import { registerSchema } from '../schemas/user.js';
+import { register } from '../controllers/user.js';
 
 async function userRoutes(fastify: FastifyInstance) {
-  fastify.post('/register', { schema: createUserSchema }, registerUser);
-  fastify.post('/login', { schema: loginUserSchema }, loginUser);
+  fastify.post('/register', { schema: registerSchema }, register);
 }
 
 export default userRoutes;

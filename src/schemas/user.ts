@@ -1,33 +1,28 @@
+import { FastifySchema } from 'fastify';
 
-export const userSchema = {
-  type: 'object',
-  required: ['username', 'password'],
-  properties: {
-    username: { type: 'string' },
-    password: { type: 'string' },
-  }
-};
+import { bool, str, strArr, successMsg } from "./base.js";
+import { filterByKeys } from '../utils/obj-manupluation.js';
 
-export const createUserSchema = {
-  body: userSchema,
-  response: {
-    201: {
-      type: 'object',
-      properties: {
-        username: { type: 'string' },
-      }
-    },
+const userSchema = {
+  fullName: str,
+  role: { ...str, enum: ["user", "broker", "admin"] },
+  email: { ...str, format: 'email' },
+  password: str,
+  token: strArr,
+  previewImg: str,
+  otherImages: strArr,
+  brokerAppointed: str,
+  isMarried: bool,
+}
+
+export const registerSchema: FastifySchema = {
+  body: {
+    type: 'object',
+    required: ['fullName', 'email', 'password'],
+    properties: filterByKeys(userSchema, ['fullName', 'email', 'password', "role"]),
+    additionalProperties: false
   },
-};
-
-export const loginUserSchema = {
-  body: userSchema,
   response: {
-    200: {
-      type: 'object',
-      properties: {
-        token: { type: 'string' }
-      }
-    }
+    200: successMsg
   }
-};
+}

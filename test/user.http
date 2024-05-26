@@ -5,16 +5,7 @@ POST {{host}}/register
 Content-Type: application/json
 
 {
-  "username": "raj",
-  "password": "bjjhjjj"
-}
-
-
-### login
-POST {{host}}/login
-Content-Type: application/json
-
-{
-  "username": "raj",
-  "password": "bjjhjjj"
+  "fullName": "raj",
+  "email": "raj@gmail.com",
+  "password": "aA1!aa"
 }

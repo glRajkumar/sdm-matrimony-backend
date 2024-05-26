@@ -1,35 +1,20 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyReply } from 'fastify';
 import bcrypt from 'bcryptjs';
 
-interface User {
-  username: string;
-  password: string;
-}
+import { reqRegister } from '../types/user.js';
+import User from '../models/User.js';
 
-let users: User[] = [];
+export async function register(req: reqRegister, res: FastifyReply) {
+  const { fullName, email, password } = req.body
 
-export async function registerUser(req: FastifyRequest, res: FastifyReply) {
-  const { username, password } = req.body as User;
+  const userExist = await User.findOne({ email }).select("_id")
+  if (userExist) return res.status(400).send({ msg: "Email is already exists" })
+  if (!password) return res.status(400).send({ msg: "Password shouldn't be empty" })
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  users.push({ username, password: hashedPassword });
+  const salt = await bcrypt.genSalt(10)
+  const hash = await bcrypt.hash(password, salt)
+  const user = new User({ fullName, email, password: hash })
+  await user.save()
 
-  res.code(201).send({ username });
-}
-
-export async function loginUser(req: FastifyRequest, res: FastifyReply) {
-  const { username, password } = req.body as User;
-
-  const user = users.find(user => user.username === username);
-  if (!user) {
-    return res.code(401).send({ message: 'Invalid username or password' });
-  }
-
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) {
-    return res.code(401).send({ message: 'Invalid username or password' });
-  }
-
-  const token = (req.server as FastifyInstance).jwt.sign({ username });
-  res.send({ token });
+  return res.send({ msg: "User Saved successfully" })
 }
