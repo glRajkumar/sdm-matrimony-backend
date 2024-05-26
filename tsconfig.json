@@ -1,0 +1,10 @@
+{
+  "extends": "fastify-tsconfig",
+  "compilerOptions": {
+    "outDir": "build",
+    "allowJs": true,
+  },
+  "include": [
+    "src/**/*.ts",
+  ]
+}

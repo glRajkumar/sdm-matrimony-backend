@@ -1,0 +1,25 @@
+{
+  "name": "sdm-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node build/index"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^4.27.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "fastify-tsconfig": "^2.0.0",
+    "nodemon": "^3.1.1",
+    "tsx": "^4.11.0",
+    "typescript": "^5.4.5"
+  }
+}
