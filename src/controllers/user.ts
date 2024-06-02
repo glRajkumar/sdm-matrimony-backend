@@ -1,10 +1,10 @@
 import { FastifyReply } from 'fastify';
 import bcrypt from 'bcryptjs';
 
-import { reqRegister } from '../types/user.js';
+import { fastReqRegister } from '../types/user.js';
 import User from '../models/User.js';
 
-export async function register(req: reqRegister, res: FastifyReply) {
+export async function register(req: fastReqRegister, res: FastifyReply) {
   const { fullName, email, password } = req.body
 
   const userExist = await User.findOne({ email }).select("_id")
