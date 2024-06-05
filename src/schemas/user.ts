@@ -1,28 +1,32 @@
-import { FastifySchema } from 'fastify';
+import { Static, Type } from '@sinclair/typebox';
+import { bool, str, strArr } from './base.js';
 
-import { bool, str, strArr, successMsg } from "./base.js";
-import { filterByKeys } from '../utils/obj-manupluation.js';
+export const Role = Type.Union([
+  Type.Literal('user'),
+  Type.Literal('admin'),
+  Type.Literal('broker'),
+]);
 
-const userSchema = {
-  fullName: str,
-  role: { ...str, enum: ["user", "broker", "admin"] },
-  email: { ...str, format: 'email' },
+export const User = Type.Object({
+  fullName: Type.String({ minLength: 3 }),
+  role: Role,
+  email: Type.String({ format: 'email' }),
   password: str,
   token: strArr,
   previewImg: str,
   otherImages: strArr,
   brokerAppointed: str,
   isMarried: bool,
-}
+})
 
-export const registerSchema: FastifySchema = {
-  body: {
-    type: 'object',
-    required: ['fullName', 'email', 'password'],
-    properties: filterByKeys(userSchema, ['fullName', 'email', 'password', "role"]),
-    additionalProperties: false
-  },
-  response: {
-    200: successMsg
-  }
-}
+export type UserType = Static<typeof User>
+
+export const registerShcema = Type.Object({
+  fullName: Type.String({ minLength: 3 }),
+  email: Type.String({ format: 'email' }),
+  password: str,
+  role: Type.Optional(Role)
+})
+
+export type registerShcemaType = Static<typeof registerShcema>
+
