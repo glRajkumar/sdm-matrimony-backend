@@ -7,6 +7,8 @@ export const Role = Type.Union([
   Type.Literal('broker'),
 ]);
 
+export type RoleType = Static<typeof Role>
+
 export const User = Type.Object({
   fullName: Type.String({ minLength: 3 }),
   role: Role,
