@@ -1,5 +1,5 @@
 import fastify from 'fastify';
-import fastifyPlugin from 'fastify-plugin';
+import fp from 'fastify-plugin';
 import cors from '@fastify/cors';
 import env from '@fastify/env';
 
@@ -14,8 +14,8 @@ const app = fastify()
 app
   .register(env, envOptions)
   .register(cors)
-  .register(fastifyPlugin(connectDb))
-  .register(fastifyPlugin(authenticator))
+  .register(fp(connectDb))
+  .register(fp(authenticator))
   .register(userRoutes, { prefix: "/users" })
 
 const port = 5000

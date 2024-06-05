@@ -4,12 +4,19 @@ import jwt from '@fastify/jwt';
 import User from "../models/User.js";
 
 async function authenticator(fastify: FastifyInstance) {
+  const publicRoutes = [
+    "/users/register",
+    "/users/login",
+  ]
+
   fastify.register(jwt, {
     secret: fastify.config.jwtSecretKey
   })
 
   fastify.decorate('auth', async function (req: FastifyRequest, res: FastifyReply) {
     try {
+      if (publicRoutes.includes(req.url)) return;
+
       const token = req.headers.authorization?.replace('Bearer ', '')
       if (!token) return res.status(401).send('Authorization header is missing');
 
@@ -28,6 +35,8 @@ async function authenticator(fastify: FastifyInstance) {
       return res.code(400).send("Auth token invalid")
     }
   })
+
+  fastify.addHook('onRequest', fastify.auth);
 }
 
 export default authenticator
