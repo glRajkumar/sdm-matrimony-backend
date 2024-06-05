@@ -1,4 +1,5 @@
 @host = http://localhost:5000/users
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjYwMDJlNTdkYWFkMTIxYTIzODBlNzIiLCJyb2xlIjoidXNlciIsImlhdCI6MTcxNzU4NTc2NCwiZXhwIjoxNzE3NjUwNTY0fQ.Chc7xoZjCeSPXGaihM26MFjhZ-R7bOcHgyU6JySvOAM
 
 ### register
 POST {{host}}/register
@@ -9,3 +10,22 @@ Content-Type: application/json
   "email": "rajq@gmail.com",
   "password": "aA1!aa"
 }
+
+### login
+POST {{host}}/login
+Content-Type: application/json
+
+{
+  "email": "rajq@gmail.com",
+  "password": "aA1!aa"
+}
+
+
+### user details
+GET {{host}}/me
+Authorization: {{token}}
+
+
+### logout
+POST {{host}}/logout
+Authorization: {{token}}

@@ -32,3 +32,9 @@ export const registerShcema = Type.Object({
 
 export type registerShcemaType = Static<typeof registerShcema>
 
+export const loginShcema = Type.Object({
+  email: Type.String({ format: 'email' }),
+  password: str,
+})
+
+export type loginShcemaType = Static<typeof loginShcema>

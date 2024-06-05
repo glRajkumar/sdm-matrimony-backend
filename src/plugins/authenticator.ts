@@ -21,15 +21,16 @@ async function authenticator(fastify: FastifyInstance) {
       if (!token) return res.status(401).send('Authorization header is missing');
 
       const payload: any = fastify.jwt.verify(token)
-      const userId = payload?.userId
+      const userId = payload?._id
 
       const user = await User.findById(userId).lean()
       if (!user) return res.code(400).send("User was not found")
 
       const tokenIndex = user.token.indexOf(token)
-      if (tokenIndex < 0) return res.code(401).send("Issue with token")
+      if (tokenIndex < 0) return res.code(401).send("Token not found in db")
 
       req.user = user
+      req.token = token
 
     } catch (error) {
       return res.code(400).send("Auth token invalid")

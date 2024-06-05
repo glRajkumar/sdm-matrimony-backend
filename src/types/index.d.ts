@@ -11,5 +11,6 @@ declare module 'fastify' {
   }
   interface FastifyRequest {
     user: UserType | null
+    token: string | null
   }
 }
