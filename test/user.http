@@ -8,7 +8,29 @@ Content-Type: application/json
 {
   "fullName": "raj",
   "email": "rajq@gmail.com",
-  "password": "aA1!aa"
+  "password": "aA1!aa",
+"sex": "male",
+  "dateofBirth": "21/06/2002",
+  "timeofBirth": "10:10",
+  "placeofBirth": "viralimalai",
+  "nakshatra": "nagam",
+  "rasi": "thulam",
+  "lagna": "mirugam",
+  "height": "180",
+  "color": "white",
+  "educationalQualification": "bsc",
+  "work": "it",
+  "salary": 25000,
+  "fatherName": "nallu",
+  "motherName": "angali",
+  "brothers": 1,
+  "sisters": 2,
+  "birthOrder": 2,
+  "expectation": "nothing else",
+  "formalities": "all",
+  "houseType": "own",
+  "currentLiving": "chennai",
+  "dashaPeriod": "4months",
 }
 
 ### login
@@ -29,3 +51,4 @@ Authorization: {{token}}
 ### logout
 POST {{host}}/logout
 Authorization: {{token}}
+
