@@ -6,17 +6,14 @@ import User from "../models/User.js";
 
 export async function register(req: registerReq, res: FastifyReply) {
   const { fullName, email, password, ...rest } = req.body;
-  console.log("rest", rest);
-  return;
+
   const userExist = await User.findOne({ email }).select("_id");
-  if (userExist)
-    return res.status(400).send({ msg: "Email is already exists" });
-  if (!password)
-    return res.status(400).send({ msg: "Password shouldn't be empty" });
+  if (userExist) return res.status(400).send({ msg: "Email is already exists" });
+  if (!password) return res.status(400).send({ msg: "Password shouldn't be empty" });
 
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
-  const user = new User({ fullName, email, password: hash, rest });
+  const user = new User({ fullName, email, password: hash, ...rest });
   await user.save();
 
   return res.send({ msg: "User Saved successfully" });

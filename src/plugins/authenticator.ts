@@ -10,32 +10,29 @@ async function authenticator(fastify: FastifyInstance) {
     secret: fastify.config.jwtSecretKey,
   });
 
-  fastify.decorate(
-    "auth",
-    async function (req: FastifyRequest, res: FastifyReply) {
-      try {
-        if (publicRoutes.includes(req.url)) return;
+  fastify.decorate("auth", async function (req: FastifyRequest, res: FastifyReply) {
+    try {
+      if (publicRoutes.includes(req.url)) return;
 
-        const token = req.headers.authorization?.replace("Bearer ", "");
-        if (!token)
-          return res.status(401).send("Authorization header is missing");
+      const token = req.headers.authorization?.replace("Bearer ", "");
+      if (!token)
+        return res.status(401).send("Authorization header is missing");
 
-        const payload: any = fastify.jwt.verify(token);
-        const userId = payload?._id;
+      const payload: any = fastify.jwt.verify(token);
+      const userId = payload?._id;
 
-        const user = await User.findById(userId).lean();
-        if (!user) return res.code(400).send("User was not found");
+      const user = await User.findById(userId).lean();
+      if (!user) return res.code(400).send("User was not found");
 
-        const tokenIndex = user.token.indexOf(token);
-        if (tokenIndex < 0) return res.code(401).send("Token not found in db");
+      const tokenIndex = user.token.indexOf(token);
+      if (tokenIndex < 0) return res.code(401).send("Token not found in db");
 
-        req.user = user;
-        req.token = token;
-      } catch (error) {
-        return res.code(400).send("Auth token invalid");
-      }
+      req.user = user;
+      req.token = token;
+    } catch (error) {
+      return res.code(400).send("Auth token invalid");
     }
-  );
+  });
 
   fastify.addHook("onRequest", fastify.auth);
 }

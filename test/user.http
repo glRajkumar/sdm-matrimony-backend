@@ -1,5 +1,5 @@
 @host = http://localhost:5000/users
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjYwMDJlNTdkYWFkMTIxYTIzODBlNzIiLCJyb2xlIjoidXNlciIsImlhdCI6MTcxNzU4NTc2NCwiZXhwIjoxNzE3NjUwNTY0fQ.Chc7xoZjCeSPXGaihM26MFjhZ-R7bOcHgyU6JySvOAM
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjcyYTVjZDAxOWVkZGY0NjVlNmQ2MTAiLCJyb2xlIjoidXNlciIsImlhdCI6MTcxODc4OTcxOCwiZXhwIjoxNzE4ODU0NTE4fQ.udJEsalwX21tO-clWbe91OWKPq0rQdR-iAJs6wiYN_I
 
 ### register
 POST {{host}}/register
@@ -7,9 +7,9 @@ Content-Type: application/json
 
 {
   "fullName": "raj",
-  "email": "rajq@gmail.com",
+  "email": "raj6@gmail.com",
   "password": "aA1!aa",
-"sex": "male",
+  "sex": "male",
   "dateofBirth": "21/06/2002",
   "timeofBirth": "10:10",
   "placeofBirth": "viralimalai",
@@ -30,7 +30,7 @@ Content-Type: application/json
   "formalities": "all",
   "houseType": "own",
   "currentLiving": "chennai",
-  "dashaPeriod": "4months",
+  "dashaPeriod": "4months"
 }
 
 ### login
@@ -38,7 +38,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "rajq@gmail.com",
+  "email": "raj6@gmail.com",
   "password": "aA1!aa"
 }
 

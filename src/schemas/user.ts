@@ -45,12 +45,7 @@ export const User = Type.Object({
 
 export type UserType = Static<typeof User>;
 
-export const registerShcema = Type.Object({
-  fullName: Type.String({ minLength: 3 }),
-  email: Type.String({ format: "email" }),
-  password: str,
-  role: Type.Optional(Role),
-});
+export const registerShcema = Type.Optional(User);
 
 export type registerShcemaType = Static<typeof registerShcema>;
 
