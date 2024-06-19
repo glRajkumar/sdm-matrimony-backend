@@ -43,19 +43,20 @@ const userSchema = new Schema({
     default: false,
   },
 
-  sex: {
+  gender: {
     type: String,
   },
 
-  dateofBirth: {
+  dob: {
     type: String,
+    required: true,
+    match: [
+      /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(19|20)\d\d (0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/,
+      'Please use a valid date format: DD-MM-YYYY HH:MM AM/PM.'
+    ]
   },
 
-  timeofBirth: {
-    type: String,
-  },
-
-  placeofBirth: {
+  placeOfBirth: {
     type: String,
   },
 
@@ -71,15 +72,7 @@ const userSchema = new Schema({
     type: String,
   },
 
-  height: {
-    type: String,
-  },
-
-  color: {
-    type: String,
-  },
-
-  educationalQualification: {
+  qualification: {
     type: String,
   },
 
@@ -99,11 +92,11 @@ const userSchema = new Schema({
     type: String,
   },
 
-  brothers: {
+  noOfBrothers: {
     type: Number,
   },
 
-  sisters: {
+  noOfSisters: {
     type: Number,
   },
 
@@ -123,11 +116,19 @@ const userSchema = new Schema({
     type: String,
   },
 
-  currentLiving: {
+  address: {
     type: String,
   },
 
   dashaPeriod: {
+    type: String,
+  },
+
+  height: {
+    type: String,
+  },
+
+  color: {
     type: String,
   },
 
