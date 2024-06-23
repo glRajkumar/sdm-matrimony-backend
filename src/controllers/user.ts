@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import bcrypt from "bcryptjs";
+import { v2 as cloudinary } from "cloudinary";
 
 import { loginReq, registerReq } from "../fastify-types/user.js";
 import User from "../models/User.js";
@@ -8,8 +9,10 @@ export async function register(req: registerReq, res: FastifyReply) {
   const { fullName, email, password, ...rest } = req.body;
 
   const userExist = await User.findOne({ email }).select("_id");
-  if (userExist) return res.status(400).send({ msg: "Email is already exists" });
-  if (!password) return res.status(400).send({ msg: "Password shouldn't be empty" });
+  if (userExist)
+    return res.status(400).send({ msg: "Email is already exists" });
+  if (!password)
+    return res.status(400).send({ msg: "Password shouldn't be empty" });
 
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
@@ -62,5 +65,31 @@ export async function logout(req: FastifyRequest, res: FastifyReply) {
     return res.send({ msg: "User Logged Out successfully" });
   } catch (error) {
     return res.code(400).send({ error, msg: "User LogOut failed" });
+  }
+}
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
+export async function genrateSignature(req: FastifyRequest, res: FastifyReply) {
+  const { folder }: any = req.body;
+
+  try {
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const signature = cloudinary.utils.api_sign_request(
+      {
+        timestamp,
+        folder,
+      },
+      process.env.CLOUDINARY_API_SECRET
+    );
+    res.code(200).send({ timestamp, signature });
+  } catch (error) {
+    return res
+      .code(400)
+      .send({ error, msg: "genrateSignature have some error" });
   }
 }
