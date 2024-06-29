@@ -8,6 +8,8 @@ import connectDb from './plugins/connectDb.js';
 
 import envOptions from './schemas/env.js';
 import userRoutes from './routes/user.js';
+import multer from 'fastify-multer';
+
 
 const app = fastify()
 
@@ -17,6 +19,7 @@ app
   .register(fp(connectDb))
   .register(fp(authenticator))
   .register(userRoutes, { prefix: "/users" })
+  .register(multer.contentParser);
 
 const port = 5000
 app.listen({ port }, (err) => {

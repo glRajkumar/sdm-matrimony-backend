@@ -11,7 +11,8 @@ export type loginReq = FastifyRequest<{
 }>
 
 export type uploadReq = FastifyRequest<{
-  Body: uploadSchemaType
+  Body: uploadSchemaType,
+  File:uploadSchemaType,
 }>
 
 
