@@ -131,6 +131,9 @@ const userSchema = new Schema({
   color: {
     type: String,
   },
+  image:{
+    type:String,
+  }
 
 }, { timestamps: true });
 

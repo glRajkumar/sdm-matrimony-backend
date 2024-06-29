@@ -10,7 +10,7 @@ Content-Type: application/json
   "email": "raj6@gmail.com",
   "password": "aA1!aa",
   "gender": "male",
-  "dob": "21/06/2002 10:10 AM",
+  "dob": "21-06-2002 10:10 AM",
   "placeofBirth": "viralimalai",
   "nakshatra": "nagam",
   "rasi": "thulam",
@@ -50,4 +50,13 @@ Authorization: {{token}}
 ### logout
 POST {{host}}/logout
 Authorization: {{token}}
+
+### imgupload
+POST {{host}}/imgupload
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "image": "xfjfdxif",
+}
 

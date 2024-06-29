@@ -6,6 +6,9 @@ declare module 'fastify' {
     config: {
       MONGODB_URL: string;
       jwtSecretKey: string;
+      CLOUDINARY_API_SECRET:string;
+      CLOUDINARY_CLOUD_NAME:string;
+      CLOUDINARY_API_KEY:string;
     };
     auth: (req: FastifyRequest, res: FastifyReply) => Promise<void>;
   }
