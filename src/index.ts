@@ -1,25 +1,26 @@
 import fastify from 'fastify';
-import fp from 'fastify-plugin';
+import fastifyMultipart from '@fastify/multipart';
 import cors from '@fastify/cors';
 import env from '@fastify/env';
+import fp from 'fastify-plugin';
 
+import cloudinaryConfig from './plugins/cloudinary.js';
 import authenticator from './plugins/authenticator.js';
 import connectDb from './plugins/connectDb.js';
 
 import envOptions from './schemas/env.js';
 import userRoutes from './routes/user.js';
-import multer from 'fastify-multer';
-
 
 const app = fastify()
 
 app
   .register(env, envOptions)
   .register(cors)
+  .register(fastifyMultipart)
   .register(fp(connectDb))
   .register(fp(authenticator))
+  .register(fp(cloudinaryConfig))
   .register(userRoutes, { prefix: "/users" })
-  .register(multer.contentParser);
 
 const port = 5000
 app.listen({ port }, (err) => {

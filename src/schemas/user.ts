@@ -56,7 +56,7 @@ export const loginShcema = Type.Object({
 export type loginShcemaType = Static<typeof loginShcema>;
 
 export const uploadSchema = Type.Object({
-  image: str,
+  file: Type.Any()
 })
 
 export type uploadSchemaType = Static<typeof uploadSchema>;

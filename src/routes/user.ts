@@ -1,5 +1,4 @@
 import { FastifyInstance } from "fastify";
-import multer from 'fastify-multer';
 
 import { loginShcema, registerShcema, uploadSchema } from "../schemas/user.js";
 
@@ -8,16 +7,23 @@ import {
   register, imgUpload,
 } from "../controllers/user.js";
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
 async function userRoutes(fastify: FastifyInstance) {
   fastify
     .post("/register", { schema: registerShcema }, register)
     .post("/login", { schema: loginShcema }, login)
     .get("/me", { schema: registerShcema }, me)
     .post("/logout", { schema: registerShcema }, logout)
-    .put("/imgupload", { schema: uploadSchema, preHandler: upload.single('image') }, imgUpload)
+
+  fastify.put("/imgupload", {
+    schema: uploadSchema,
+    attachValidation: true,
+    preValidation: async (request, reply) => {
+      if (request.headers['content-type']?.startsWith('multipart/form-data')) {
+        return
+      }
+      reply.code(400).send({ error: 'Content-Type must be multipart/form-data' })
+    }
+  }, imgUpload)
 }
 
 export default userRoutes;

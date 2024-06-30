@@ -1,9 +1,8 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { v2 as cloudinary } from "cloudinary";
+import { Readable } from 'stream';
 import bcrypt from "bcryptjs";
-import axios from "axios";
 
-import { loginReq, registerReq, uploadReq } from "../fastify-types/user.js";
+import { loginReq, registerReq } from "../fastify-types/user.js";
 
 import User from "../models/User.js";
 
@@ -70,49 +69,33 @@ export async function logout(req: FastifyRequest, res: FastifyReply) {
   }
 }
 
-export async function imgUpload(this: FastifyInstance, req: any, res: FastifyReply) { //req: uploadReq
+export async function imgUpload(req: FastifyRequest, res: FastifyReply) {
+  const { user: { _id } } = req
+  const data = await req.file()
+
+  if (!data) return res.code(400).send({ msg: 'No file uploaded' })
+
   try {
-    const { image } = req.file;
-    const user_id = req.user._id
-    console.log(image);
+    const cloudinary = req.server.cloudinary
+    const stream = Readable.from(await data.toBuffer())
 
-    if (!image) {
-      return res.code(400).send({ msg: "No image uploaded" });
-    }
+    const result: any = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'my_uploads' },
+        (error, result) => {
+          if (error) reject(error)
+          else resolve(result)
+        }
+      )
 
-    cloudinary.config({
-      cloud_name: this.config.CLOUDINARY_CLOUD_NAME,
-      api_secret: this.config.CLOUDINARY_API_SECRET,
-      api_key: this.config.CLOUDINARY_API_KEY,
-      secure: true,
-    });
+      stream.pipe(uploadStream)
+    })
 
-    const timestamp = Math.round(new Date().getTime() / 1000);
-    const signature = cloudinary.utils.api_sign_request(
-      {
-        timestamp: timestamp,
-        folder: "images",
-      },
-      this.config.CLOUDINARY_API_SECRET
-    );
+    await User.updateOne({ _id }, { $push: { images: result.url } });
 
-    const data = new FormData();
-    data.append("image", image.buffer, image.originalname);
-    data.append("timestamp", timestamp);
-    data.append("signature", signature);
-    data.append("api_key", this.config.CLOUDINARY_API_KEY);
-    data.append("images", "images");
-
-    const api = `https://api.cloudinary.com/v1_1/${this.config.CLOUDINARY_CLOUD_NAME}/image/upload`;
-
-    const axiosRes = await axios.post(api, data);
-    const imageUrl = axiosRes.data.secure_url;
-
-    await User.updateOne({ _id: user_id }, { $push: { otherImages: imageUrl } });
-
-    return res.send({ msg: "Image uploaded successfully" })
+    res.send({ msg: "User img uploaded successfully" })
 
   } catch (error) {
-    return res.code(400).send({ error, msg: "User LogOut failed" });
+    return res.code(400).send({ error, msg: "Cannot upload image" });
   }
 }

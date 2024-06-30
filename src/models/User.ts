@@ -27,11 +27,7 @@ const userSchema = new Schema({
 
   token: [{ type: String }],
 
-  previewImg: {
-    type: String,
-  },
-
-  otherImages: [{ type: String }],
+  images: [{ type: String }],
 
   brokerAppointed: {
     type: Schema.Types.ObjectId,
@@ -131,9 +127,6 @@ const userSchema = new Schema({
   color: {
     type: String,
   },
-  image:{
-    type:String,
-  }
 
 }, { timestamps: true });
 

@@ -2,7 +2,7 @@ import { FastifyEnvOptions } from "@fastify/env";
 
 const envSchema = {
   type: "object",
-  required: ["MONGODB_URL", "jwtSecretKey",,"CLOUDINARY_CLOUD_NAME","CLOUDINARY_API_KEY","CLOUDINARY_API_SECRET"],
+  required: ["MONGODB_URL", "jwtSecretKey", "CLOUDINARY_CLOUD_NAME", "CLOUDINARY_API_KEY", "CLOUDINARY_API_SECRET"],
   properties: {
     MONGODB_URL: { type: "string" },
     jwtSecretKey: { type: "string" },

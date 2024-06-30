@@ -1,5 +1,5 @@
 @host = http://localhost:5000/users
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjcyYTVjZDAxOWVkZGY0NjVlNmQ2MTAiLCJyb2xlIjoidXNlciIsImlhdCI6MTcxODc4OTcxOCwiZXhwIjoxNzE4ODU0NTE4fQ.udJEsalwX21tO-clWbe91OWKPq0rQdR-iAJs6wiYN_I
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjgxNDg2Nzc3YTY4MjllODRhZTg5NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTcxOTc0ODcxOCwiZXhwIjoxNzE5ODEzNTE4fQ.hFKQoRvlMHGWBy7GYCKs0XN0omuaFCodVpHb2sGLv4k
 
 ### register
 POST {{host}}/register
@@ -7,7 +7,7 @@ Content-Type: application/json
 
 {
   "fullName": "raj",
-  "email": "raj6@gmail.com",
+  "email": "raj7@gmail.com",
   "password": "aA1!aa",
   "gender": "male",
   "dob": "21-06-2002 10:10 AM",
@@ -37,7 +37,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "raj6@gmail.com",
+  "email": "raj7@gmail.com",
   "password": "aA1!aa"
 }
 
@@ -51,12 +51,15 @@ Authorization: {{token}}
 POST {{host}}/logout
 Authorization: {{token}}
 
-### imgupload
-POST {{host}}/imgupload
+
+### upload img
+PUT {{host}}/imgupload
 Authorization: {{token}}
-Content-Type: application/json
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
-{
-  "image": "xfjfdxif",
-}
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename="1.png"
+Content-Type: image/png
 
+< ./1.png
+------WebKitFormBoundary--
