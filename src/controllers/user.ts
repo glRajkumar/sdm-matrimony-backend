@@ -69,7 +69,7 @@ export async function logout(req: FastifyRequest, res: FastifyReply) {
   }
 }
 
-export async function imgUpload(req: FastifyRequest, res: FastifyReply) {
+export async function imgUpload(req: any, res: FastifyReply) {
   const { user: { _id } } = req
   const data = await req.file()
 
@@ -82,7 +82,7 @@ export async function imgUpload(req: FastifyRequest, res: FastifyReply) {
     const result: any = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         { folder: 'my_uploads' },
-        (error, result) => {
+        (error:any, result:any) => {
           if (error) reject(error)
           else resolve(result)
         }
@@ -98,4 +98,29 @@ export async function imgUpload(req: FastifyRequest, res: FastifyReply) {
   } catch (error) {
     return res.code(400).send({ error, msg: "Cannot upload image" });
   }
+}
+
+export async function getUsers(req: FastifyRequest, res: FastifyReply) {
+  
+  try {
+    const users = await User.find();
+    return res.send(users);
+  } catch (error) {
+    return res.code(400).send({ error, msg: "Users fetch error" });
+
+  }
+  
+}
+
+export async function getUser(req: FastifyRequest, res: FastifyReply) {
+  const { user } = req;
+  try {
+    const userDetails = await User.findOne({_id:user._id});
+    return res.send(userDetails);
+
+  } catch (error) {
+    return res.code(400).send({ error, msg: "Users fetch error" });
+
+  }
+  
 }

@@ -3,8 +3,13 @@ import { FastifyInstance } from "fastify";
 import { loginShcema, registerShcema, uploadSchema } from "../schemas/user.js";
 
 import {
-  login, logout, me,
-  register, imgUpload,
+  login,
+  logout,
+  me,
+  register,
+  imgUpload,
+  getUsers,
+  getUser
 } from "../controllers/user.js";
 
 async function userRoutes(fastify: FastifyInstance) {
@@ -13,6 +18,8 @@ async function userRoutes(fastify: FastifyInstance) {
     .post("/login", { schema: loginShcema }, login)
     .get("/me", { schema: registerShcema }, me)
     .post("/logout", { schema: registerShcema }, logout)
+    .get("/getusers", getUsers)
+    .get("/getuser/:id", { schema: registerShcema }, getUser)
 
   fastify.put("/imgupload", {
     schema: uploadSchema,

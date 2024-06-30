@@ -1,5 +1,5 @@
 @host = http://localhost:5000/users
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjgxNDg2Nzc3YTY4MjllODRhZTg5NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTcxOTc0ODcxOCwiZXhwIjoxNzE5ODEzNTE4fQ.hFKQoRvlMHGWBy7GYCKs0XN0omuaFCodVpHb2sGLv4k
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjgxNWI5YWZiNzc5YmMxZGRlYmI2ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTcxOTc1MzY1MywiZXhwIjoxNzE5ODE4NDUzfQ.NCzVkKM4YFWUQvDdYKbUT25dQlYUi9pac-ROyQIwIhM
 
 ### register
 POST {{host}}/register
@@ -63,3 +63,12 @@ Content-Type: image/png
 
 < ./1.png
 ------WebKitFormBoundary--
+
+
+### users list
+GET {{host}}/getusers
+Authorization: {{token}}
+
+### user particular details
+GET {{host}}/getuser/66815b9afb779bc1ddebb6e3
+Authorization: {{token}}
