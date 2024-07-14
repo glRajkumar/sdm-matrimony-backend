@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { Readable } from 'stream';
 import bcrypt from "bcryptjs";
 
-import { loginReq, registerReq } from "../fastify-types/user.js";
+import { getMatchesReq, getUserDetailsReq, loginReq, registerReq } from "../fastify-types/user.js";
 
 import User from "../models/User.js";
 
@@ -108,11 +108,11 @@ export async function getUsers(req: FastifyRequest, res: FastifyReply) {
   }
 }
 
-export async function getUser(req: FastifyRequest, res: FastifyReply) {
-  const { user } = req
+export async function getUserDetails(req: getUserDetailsReq, res: FastifyReply) {
+  const _id = req.params.id
 
   try {
-    const userDetails = await User.findOne({ _id: user._id })
+    const userDetails = await User.findOne({ _id })
     return res.send(userDetails)
 
   } catch (error) {
@@ -120,8 +120,8 @@ export async function getUser(req: FastifyRequest, res: FastifyReply) {
   }
 }
 
-export async function getMatches(req: FastifyRequest, res: FastifyReply) {
-  const { gender }: any = req.body
+export async function getMatches(req: getMatchesReq, res: FastifyReply) {
+  const { gender } = req.params
 
   try {
     const getMatches = await User.find({ gender: gender === 'male' ? 'female' : 'male' })

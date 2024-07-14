@@ -60,3 +60,15 @@ export const uploadSchema = Type.Object({
 })
 
 export type uploadSchemaType = Static<typeof uploadSchema>
+
+export const getUserDetailsShcema = Type.Object({
+  id: str,
+})
+
+export type getUserDetailsShcemaType = Static<typeof getUserDetailsShcema>
+
+export const getMatchesShcema = Type.Object({
+  gender: str,
+})
+
+export type getMatchesShcemaType = Static<typeof getMatchesShcema>

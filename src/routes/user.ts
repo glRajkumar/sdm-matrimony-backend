@@ -1,27 +1,22 @@
 import { FastifyInstance } from "fastify";
 
-import { loginShcema, registerShcema, uploadSchema } from "../schemas/user.js";
+import { getUserDetailsShcema, loginShcema, registerShcema, uploadSchema } from "../schemas/user.js";
 
 import {
-  login,
-  logout,
-  me,
-  register,
-  imgUpload,
-  getUsers,
-  getUser,
-  getMatches
+  login, logout, me, register, imgUpload,
+  getUserDetails, getMatches
 } from "../controllers/user.js";
 
 async function userRoutes(fastify: FastifyInstance) {
   fastify
     .post("/register", { schema: registerShcema }, register)
     .post("/login", { schema: loginShcema }, login)
-    .get("/me", { schema: registerShcema }, me)
-    .post("/logout", { schema: registerShcema }, logout)
-    .get("/getusers", getUsers)
-    .get("/getuser/:id", { schema: registerShcema }, getUser)
-    .get("/getmatches", { schema: registerShcema }, getMatches)
+    .post("/logout", logout)
+
+  fastify
+    .get("/me", me)
+    .get("/:id", { schema: getUserDetailsShcema }, getUserDetails)
+    .get("/matches", { schema: registerShcema }, getMatches)
 
   fastify.put("/imgupload", {
     schema: uploadSchema,
