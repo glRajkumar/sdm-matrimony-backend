@@ -9,7 +9,8 @@ import {
   register,
   imgUpload,
   getUsers,
-  getUser
+  getUser,
+  getMatches
 } from "../controllers/user.js";
 
 async function userRoutes(fastify: FastifyInstance) {
@@ -20,6 +21,7 @@ async function userRoutes(fastify: FastifyInstance) {
     .post("/logout", { schema: registerShcema }, logout)
     .get("/getusers", getUsers)
     .get("/getuser/:id", { schema: registerShcema }, getUser)
+    .get("/getmatches", { schema: registerShcema }, getMatches)
 
   fastify.put("/imgupload", {
     schema: uploadSchema,

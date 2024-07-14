@@ -124,3 +124,16 @@ export async function getUser(req: FastifyRequest, res: FastifyReply) {
   }
   
 }
+
+export async function getMatches(req: FastifyRequest, res: FastifyReply) {
+  const {gender}:any = req.body;
+
+  try {
+    const getMatches = await User.find({ gender:gender==='male'?'female':'male'});
+    return res.send(getMatches);
+
+  } catch (error) {
+    return res.code(400).send({ error, msg: "Users fetch error" });
+
+  }
+}
