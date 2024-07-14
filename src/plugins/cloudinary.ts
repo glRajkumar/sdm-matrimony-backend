@@ -3,7 +3,7 @@ import { ConfigOptions, v2 as cloudinary } from 'cloudinary';
 
 declare module 'fastify' {
   interface FastifyInstance {
-    cloudinary: typeof cloudinary;
+    cloudinary: typeof cloudinary
   }
 }
 
@@ -15,9 +15,9 @@ async function cloudinaryConfig(fastify: FastifyInstance) {
     secure: true,
   };
 
-  cloudinary.config(config);
+  cloudinary.config(config)
 
-  fastify.decorate('cloudinary', cloudinary);
+  fastify.decorate('cloudinary', cloudinary)
 
   // Hook to close Cloudinary (if needed) when Fastify closes
   // fastify.addHook('onClose', (instance, done) => {

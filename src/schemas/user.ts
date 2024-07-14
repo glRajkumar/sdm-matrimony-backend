@@ -5,9 +5,9 @@ export const Role = Type.Union([
   Type.Literal("user"),
   Type.Literal("admin"),
   Type.Literal("broker"),
-]);
+])
 
-export type RoleType = Static<typeof Role>;
+export type RoleType = Static<typeof Role>
 
 export const User = Type.Object({
   fullName: Type.String({ minLength: 3 }),
@@ -40,23 +40,23 @@ export const User = Type.Object({
   dashaPeriod: str,
   height: str,
   color: str,
-});
+})
 
-export type UserType = Static<typeof User>;
+export type UserType = Static<typeof User>
 
-export const registerShcema = Type.Optional(User);
+export const registerShcema = Type.Optional(User)
 
-export type registerShcemaType = Static<typeof registerShcema>;
+export type registerShcemaType = Static<typeof registerShcema>
 
 export const loginShcema = Type.Object({
   email: Type.String({ format: "email" }),
   password: str,
-});
+})
 
-export type loginShcemaType = Static<typeof loginShcema>;
+export type loginShcemaType = Static<typeof loginShcema>
 
 export const uploadSchema = Type.Object({
   file: Type.Any()
 })
 
-export type uploadSchemaType = Static<typeof uploadSchema>;
+export type uploadSchemaType = Static<typeof uploadSchema>

@@ -128,8 +128,8 @@ const userSchema = new Schema({
     type: String,
   },
 
-}, { timestamps: true });
+}, { timestamps: true })
 
-const User = model("User", userSchema);
+const User = model("User", userSchema)
 
-export default User;
+export default User

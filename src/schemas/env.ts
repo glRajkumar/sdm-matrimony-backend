@@ -16,6 +16,6 @@ const envSchema = {
 const envOptions: FastifyEnvOptions = {
   schema: envSchema,
   dotenv: true,
-};
+}
 
-export default envOptions;
+export default envOptions

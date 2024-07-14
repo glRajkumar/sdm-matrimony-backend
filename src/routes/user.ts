@@ -35,4 +35,4 @@ async function userRoutes(fastify: FastifyInstance) {
   }, imgUpload)
 }
 
-export default userRoutes;
+export default userRoutes
