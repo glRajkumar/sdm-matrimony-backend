@@ -40,7 +40,15 @@ export async function login(
     user.token = user.token.concat(newToken)
     await user.save()
 
-    return res.send({ token: newToken })
+    let output = {
+      token: newToken,
+      id: user?._id,
+      email: user?.email,
+      fullName: user?.fullName,
+      gender:user?.gender
+    }
+    
+    return res.send(output)
   } catch (error) {
     return res.code(400).send({ error, msg: "User LogIn failed" })
   }
@@ -121,10 +129,11 @@ export async function getUserDetails(req: getUserDetailsReq, res: FastifyReply) 
 }
 
 export async function getMatches(req: getMatchesReq, res: FastifyReply) {
-  const { gender } = req.params
+  const { gender } = req.params;
+  if (!gender) return res.code(400).send({ msg: 'Gender Not Present' })
 
   try {
-    const getMatches = await User.find({ gender: gender === 'male' ? 'female' : 'male' })
+    const getMatches = await User.find({ gender: gender === 'Male' ? 'female' : 'male' })
     return res.send(getMatches)
 
   } catch (error) {

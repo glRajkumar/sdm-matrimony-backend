@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 
-import { getUserDetailsShcema, loginShcema, registerShcema, uploadSchema } from "../schemas/user.js";
+import { getMatchesShcema, getUserDetailsShcema, loginShcema, registerShcema, uploadSchema } from "../schemas/user.js";
 
 import {
   login, logout, me, register, imgUpload,
@@ -16,7 +16,7 @@ async function userRoutes(fastify: FastifyInstance) {
   fastify
     .get("/me", me)
     .get("/:id", { schema: getUserDetailsShcema }, getUserDetails)
-    .get("/matches", { schema: registerShcema }, getMatches)
+    .get("/matches/:gender", { schema: getMatchesShcema }, getMatches)
 
   fastify.put("/imgupload", {
     schema: uploadSchema,

@@ -1,5 +1,5 @@
 @host = http://localhost:5000/users
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjgxNWI5YWZiNzc5YmMxZGRlYmI2ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTcxOTc1MzY1MywiZXhwIjoxNzE5ODE4NDUzfQ.NCzVkKM4YFWUQvDdYKbUT25dQlYUi9pac-ROyQIwIhM
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjkzNTJmYTQyZjhjZjBkMDY4YzJhMWIiLCJyb2xlIjoidXNlciIsImlhdCI6MTcyMDkzMTA3NiwiZXhwIjoxNzIwOTk1ODc2fQ.z8rcUs3xdquBXvI6I8JQYukV6GeO2mkFumXhtfZoPE4
 
 ### register
 POST {{host}}/register
@@ -65,10 +65,10 @@ Content-Type: image/png
 ------WebKitFormBoundary--
 
 
-### users list
-GET {{host}}/getusers
+### user details
+GET {{host}}/66815b9afb779bc1ddebb6e3
 Authorization: {{token}}
 
-### user particular details
-GET {{host}}/getuser/66815b9afb779bc1ddebb6e3
+### getMathces
+GET  {{host}}/matches/female
 Authorization: {{token}}
