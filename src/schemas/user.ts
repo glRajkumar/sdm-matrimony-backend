@@ -1,18 +1,18 @@
-import { Static, Type } from "@sinclair/typebox";
-import { bool, str, strArr, num } from "./base.js";
+import { Static, Type } from '@sinclair/typebox';
+import { bool, str, strArr, num } from './base.js';
 
 export const Role = Type.Union([
-  Type.Literal("user"),
-  Type.Literal("admin"),
-  Type.Literal("broker"),
-])
+  Type.Literal('user'),
+  Type.Literal('admin'),
+  Type.Literal('broker'),
+]);
 
-export type RoleType = Static<typeof Role>
+export type RoleType = Static<typeof Role>;
 
 export const User = Type.Object({
   fullName: Type.String({ minLength: 3 }),
   role: Role,
-  email: Type.String({ format: "email" }),
+  email: Type.String({ format: 'email' }),
   password: str,
   token: strArr,
   previewImg: str,
@@ -40,35 +40,43 @@ export const User = Type.Object({
   dashaPeriod: str,
   height: str,
   color: str,
-})
+  approval_required: str,
+});
 
-export type UserType = Static<typeof User>
+export type UserType = Static<typeof User>;
 
-export const registerShcema = Type.Optional(User)
+export const registerShcema = Type.Optional(User);
 
-export type registerShcemaType = Static<typeof registerShcema>
+export type registerShcemaType = Static<typeof registerShcema>;
 
 export const loginShcema = Type.Object({
-  email: Type.String({ format: "email" }),
+  email: Type.String({ format: 'email' }),
   password: str,
-})
-
-export type loginShcemaType = Static<typeof loginShcema>
+});
+export type loginShcemaType = Static<typeof loginShcema>;
 
 export const uploadSchema = Type.Object({
-  file: Type.Any()
-})
-
-export type uploadSchemaType = Static<typeof uploadSchema>
+  file: Type.Any(),
+});
+export type uploadSchemaType = Static<typeof uploadSchema>;
 
 export const getUserDetailsShcema = Type.Object({
   id: str,
-})
-
-export type getUserDetailsShcemaType = Static<typeof getUserDetailsShcema>
+});
+export type getUserDetailsShcemaType = Static<typeof getUserDetailsShcema>;
 
 export const getMatchesShcema = Type.Object({
   gender: str,
-})
+});
+export type getMatchesShcemaType = Static<typeof getMatchesShcema>;
 
-export type getMatchesShcemaType = Static<typeof getMatchesShcema>
+export const getPendingListShcema = Type.Object({
+  approval_required: str,
+});
+export type getPendingListShcemaType = Static<typeof getPendingListShcema>;
+
+export const updateApprovalSchema = Type.Object({
+  id: str,
+  approval_required: str,
+});
+export type updateApproval = Static<typeof updateApprovalSchema>;

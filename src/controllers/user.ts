@@ -1,24 +1,33 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { Readable } from 'stream';
-import bcrypt from "bcryptjs";
+import bcrypt from 'bcryptjs';
 
-import { getMatchesReq, getUserDetailsReq, loginReq, registerReq } from "../fastify-types/user.js";
+import {
+  getPendingListReq,
+  getMatchesReq,
+  getUserDetailsReq,
+  loginReq,
+  registerReq,
+  updateApprovalReq,
+} from '../fastify-types/user.js';
 
-import User from "../models/User.js";
+import User from '../models/User.js';
 
 export async function register(req: registerReq, res: FastifyReply) {
-  const { fullName, email, password, ...rest } = req.body
+  const { fullName, email, password, ...rest } = req.body;
 
-  const userExist = await User.findOne({ email }).select("_id")
-  if (userExist) return res.status(400).send({ msg: "Email is already exists" })
-  if (!password) return res.status(400).send({ msg: "Password shouldn't be empty" })
+  const userExist = await User.findOne({ email }).select('_id');
+  if (userExist)
+    return res.status(400).send({ msg: 'Email is already exists' });
+  if (!password)
+    return res.status(400).send({ msg: "Password shouldn't be empty" });
 
-  const salt = await bcrypt.genSalt(10)
-  const hash = await bcrypt.hash(password, salt)
-  const user = new User({ fullName, email, password: hash, ...rest })
-  await user.save()
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  const user = new User({ fullName, email, password: hash, ...rest });
+  await user.save();
 
-  return res.send({ msg: "User Saved successfully" })
+  return res.send({ msg: 'User Saved successfully' });
 }
 
 export async function login(
@@ -26,117 +35,158 @@ export async function login(
   req: loginReq,
   res: FastifyReply
 ) {
-  const { email, password } = req.body
-
+  const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email })
-    if (!user) return res.code(401).send("cannot find user in db")
+    const user = await User.findOne({ email });
+    if (!user) return res.code(401).send('cannot find user in db');
 
-    const result = await bcrypt.compare(password, user.password)
-    if (!result) return res.status(400).send({ msg: "password not matched" })
+    const result = await bcrypt.compare(password, user.password);
+    if (!result) return res.status(400).send({ msg: 'password not matched' });
 
-    const payload = { _id: user._id.toString(), role: user.role }
-    const newToken = this.jwt.sign(payload, { expiresIn: "18h" })
-    user.token = user.token.concat(newToken)
-    await user.save()
+    const payload = { _id: user._id.toString(), role: user.role };
+    const newToken = this.jwt.sign(payload, { expiresIn: '18h' });
+    user.token = user.token.concat(newToken);
+    await user.save();
 
     let output = {
       token: newToken,
       id: user?._id,
       email: user?.email,
       fullName: user?.fullName,
-      gender:user?.gender
-    }
-    
-    return res.send(output)
+      gender: user?.gender,
+      approval_required: user?.approval_required,
+    };
+
+    return res.send(output);
   } catch (error) {
-    return res.code(400).send({ error, msg: "User LogIn failed" })
+    return res.code(400).send({ error, msg: 'User LogIn failed' });
   }
 }
 
 export async function me(req: FastifyRequest, res: FastifyReply) {
   try {
-    const { password, token, ...rest } = req.user
+    const { password, token, ...rest } = req.user;
 
-    return res.send(rest)
+    return res.send(rest);
   } catch (error) {
-    return res.code(400).send({ error, msg: "Cannot find the user" })
+    return res.code(400).send({ error, msg: 'Cannot find the user' });
   }
 }
 
 export async function logout(req: FastifyRequest, res: FastifyReply) {
-  const { user, token } = req
+  const { user, token } = req;
 
   try {
-    await User.updateOne({ _id: user._id }, { $pull: { token } })
-    return res.send({ msg: "User Logged Out successfully" })
+    await User.updateOne({ _id: user._id }, { $pull: { token } });
+    return res.send({ msg: 'User Logged Out successfully' });
   } catch (error) {
-    return res.code(400).send({ error, msg: "User LogOut failed" })
+    return res.code(400).send({ error, msg: 'User LogOut failed' });
   }
 }
 
 export async function imgUpload(req: any, res: FastifyReply) {
-  const { user: { _id } } = req
-  const data = await req.file()
+  const {
+    user: { _id },
+  } = req;
+  const data = await req.file();
 
-  if (!data) return res.code(400).send({ msg: 'No file uploaded' })
+  if (!data) return res.code(400).send({ msg: 'No file uploaded' });
 
   try {
-    const cloudinary = req.server.cloudinary
-    const stream = Readable.from(await data.toBuffer())
+    const cloudinary = req.server.cloudinary;
+    const stream = Readable.from(await data.toBuffer());
 
     const result: any = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         { folder: 'my_uploads' },
         (error: any, result: any) => {
-          if (error) reject(error)
-          else resolve(result)
+          if (error) reject(error);
+          else resolve(result);
         }
-      )
+      );
 
-      stream.pipe(uploadStream)
-    })
+      stream.pipe(uploadStream);
+    });
 
-    await User.updateOne({ _id }, { $push: { images: result.url } })
+    await User.updateOne({ _id }, { $push: { images: result.url } });
 
-    res.send({ msg: "User img uploaded successfully" })
-
+    res.send({ msg: 'User img uploaded successfully' });
   } catch (error) {
-    return res.code(400).send({ error, msg: "Cannot upload image" })
+    return res.code(400).send({ error, msg: 'Cannot upload image' });
   }
 }
 
 export async function getUsers(req: FastifyRequest, res: FastifyReply) {
   try {
-    const users = await User.find()
-    return res.send(users)
-
+    const users = await User.find();
+    return res.send(users);
   } catch (error) {
-    return res.code(400).send({ error, msg: "Users fetch error" })
+    return res.code(400).send({ error, msg: 'Users fetch error' });
   }
 }
 
-export async function getUserDetails(req: getUserDetailsReq, res: FastifyReply) {
-  const _id = req.params.id
-
+export async function getUserDetails(
+  req: getUserDetailsReq,
+  res: FastifyReply
+) {
+  const _id = req.params.id;
   try {
-    const userDetails = await User.findOne({ _id })
-    return res.send(userDetails)
-
+    const userDetails = await User.findOne({ _id });
+    return res.send(userDetails);
   } catch (error) {
-    return res.code(400).send({ error, msg: "Users fetch error" })
+    return res.code(400).send({ error, msg: 'getUserDetails error' });
   }
 }
 
 export async function getMatches(req: getMatchesReq, res: FastifyReply) {
   const { gender } = req.params;
-  if (!gender) return res.code(400).send({ msg: 'Gender Not Present' })
+  if (!gender) return res.code(400).send({ msg: 'Gender Not Present' });
 
   try {
-    const getMatches = await User.find({ gender: gender === 'Male' ? 'female' : 'male' })
-    return res.send(getMatches)
-
+    const getMatches = await User.find({
+      gender: gender === 'Male' ? 'female' : 'male',
+    });
+    return res.send(getMatches);
   } catch (error) {
-    return res.code(400).send({ error, msg: "Users fetch error" })
+    return res.code(400).send({ error, msg: 'getMatches error' });
+  }
+}
+
+export async function getPendingList(
+  req: getPendingListReq,
+  res: FastifyReply
+) {
+  try {
+    const fullList = await User.find({
+      approval_required: 'pending',
+    });
+
+    const result = fullList.map((item: any) => ({
+      id: item._id,
+      fullName: item.fullName,
+    }));
+
+    res.send(result);
+  } catch (error) {
+    return res.code(400).send({ error, msg: 'getPendingList error' });
+  }
+}
+
+export async function updateApproval(
+  req: updateApprovalReq,
+  res: FastifyReply
+) {
+  try {
+    const id = req.params.id;
+    const approval_required = req.query.approval_required;
+
+    await User.updateOne(
+      { _id: id },
+      { $set: { approval_required: approval_required } }
+    );
+
+    return res.send({ success: 'Updated Successfully' });
+  } catch (error) {
+    return res.code(400).send({ error, msg: 'Users fetch error' });
   }
 }
