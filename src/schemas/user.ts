@@ -70,6 +70,13 @@ export const loginSchema = Type.Object({
 
 export const uploadSchema = Type.Object({ file: Type.Any() })
 
-export const genderSchema = Type.Object({ gender: Gender })
+export const genderSchema = Type.Object({
+  gender: Gender,
+  marriedStatus: str,
+  salaryRange: str,
+  rasi: str,
+  age: str,
+  limit:num
+})
 
 export const approvalStatusSchema = Type.Object({ approvalStatus: ApprovalStatus })

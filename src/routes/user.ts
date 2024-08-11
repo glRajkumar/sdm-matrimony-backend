@@ -27,7 +27,7 @@ async function userRoutes(fastify: FastifyInstance) {
   fastify
     .get('/me', me)
     .get('/:_id', { schema: { params: _id } }, getUserDetails)
-    .get('/matches/:gender', { schema: { params: genderSchema } }, getMatches)
+    .get('/matches', { schema: { body: genderSchema } }, getMatches)
 
   fastify.put(
     '/imgupload',

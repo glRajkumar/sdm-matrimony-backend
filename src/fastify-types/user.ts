@@ -29,5 +29,5 @@ export type getUserDetailsReq = FastifyRequest<{
 }>
 
 export type getMatchesReq = FastifyRequest<{
-  Params: Static<typeof genderSchema>
+  Body: Static<typeof genderSchema>
 }>

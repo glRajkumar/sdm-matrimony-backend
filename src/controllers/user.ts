@@ -141,21 +141,66 @@ export async function getUserDetails(req: getUserDetailsReq, res: FastifyReply) 
 
 export async function getMatches(req: getMatchesReq, res: FastifyReply) {
   try {
-    const { gender } = req.params
+    const { gender,marriedStatus,salaryRange,rasi,age } = req.body
 
-    const filter: Partial<userType> = {
+    const filter: any = {
       role: "user",
-      isMarried: false,
       approvalStatus: "approved",
     }
 
-    if (gender === "male") {
-      filter.gender = "female"
+    if (gender) {
+      filter.gender = gender === "male" ? "female" : "male";
     }
 
-    if (gender === "female") {
-      filter.gender = "male"
+    if (marriedStatus) {
+      filter.isMarried = marriedStatus
     }
+
+    if (!!salaryRange) {
+      switch (salaryRange) {
+        case 'below_20000':
+          filter.salary = { $lt: 20000 }
+          break;
+          case '20000_30000':
+            filter.salary = {  $gte: 20000, $lte: 30000  };
+            break;
+          case '30000_40000':
+            filter.salary = { $gte: 30000, $lte: 40000  };
+            break;
+          case '40000_50000':
+            filter.salary = { $gte: 40000, $lte: 50000};
+            break;
+          case 'above_50000':
+            filter.salary = {  $gt: 50000 };
+            break;
+          default:
+            filter.salary = {};
+      }
+    }
+    
+    if (age) {
+      switch (age) {
+        case 'below_25':
+          filter.age = { $lt: 25 };
+          break;
+        case '25_30':
+          filter.age = { $gte: 25, $lte: 30 };
+          break;
+        case '30_40':
+          filter.age = { $gte: 30, $lte: 40 };
+          break;
+        case 'above_40':
+          filter.age = { $gt: 40 };
+          break;
+        default:
+          break;
+      }
+    }
+    
+    if (age) {   
+      filter.rasi = { $in: rasi }
+    }
+
 
     const getMatches = await User.find(filter)
       .select("-token -password")
