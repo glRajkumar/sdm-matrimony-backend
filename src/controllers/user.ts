@@ -2,13 +2,13 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { Readable } from "stream";
 import bcrypt from "bcryptjs";
 
-import type { UserType } from "../schemas/user.js";
 import type {
   getMatchesReq,
   getUserDetailsReq,
   loginReq,
   registerReq,
   updateApprovalReq,
+  userType,
 } from "../fastify-types/user.js";
 
 import User from "../models/User.js";
@@ -144,7 +144,7 @@ export async function getMatches(req: getMatchesReq, res: FastifyReply) {
   try {
     const { gender } = req.params
 
-    const filter: Partial<UserType> = {
+    const filter: Partial<userType> = {
       role: "user",
       isMarried: false,
       approvalStatus: "approved",

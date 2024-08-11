@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
 
+import { _id } from '../schemas/base.js';
 import {
-  loginShcema,
-  registerShcema,
+  loginSchema,
+  registerSchema,
   uploadSchema,
-  _idSchema,
-  genderShcema,
-  approvalStatusShcema,
+  genderSchema,
+  approvalStatusSchema,
 } from '../schemas/user.js';
 
 import {
@@ -23,16 +23,16 @@ import {
 
 async function userRoutes(fastify: FastifyInstance) {
   fastify
-    .post('/register', { schema: registerShcema }, register)
-    .post('/login', { schema: loginShcema }, login)
+    .post('/register', { schema: { body: registerSchema } }, register)
+    .post('/login', { schema: { body: loginSchema } }, login)
     .post('/logout', logout)
 
   fastify
     .get('/me', me)
-    .get('/:_id', { schema: { params: _idSchema } }, getUserDetails)
-    .get('/matches/:gender', { schema: { params: genderShcema } }, getMatches)
     .get('/pending-user-list', getPendingList)
-    .put('/approval/:_id', { schema: { params: _idSchema, querystring: approvalStatusShcema } }, updateApproval)
+    .get('/:_id', { schema: { params: _id } }, getUserDetails)
+    .get('/matches/:gender', { schema: { params: genderSchema } }, getMatches)
+    .put('/approval/:_id', { schema: { params: _id, querystring: approvalStatusSchema } }, updateApproval)
 
   fastify.put(
     '/imgupload',

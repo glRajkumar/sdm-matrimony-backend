@@ -1,35 +1,39 @@
 import { FastifyRequest } from 'fastify';
+import { Static } from '@sinclair/typebox';
 
+import { _id } from '../schemas/base.js';
 import {
-  _idShcemaType,
-  approvalStatusShcemaType,
-  genderShcemaType,
-  loginShcemaType,
-  registerShcemaType,
-  uploadSchemaType,
+  approvalStatusSchema,
+  genderSchema,
+  loginSchema,
+  registerSchema,
+  uploadSchema,
+  User,
 } from '../schemas/user.js';
 
+export type userType = Static<typeof User>
+
 export type registerReq = FastifyRequest<{
-  Body: registerShcemaType;
-}>;
+  Body: Static<typeof registerSchema>
+}>
 
 export type loginReq = FastifyRequest<{
-  Body: loginShcemaType;
-}>;
+  Body: Static<typeof loginSchema>
+}>
 
 export type uploadReq = FastifyRequest<{
-  Body: uploadSchemaType;
-}>;
+  Body: Static<typeof uploadSchema>
+}>
 
 export type getUserDetailsReq = FastifyRequest<{
-  Params: _idShcemaType;
-}>;
+  Params: Static<typeof _id>
+}>
 
 export type getMatchesReq = FastifyRequest<{
-  Params: genderShcemaType;
-}>;
+  Params: Static<typeof genderSchema>
+}>
 
 export type updateApprovalReq = FastifyRequest<{
-  Params: _idShcemaType;
-  Querystring: approvalStatusShcemaType;
-}>;
+  Params: Static<typeof _id>
+  Querystring: Static<typeof approvalStatusSchema>
+}>
