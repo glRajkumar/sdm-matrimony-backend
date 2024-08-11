@@ -1,13 +1,12 @@
 import { FastifyInstance } from 'fastify';
 
 import {
-  getPendingListShcema,
-  getMatchesShcema,
-  getUserDetailsShcema,
   loginShcema,
   registerShcema,
-  updateApprovalSchema,
   uploadSchema,
+  _idSchema,
+  genderShcema,
+  approvalStatusShcema,
 } from '../schemas/user.js';
 
 import {
@@ -26,17 +25,14 @@ async function userRoutes(fastify: FastifyInstance) {
   fastify
     .post('/register', { schema: registerShcema }, register)
     .post('/login', { schema: loginShcema }, login)
-    .post('/logout', logout);
+    .post('/logout', logout)
 
   fastify
     .get('/me', me)
-    .get('/:id', { schema: getUserDetailsShcema }, getUserDetails)
-    .get('/matches/:gender', { schema: getMatchesShcema }, getMatches)
-    .get(
-      '/pending-user-list',
-      { schema: getPendingListShcema },
-      getPendingList
-    );
+    .get('/:_id', { schema: { params: _idSchema } }, getUserDetails)
+    .get('/matches/:gender', { schema: { params: genderShcema } }, getMatches)
+    .get('/pending-user-list', getPendingList)
+    .put('/approval/:_id', { schema: { params: _idSchema, querystring: approvalStatusShcema } }, updateApproval)
 
   fastify.put(
     '/imgupload',
@@ -55,12 +51,7 @@ async function userRoutes(fastify: FastifyInstance) {
       },
     },
     imgUpload
-  );
-  fastify.put(
-    '/get-approval',
-    { schema: updateApprovalSchema },
-    updateApproval
-  );
+  )
 }
 
 export default userRoutes;

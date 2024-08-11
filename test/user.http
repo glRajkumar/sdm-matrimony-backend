@@ -1,5 +1,5 @@
 @host = http://localhost:5000/users
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjkzNTJmYTQyZjhjZjBkMDY4YzJhMWIiLCJyb2xlIjoidXNlciIsImlhdCI6MTcyMDkzMTA3NiwiZXhwIjoxNzIwOTk1ODc2fQ.z8rcUs3xdquBXvI6I8JQYukV6GeO2mkFumXhtfZoPE4
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmI4NGE1MzFiZTU3ZGQ3ZWU0Y2EyYTQiLCJyb2xlIjoidXNlciIsImlhdCI6MTcyMzM1MzcwMCwiZXhwIjoxNzIzNDE4NTAwfQ.w9oO8t1-JuD3FI9K1PbnkBhh9YwVVvUoxIxhKBOFAU4
 
 ### register
 POST {{host}}/register
@@ -7,7 +7,7 @@ Content-Type: application/json
 
 {
   "fullName": "raj",
-  "email": "raj7@gmail.com",
+  "email": "raj8@gmail.com",
   "password": "aA1!aa",
   "gender": "male",
   "dob": "21-06-2002 10:10 AM",
@@ -32,12 +32,13 @@ Content-Type: application/json
   "color": "white"
 }
 
+
 ### login
 POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "raj7@gmail.com",
+  "email": "raj8@gmail.com",
   "password": "aA1!aa"
 }
 
@@ -66,9 +67,21 @@ Content-Type: image/png
 
 
 ### user details
-GET {{host}}/66815b9afb779bc1ddebb6e3
+GET {{host}}/6681486777a6829e84ae8973
 Authorization: {{token}}
 
+
 ### getMathces
-GET  {{host}}/matches/female
+GET {{host}}/matches/female
 Authorization: {{token}}
+
+
+### pending user list
+GET {{host}}/pending-user-list
+Authorization: {{token}}
+
+
+### status approval
+PUT {{host}}/approval/66b84a531be57dd7ee4ca2a4?approvalStatus=approved
+Authorization: {{token}}
+

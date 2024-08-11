@@ -5,9 +5,22 @@ export const Role = Type.Union([
   Type.Literal('user'),
   Type.Literal('admin'),
   Type.Literal('broker'),
-]);
+])
+export type RoleType = Static<typeof Role>
 
-export type RoleType = Static<typeof Role>;
+export const Gender = Type.Union([
+  Type.Literal('male'),
+  Type.Literal('female'),
+  Type.Literal('other'),
+])
+export type GenderType = Static<typeof Gender>
+
+export const ApprovalStatus = Type.Union([
+  Type.Literal('pending'),
+  Type.Literal('approved'),
+  Type.Literal('rejected'),
+])
+export type ApprovalStatusType = Static<typeof ApprovalStatus>
 
 export const User = Type.Object({
   fullName: Type.String({ minLength: 3 }),
@@ -19,7 +32,7 @@ export const User = Type.Object({
   otherImages: strArr,
   brokerAppointed: str,
   isMarried: bool,
-  gender: str,
+  gender: Gender,
   dob: str,
   placeOfBirth: str,
   nakshatra: str,
@@ -40,43 +53,29 @@ export const User = Type.Object({
   dashaPeriod: str,
   height: str,
   color: str,
-  approval_required: str,
-});
+  approvalStatus: ApprovalStatus,
+})
 
-export type UserType = Static<typeof User>;
+export type UserType = Static<typeof User>
 
-export const registerShcema = Type.Optional(User);
+export const registerShcema = Type.Optional(User)
 
-export type registerShcemaType = Static<typeof registerShcema>;
+export type registerShcemaType = Static<typeof registerShcema>
 
 export const loginShcema = Type.Object({
   email: Type.String({ format: 'email' }),
   password: str,
-});
-export type loginShcemaType = Static<typeof loginShcema>;
+})
+export type loginShcemaType = Static<typeof loginShcema>
 
-export const uploadSchema = Type.Object({
-  file: Type.Any(),
-});
-export type uploadSchemaType = Static<typeof uploadSchema>;
+export const uploadSchema = Type.Object({ file: Type.Any() })
+export type uploadSchemaType = Static<typeof uploadSchema>
 
-export const getUserDetailsShcema = Type.Object({
-  id: str,
-});
-export type getUserDetailsShcemaType = Static<typeof getUserDetailsShcema>;
+export const _idSchema = Type.Object({ _id: str })
+export type _idShcemaType = Static<typeof _idSchema>
 
-export const getMatchesShcema = Type.Object({
-  gender: str,
-});
-export type getMatchesShcemaType = Static<typeof getMatchesShcema>;
+export const genderShcema = Type.Object({ gender: Gender })
+export type genderShcemaType = Static<typeof genderShcema>
 
-export const getPendingListShcema = Type.Object({
-  approval_required: str,
-});
-export type getPendingListShcemaType = Static<typeof getPendingListShcema>;
-
-export const updateApprovalSchema = Type.Object({
-  id: str,
-  approval_required: str,
-});
-export type updateApproval = Static<typeof updateApprovalSchema>;
+export const approvalStatusShcema = Type.Object({ approvalStatus: ApprovalStatus })
+export type approvalStatusShcemaType = Static<typeof approvalStatusShcema>

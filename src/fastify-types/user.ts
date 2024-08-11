@@ -1,13 +1,12 @@
 import { FastifyRequest } from 'fastify';
 
 import {
-  getPendingListShcemaType,
-  getMatchesShcemaType,
-  getUserDetailsShcemaType,
+  _idShcemaType,
+  approvalStatusShcemaType,
+  genderShcemaType,
   loginShcemaType,
   registerShcemaType,
   uploadSchemaType,
-  updateApproval,
 } from '../schemas/user.js';
 
 export type registerReq = FastifyRequest<{
@@ -23,18 +22,14 @@ export type uploadReq = FastifyRequest<{
 }>;
 
 export type getUserDetailsReq = FastifyRequest<{
-  Params: getUserDetailsShcemaType;
+  Params: _idShcemaType;
 }>;
 
 export type getMatchesReq = FastifyRequest<{
-  Params: getMatchesShcemaType;
-}>;
-
-export type getPendingListReq = FastifyRequest<{
-  Body: getPendingListShcemaType;
+  Params: genderShcemaType;
 }>;
 
 export type updateApprovalReq = FastifyRequest<{
-  Params: updateApproval;
-  Querystring: updateApproval;
+  Params: _idShcemaType;
+  Querystring: approvalStatusShcemaType;
 }>;
