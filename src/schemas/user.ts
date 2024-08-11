@@ -53,7 +53,7 @@ export const User = Type.Object({
   approvalStatus: ApprovalStatus,
 })
 
-export const registerSchema = Type.Optional(User)
+export const registerSchema = Type.Partial(User)
 
 export const loginSchema = Type.Object({
   email: Type.String({ format: 'email' }),

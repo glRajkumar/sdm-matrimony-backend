@@ -15,8 +15,7 @@ async function authenticator(fastify: FastifyInstance) {
       if (publicRoutes.includes(req.url)) return
 
       const token = req.headers.authorization?.replace("Bearer ", "")
-      if (!token)
-        return res.status(401).send("Authorization header is missing")
+      if (!token) return res.status(401).send("Authorization header is missing")
 
       const payload: any = fastify.jwt.verify(token)
       const userId = payload?._id

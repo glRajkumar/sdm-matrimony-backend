@@ -1,0 +1,12 @@
+@host = http://localhost:5000/admin
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmI4NjY3YzYwMTA3ZTc1MjNiODQyMDAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MjMzNjEwMTAsImV4cCI6MTcyMzQyNTgxMH0.INg-zc2AP2gqvSdO_6OIyMS70siyJFS-CUJx6oP56fo
+
+
+### pending user list
+GET {{host}}/pending-user-list
+Authorization: {{token}}
+
+
+### status approval
+PUT {{host}}/approval/66b84a531be57dd7ee4ca2a4?approvalStatus=approved
+Authorization: {{token}}

@@ -3,7 +3,6 @@ import { Static } from '@sinclair/typebox';
 
 import { _id } from '../schemas/base.js';
 import {
-  approvalStatusSchema,
   genderSchema,
   loginSchema,
   registerSchema,
@@ -31,9 +30,4 @@ export type getUserDetailsReq = FastifyRequest<{
 
 export type getMatchesReq = FastifyRequest<{
   Params: Static<typeof genderSchema>
-}>
-
-export type updateApprovalReq = FastifyRequest<{
-  Params: Static<typeof _id>
-  Querystring: Static<typeof approvalStatusSchema>
 }>

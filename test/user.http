@@ -38,7 +38,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "raj8@gmail.com",
+  "email": "admin@gmail.com",
   "password": "aA1!aa"
 }
 
@@ -75,13 +75,4 @@ Authorization: {{token}}
 GET {{host}}/matches/female
 Authorization: {{token}}
 
-
-### pending user list
-GET {{host}}/pending-user-list
-Authorization: {{token}}
-
-
-### status approval
-PUT {{host}}/approval/66b84a531be57dd7ee4ca2a4?approvalStatus=approved
-Authorization: {{token}}
 

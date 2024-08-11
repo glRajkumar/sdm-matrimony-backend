@@ -6,7 +6,6 @@ import {
   registerSchema,
   uploadSchema,
   genderSchema,
-  approvalStatusSchema,
 } from '../schemas/user.js';
 
 import {
@@ -17,8 +16,6 @@ import {
   imgUpload,
   getUserDetails,
   getMatches,
-  getPendingList,
-  updateApproval,
 } from '../controllers/user.js';
 
 async function userRoutes(fastify: FastifyInstance) {
@@ -29,10 +26,8 @@ async function userRoutes(fastify: FastifyInstance) {
 
   fastify
     .get('/me', me)
-    .get('/pending-user-list', getPendingList)
     .get('/:_id', { schema: { params: _id } }, getUserDetails)
     .get('/matches/:gender', { schema: { params: genderSchema } }, getMatches)
-    .put('/approval/:_id', { schema: { params: _id, querystring: approvalStatusSchema } }, updateApproval)
 
   fastify.put(
     '/imgupload',
@@ -54,4 +49,4 @@ async function userRoutes(fastify: FastifyInstance) {
   )
 }
 
-export default userRoutes;
+export default userRoutes

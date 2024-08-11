@@ -9,6 +9,8 @@ import authenticator from './plugins/authenticator.js';
 import connectDb from './plugins/connectDb.js';
 
 import envOptions from './schemas/env.js';
+
+import adminRoutes from './routes/admin.js';
 import userRoutes from './routes/user.js';
 
 const app = fastify()
@@ -21,6 +23,7 @@ app
   .register(fp(authenticator))
   .register(fp(cloudinaryConfig))
   .register(userRoutes, { prefix: "/users" })
+  .register(adminRoutes, { prefix: "/admin" })
 
 const port = 5000
 app.listen({ port }, (err) => {
