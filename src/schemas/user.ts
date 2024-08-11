@@ -53,7 +53,15 @@ export const User = Type.Object({
   approvalStatus: ApprovalStatus,
 })
 
-export const registerSchema = Type.Partial(User)
+export const registerSchema = Type.Composite([
+  Type.Partial(Type.Omit(User, ['token', 'approvalStatus', "fullName", "email", "password", "dob"])),
+  Type.Object({
+    fullName: Type.String({ minLength: 3 }),
+    email: Type.String({ format: 'email' }),
+    password: str,
+    dob: str,
+  })
+])
 
 export const loginSchema = Type.Object({
   email: Type.String({ format: 'email' }),
