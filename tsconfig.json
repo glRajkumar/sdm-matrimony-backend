@@ -1,14 +1,14 @@
 {
-  "extends": "fastify-tsconfig",
   "compilerOptions": {
-    "outDir": "build",
-    "allowJs": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ]
-  },
-  "include": [
-    "src/**/*.ts",
-  ]
+    "target": "ESNext",
+    "module": "NodeNext",
+    "strict": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "types": [
+      "node"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+  }
 }

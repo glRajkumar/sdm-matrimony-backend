@@ -1,18 +1,16 @@
-import { FastifyInstance } from 'fastify';
-
-import roleCheck from '../plugins/role-check.js';
-
-import { approvalStatusSchema } from '../schemas/user.js';
-import { _id } from '../schemas/base.js';
+import { Hono } from 'hono';
 
 import { getPendingList, updateApproval } from '../controllers/admin.js';
+import authMiddleware from '../middlewares/auth.js';
+import roleCheck from '../middlewares/role-check.js';
 
-async function userRoutes(fastify: FastifyInstance) {
-  fastify.addHook('preHandler', roleCheck(['admin']))
+const adminRoutes = new Hono()
 
-  fastify
-    .get('/pending-user-list', getPendingList)
-    .put('/approval/:_id', { schema: { params: _id, querystring: approvalStatusSchema } }, updateApproval)
-}
+adminRoutes.use(authMiddleware)
+adminRoutes.use(roleCheck(["admin"]))
 
-export default userRoutes;
+adminRoutes
+  .get('/pending-user-list', getPendingList)
+  .put('/approval/:_id', updateApproval)
+
+export default adminRoutes

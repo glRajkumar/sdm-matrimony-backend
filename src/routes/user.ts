@@ -1,52 +1,21 @@
-import { FastifyInstance } from 'fastify';
+import { Hono } from 'hono';
 
-import { _id } from '../schemas/base.js';
-import {
-  loginSchema,
-  registerSchema,
-  uploadSchema,
-  genderSchema,
-} from '../schemas/user.js';
+import { login, logout, me, register, imgUpload, getUserDetails, getMatches } from '../controllers/user.js';
+import authMiddleware from '../middlewares/auth.js';
 
-import {
-  login,
-  logout,
-  me,
-  register,
-  imgUpload,
-  getUserDetails,
-  getMatches,
-} from '../controllers/user.js';
+const userRoutes = new Hono()
 
-async function userRoutes(fastify: FastifyInstance) {
-  fastify
-    .post('/register', { schema: { body: registerSchema } }, register)
-    .post('/login', { schema: { body: loginSchema } }, login)
-    .post('/logout', logout)
+userRoutes
+  .post('/register', register)
+  .post('/login', login)
+  .post('/logout', logout)
 
-  fastify
-    .get('/me', me)
-    .get('/:_id', { schema: { params: _id } }, getUserDetails)
-    .get('/matches', { schema: { body: genderSchema } }, getMatches)
+userRoutes.use(authMiddleware)
 
-  fastify.put(
-    '/imgupload',
-    {
-      schema: uploadSchema,
-      attachValidation: true,
-      preValidation: async (request, reply) => {
-        if (
-          request.headers['content-type']?.startsWith('multipart/form-data')
-        ) {
-          return;
-        }
-        reply
-          .code(400)
-          .send({ error: 'Content-Type must be multipart/form-data' });
-      },
-    },
-    imgUpload
-  )
-}
+userRoutes
+  .get('/me', me)
+  .get('/:_id', getUserDetails)
+  .get('/matches', getMatches)
+  .put('/imgupload', imgUpload)
 
 export default userRoutes
