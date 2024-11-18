@@ -1,4 +1,4 @@
-@host = http://localhost:5000/admin
+@host = http://localhost:5000/api/admin
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmI4NjY3YzYwMTA3ZTc1MjNiODQyMDAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MjMzNjEwMTAsImV4cCI6MTcyMzQyNTgxMH0.INg-zc2AP2gqvSdO_6OIyMS70siyJFS-CUJx6oP56fo
 
 

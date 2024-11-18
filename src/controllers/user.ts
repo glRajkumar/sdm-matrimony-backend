@@ -100,7 +100,7 @@ export const getUserDetails = async (c: Context) => {
 }
 
 export const getMatches = async (c: Context) => {
-  const { gender, marriedStatus, salaryRange, rasi, age } = await c.req.json()
+  const { gender, marriedStatus, salaryRange, rasi, age } = c.req.query()
 
   const filter: any = {
     role: 'user',

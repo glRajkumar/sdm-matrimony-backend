@@ -1,5 +1,5 @@
-@host = http://localhost:5000/users
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmI4NGE1MzFiZTU3ZGQ3ZWU0Y2EyYTQiLCJyb2xlIjoidXNlciIsImlhdCI6MTcyMzM1MzcwMCwiZXhwIjoxNzIzNDE4NTAwfQ.w9oO8t1-JuD3FI9K1PbnkBhh9YwVVvUoxIxhKBOFAU4
+@host = http://localhost:5000/api/user
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNiNjBjYTRiMGVlZjMzM2ZmODc1YTMiLCJyb2xlIjoidXNlciIsImV4cCI6MTczMjAzMTA2Mn0.xokwKhJ5mrSrfykWsOJymQUZNRYJ0paDKVKJRsXkpeE
 
 ### register
 POST {{host}}/register
@@ -7,7 +7,7 @@ Content-Type: application/json
 
 {
   "fullName": "raj",
-  "email": "raj8@gmail.com",
+  "email": "rajt@gmail.com",
   "password": "aA1!aa",
   "gender": "male",
   "dob": "21-06-2002 10:10 AM",
@@ -38,7 +38,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "admin@gmail.com",
+  "email": "rajt@gmail.com",
   "password": "aA1!aa"
 }
 
@@ -67,12 +67,12 @@ Content-Type: image/png
 
 
 ### user details
-GET {{host}}/6681486777a6829e84ae8973
+GET {{host}}/673b60ca4b0eef333ff875a3
 Authorization: {{token}}
 
 
 ### getMathces
-GET {{host}}/matches/female
+GET {{host}}/matches?gender=female
 Authorization: {{token}}
 
 

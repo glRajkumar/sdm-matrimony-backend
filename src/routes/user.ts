@@ -14,8 +14,8 @@ userRoutes.use(authMiddleware)
 
 userRoutes
   .get('/me', me)
-  .get('/:_id', getUserDetails)
   .get('/matches', getMatches)
+  .get('/:_id', getUserDetails)
   .put('/imgupload', imgUpload)
 
 export default userRoutes
