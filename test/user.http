@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/user
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNiNjBjYTRiMGVlZjMzM2ZmODc1YTMiLCJyb2xlIjoidXNlciIsImV4cCI6MTczMjAzMTA2Mn0.xokwKhJ5mrSrfykWsOJymQUZNRYJ0paDKVKJRsXkpeE
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNiNjBjYTRiMGVlZjMzM2ZmODc1YTMiLCJyb2xlIjoidXNlciIsImV4cCI6MTczNDg3NDI3M30.cPPeMhW21f311sVPx9DqasATxwGjYDONaJGCGLPbkkU
 
 ### register
 POST {{host}}/register
@@ -39,7 +39,27 @@ Content-Type: application/json
 
 {
   "email": "rajt@gmail.com",
-  "password": "aA1!aa"
+  "password": "12345678"
+}
+
+
+### forget password
+POST {{host}}/forgot-pass
+Content-Type: application/json
+
+{
+  "email": "rajt@gmail.com"
+}
+
+
+### reset password
+POST {{host}}/reset-pass
+Content-Type: application/json
+
+{
+  "email": "rajt@gmail.com",
+  "password": "12345678",
+  "otp": 768032
 }
 
 

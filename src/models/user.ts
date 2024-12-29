@@ -135,6 +135,10 @@ const userSchema = new Schema({
     default: 'pending',
   },
 
+  verifiyOtp: {
+    type: Number
+  },
+
 }, { timestamps: true })
 
 const User = model('User', userSchema)

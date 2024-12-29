@@ -1,7 +1,8 @@
 import type { Context } from 'hono';
 
+import { generateOtp, getCloudinary, getToken } from '../utils/index.js';
 import { comparePasswords, hashPassword } from "../utils/password.js";
-import { getCloudinary, getToken } from '../utils/index.js';
+// import transporter from '../utils/transporter.js';
 import User from '../models/user.js';
 
 export const register = async (c: Context) => {
@@ -46,6 +47,48 @@ export const login = async (c: Context) => {
   return c.json(output)
 }
 
+export async function forgetPass(c: Context) {
+  const { email } = await c.req.json()
+
+  const user = await User.findOne({ email })
+  if (!user) return c.json({ message: 'User not found' }, 400)
+
+  const verifiyOtp = generateOtp()
+
+  user.verifiyOtp = verifiyOtp
+
+  // await transporter.sendMail({
+  //   to: email,
+  //   from: process.env.GMAIL_ID,
+  //   subject: "Reset password key",
+  //   html: `${verifiyOtp}`
+  // })
+
+  await user.save()
+
+  return c.json({ message: "Passkey sent to email successfully" })
+}
+
+export async function resetPass(c: Context) {
+  const { email, password, otp } = await c.req.json()
+
+  const user = await User.findOne({ email })
+  if (!user) return c.json({ message: 'User not found' }, 400)
+
+  if (!password) return c.json({ message: "Password shouldn't be empty" }, 400)
+
+  if (Number(otp) !== user.verifiyOtp) return c.json({ message: 'OTP not matched' }, 400)
+
+  const hashedPass = await hashPassword(password)
+
+  user.password = hashedPass
+  user.verifiyOtp = undefined
+
+  await user.save()
+
+  return c.json({ message: "Password reseted successfully" })
+}
+
 export const me = async (c: Context) => {
   const user = c.get('user')
   const { token, ...rest } = user
@@ -63,12 +106,12 @@ export const logout = async (c: Context) => {
 export const imgUpload = async (c: Context) => {
   const user = c.get('user')
   const formData = await c.req.formData()
-  const file = formData.get('file') as File
+  const file = formData.get("file")
 
   if (!file) return c.json({ msg: 'No file uploaded' }, 400)
 
-  const arrayBuffer = await file.arrayBuffer()
-  const buffer = Buffer.from(arrayBuffer)
+  const buffer = await (file as Blob).arrayBuffer()
+  const nodeBuffer = Buffer.from(buffer)
 
   const cloudinary = getCloudinary()
   const result: any = await new Promise((resolve, reject) => {
@@ -80,7 +123,7 @@ export const imgUpload = async (c: Context) => {
       }
     )
 
-    uploadStream.end(buffer)
+    uploadStream.end(nodeBuffer)
   })
 
   await User.updateOne({ _id: user._id }, { $push: { images: result.url } })
