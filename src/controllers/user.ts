@@ -2,6 +2,7 @@ import type { Context } from 'hono';
 
 import { generateOtp, getCloudinary, getToken } from '../utils/index.js';
 import { comparePasswords, hashPassword } from "../utils/password.js";
+import { getFilterObj } from '../utils/user-filter-obj.js';
 // import transporter from '../utils/transporter.js';
 import User from '../models/user.js';
 
@@ -147,64 +148,16 @@ export const getUserDetails = async (c: Context) => {
 }
 
 export const getMatches = async (c: Context) => {
-  const { gender, marriedStatus, salaryRange, rasi, age } = c.req.query()
+  const { limit, skip, ...rest } = c.req.query()
+  const filters = getFilterObj(rest)
 
-  const filter: any = {
-    role: 'user',
-    approvalStatus: 'approved',
-  }
+  const numLimit = Number(limit || 10)
+  const numSkip = Number(skip || 0)
 
-  if (gender) {
-    filter.gender = gender === 'male' ? 'female' : 'male'
-  }
-
-  if (marriedStatus) {
-    filter.isMarried = marriedStatus
-  }
-
-  if (salaryRange) {
-    switch (salaryRange) {
-      case 'below_20000':
-        filter.salary = { $lt: 20000 }
-        break
-      case '20000_30000':
-        filter.salary = { $gte: 20000, $lte: 30000 }
-        break
-      case '30000_40000':
-        filter.salary = { $gte: 30000, $lte: 40000 }
-        break
-      case '40000_50000':
-        filter.salary = { $gte: 40000, $lte: 50000 }
-        break
-      case 'above_50000':
-        filter.salary = { $gt: 50000 }
-        break
-    }
-  }
-
-  if (age) {
-    switch (age) {
-      case 'below_25':
-        filter.age = { $lt: 25 }
-        break
-      case '25_30':
-        filter.age = { $gte: 25, $lte: 30 }
-        break
-      case '30_40':
-        filter.age = { $gte: 30, $lte: 40 }
-        break
-      case 'above_40':
-        filter.age = { $gt: 40 }
-        break
-    }
-  }
-
-  if (rasi) {
-    filter.rasi = { $in: rasi }
-  }
-
-  const getMatches = await User.find(filter)
-    .select('-token -password')
+  const getMatches = await User.find(filters)
+    .select('-token -password -role -brokerAppointed -approvalStatus -verifiyOtp')
+    .limit(numLimit)
+    .skip(numSkip)
     .lean()
 
   return c.json(getMatches)

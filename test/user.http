@@ -6,30 +6,30 @@ POST {{host}}/register
 Content-Type: application/json
 
 {
-  "fullName": "raj",
-  "email": "rajt@gmail.com",
-  "password": "aA1!aa",
+  "fullName": "WhitneyPeterson",
+  "email": "adgagd@gmail.com",
+  "password": "12345678",
   "gender": "male",
-  "dob": "21-06-2002 10:10 AM",
-  "placeofBirth": "viralimalai",
-  "nakshatra": "nagam",
-  "rasi": "thulam",
-  "lagna": "mirugam",
-  "qualification": "bsc",
-  "work": "it",
-  "salary": 25000,
-  "fatherName": "nallu",
-  "motherName": "angali",
-  "noOfBrothers": 1,
+  "dob": "1950-07-16T12:22:00.000Z",
+  "placeofBirth": "Port Elizabethview",
+  "nakshatra": "bharani",
+  "rasi": "kanni",
+  "lagna": "dhanusu",
+  "qualification": "bcom",
+  "work": "education",
+  "salary": 80030,
+  "fatherName": "Aaron",
+  "motherName": "Marissa",
+  "noOfBrothers": 2,
   "noOfSisters": 2,
-  "birthOrder": 2,
+  "birthOrder": 1,
   "expectation": "nothing else",
   "formalities": "all",
   "houseType": "own",
-  "address": "chennai",
-  "dashaPeriod": "4months",
-  "height": "180",
-  "color": "white"
+  "address": "680 Nguyen Cliffs\nNew Amy, IL 82099",
+  "dashaPeriod": "14 months",
+  "height": 180,
+  "color": "brown"
 }
 
 
@@ -38,7 +38,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "rajt@gmail.com",
+  "email": "admin1@gmail.com",
   "password": "12345678"
 }
 
@@ -48,7 +48,7 @@ POST {{host}}/forgot-pass
 Content-Type: application/json
 
 {
-  "email": "rajt@gmail.com"
+  "email": "admin@gmail.com"
 }
 
 
@@ -57,9 +57,9 @@ POST {{host}}/reset-pass
 Content-Type: application/json
 
 {
-  "email": "rajt@gmail.com",
+  "email": "admin@gmail.com",
   "password": "12345678",
-  "otp": 768032
+  "otp": 546836
 }
 
 
