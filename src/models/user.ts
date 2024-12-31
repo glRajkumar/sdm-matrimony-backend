@@ -9,7 +9,7 @@ const userSchema = new Schema({
 
   role: {
     type: String,
-    enum: ['user', 'broker', 'admin'],
+    enum: ['user'],
     default: 'user',
   },
 
@@ -31,7 +31,7 @@ const userSchema = new Schema({
 
   brokerAppointed: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Admin',
   },
 
   isMarried: {

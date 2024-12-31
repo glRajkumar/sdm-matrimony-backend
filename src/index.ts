@@ -5,6 +5,7 @@ import { cors } from 'hono/cors';
 import { csrf } from 'hono/csrf';
 import { Hono } from 'hono';
 
+import accountRoutes from './routes/account.js';
 import adminRoutes from './routes/admin.js';
 import userRoutes from './routes/user.js';
 
@@ -20,6 +21,7 @@ await connectDb()
 
 app.get("/health", c => c.json({ status: "ok" }))
 
+app.route("/account", accountRoutes)
 app.route("/user", userRoutes)
 app.route("/admin", adminRoutes)
 

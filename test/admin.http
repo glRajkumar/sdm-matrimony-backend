@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/admin
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzczYTU2OWFjMDIyNTY1ZDY0YTgzZmQiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3MzU3MTg2NDB9.-x5PmpviKjP1dFw4WWIAkX3Nb6yI9n79LxN07_r9si0
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzczYmZmNzc0MzA2ZGIwN2U2MzQwY2UiLCJyb2xlIjoiYnJva2VyIiwiZXhwIjoxNzM1NzI1NTg5fQ.y-87LW7Af0J2Fc8gXwjDDNiFq_agibuaqAzCI8dHYoI
 
 
 ### pending user list ---- skip=6&limit=8&approvalStatus=["pending","rejected"]&ageRange=below_25&salaryRange=20000_30000

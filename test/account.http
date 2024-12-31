@@ -1,0 +1,91 @@
+@host = http://localhost:5000/api/account
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNiNjBjYTRiMGVlZjMzM2ZmODc1YTMiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyIsImV4cCI6MTczNTcwMjcwNH0.bLikWnZQvW_pTK9ksuQR9-XKE_1ZMgUxBm4QDzCujvE
+
+### register - user
+POST {{host}}/register
+Content-Type: application/json
+
+{
+  "fullName": "WhitneyPeterson",
+  "email": "user@gmail.com",
+  "password": "12345678",
+  "role": "user",
+  "gender": "male",
+  "dob": "1950-07-16T12:22:00.000Z",
+  "placeofBirth": "Port Elizabethview",
+  "nakshatra": "bharani",
+  "rasi": "kanni",
+  "lagna": "dhanusu",
+  "qualification": "bcom",
+  "work": "education",
+  "salary": 80030,
+  "fatherName": "Aaron",
+  "motherName": "Marissa",
+  "noOfBrothers": 2,
+  "noOfSisters": 2,
+  "birthOrder": 1,
+  "expectation": "nothing else",
+  "formalities": "all",
+  "houseType": "own",
+  "address": "680 Nguyen Cliffs\nNew Amy, IL 82099",
+  "dashaPeriod": "14 months",
+  "height": 180,
+  "color": "brown"
+}
+
+
+### register - broker | admin
+POST {{host}}/register
+Content-Type: application/json
+
+{
+  "fullName": "WhitneyPeterson",
+  "email": "adminm@gmail.com",
+  "role": "broker",
+  "password": "12345678",
+  "address": "680 Nguyen Cliffs\nNew Amy, IL 82099"
+}
+
+
+### login
+POST {{host}}/login
+Content-Type: application/json
+
+{
+  "email": "adminm@gmail.com",
+  "password": "12345678",
+  "role": "admin"
+}
+
+
+### forget password
+POST {{host}}/forgot-pass
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "role": "user"
+}
+
+
+### reset password
+POST {{host}}/reset-pass
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "12345678",
+  "otp": 546836,
+  "role": "user"
+}
+
+
+### user details
+GET {{host}}/me
+Authorization: {{token}}
+
+
+### logout
+POST {{host}}/logout
+Authorization: {{token}}
+Content-Type: application/json
