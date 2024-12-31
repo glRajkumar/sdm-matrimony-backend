@@ -10,7 +10,6 @@ userRoutes
   .post('/login', login)
   .post("/forgot-pass", forgetPass)
   .post("/reset-pass", resetPass)
-  .post('/logout', logout)
 
 userRoutes.use(authMiddleware)
 
@@ -19,5 +18,6 @@ userRoutes
   .get('/matches', getMatches)
   .get('/:_id', getUserDetails)
   .put('/imgupload', imgUpload)
+  .post('/logout', logout)
 
 export default userRoutes

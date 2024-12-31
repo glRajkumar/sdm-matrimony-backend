@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/user
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNiNjBjYTRiMGVlZjMzM2ZmODc1YTMiLCJyb2xlIjoidXNlciIsImV4cCI6MTczNDg3NDI3M30.cPPeMhW21f311sVPx9DqasATxwGjYDONaJGCGLPbkkU
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNiNjBjYTRiMGVlZjMzM2ZmODc1YTMiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyIsImV4cCI6MTczNTcwMjcwNH0.bLikWnZQvW_pTK9ksuQR9-XKE_1ZMgUxBm4QDzCujvE
 
 ### register
 POST {{host}}/register
@@ -71,6 +71,7 @@ Authorization: {{token}}
 ### logout
 POST {{host}}/logout
 Authorization: {{token}}
+Content-Type: application/json
 
 
 ### upload img

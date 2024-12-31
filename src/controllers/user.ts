@@ -29,7 +29,10 @@ export const login = async (c: Context) => {
   const result = await comparePasswords(password, user.password)
   if (!result) return c.json({ msg: 'Password not matched' }, 400)
 
-  const payload = { _id: user._id.toString(), role: user.role }
+  const payload: any = { _id: user._id.toString(), role: user.role }
+  if (payload.role === "user") {
+    payload.approvalStatus = user.approvalStatus
+  }
   const newToken = await getToken(payload)
   user.token = user.token.concat(newToken)
   await user.save()
@@ -89,6 +92,7 @@ export async function resetPass(c: Context) {
   return c.json({ message: "Password reseted successfully" })
 }
 
+// authendicated
 export const me = async (c: Context) => {
   const user = c.get('user')
   const { token, ...rest } = user
