@@ -21,7 +21,7 @@ await connectDb()
 app.get("/health", c => c.json({ status: "ok" }))
 
 app.route("/user", userRoutes)
-app.route("/auth", adminRoutes)
+app.route("/admin", adminRoutes)
 
 app.notFound(c => c.json({ message: 'Route not found' }, 404))
 

@@ -7,7 +7,7 @@ export async function getPendingList(c: Context) {
     .select("_id fullName")
     .lean()
 
-  c.json(fullList)
+  return c.json(fullList)
 }
 
 export async function updateApproval(c: Context) {
