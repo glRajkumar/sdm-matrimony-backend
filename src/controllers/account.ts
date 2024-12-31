@@ -8,7 +8,7 @@ import Admin from '../models/admin.js';
 import User from '../models/user.js';
 
 export const register = async (c: Context) => {
-  const { fullName, email, password, role, ...rest } = await c.req.json()
+  const { fullName, email, password, role = "user", ...rest } = await c.req.json()
 
   const Model = role === "user" ? User : Admin
   const userExist = await (Model as any).findOne({ email }).select('_id')
@@ -24,7 +24,7 @@ export const register = async (c: Context) => {
 }
 
 export const login = async (c: Context) => {
-  const { email, password, role } = await c.req.json()
+  const { email, password, role = "user" } = await c.req.json()
 
   const Model = role === "user" ? User : Admin
   const user = await (Model as any).findOne({ email })
@@ -58,7 +58,7 @@ export const login = async (c: Context) => {
 }
 
 export async function forgetPass(c: Context) {
-  const { email, role } = await c.req.json()
+  const { email, role = "user" } = await c.req.json()
 
   const Model = role === "user" ? User : Admin
   const user = await (Model as any).findOne({ email })
@@ -81,7 +81,7 @@ export async function forgetPass(c: Context) {
 }
 
 export async function resetPass(c: Context) {
-  const { email, password, otp, role } = await c.req.json()
+  const { email, password, otp, role = "user" } = await c.req.json()
 
   const Model = role === "user" ? User : Admin
   const user = await (Model as any).findOne({ email })
