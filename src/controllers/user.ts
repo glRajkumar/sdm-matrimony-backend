@@ -9,15 +9,15 @@ export const register = async (c: Context) => {
   const { fullName, email, password, ...rest } = await c.req.json()
 
   const userExist = await User.findOne({ email }).select('_id')
-  if (userExist) return c.json({ msg: 'Email already exists' }, 400)
-  if (!password) return c.json({ msg: "Password shouldn't be empty" }, 400)
+  if (userExist) return c.json({ message: 'Email already exists' }, 400)
+  if (!password) return c.json({ message: "Password shouldn't be empty" }, 400)
 
   const hashedPass = await hashPassword(password)
 
   const user = new User({ fullName, email, password: hashedPass, ...rest })
   await user.save()
 
-  return c.json({ msg: 'User saved successfully' })
+  return c.json({ message: 'User saved successfully' })
 }
 
 export const login = async (c: Context) => {
@@ -27,7 +27,7 @@ export const login = async (c: Context) => {
   if (!user) return c.json('Cannot find user in db', 401)
 
   const result = await comparePasswords(password, user.password)
-  if (!result) return c.json({ msg: 'Password not matched' }, 400)
+  if (!result) return c.json({ message: 'Password not matched' }, 400)
 
   const payload: any = { _id: user._id.toString(), role: user.role }
   if (payload.role === "user") {
@@ -104,7 +104,7 @@ export const logout = async (c: Context) => {
   const token = c.get('token')
 
   await User.updateOne({ _id: user._id }, { $pull: { token } })
-  return c.json({ msg: 'User logged out successfully' })
+  return c.json({ message: 'User logged out successfully' })
 }
 
 export const imgUpload = async (c: Context) => {
@@ -112,7 +112,7 @@ export const imgUpload = async (c: Context) => {
   const formData = await c.req.formData()
   const file = formData.get("file")
 
-  if (!file) return c.json({ msg: 'No file uploaded' }, 400)
+  if (!file) return c.json({ message: 'No file uploaded' }, 400)
 
   const buffer = await (file as Blob).arrayBuffer()
   const nodeBuffer = Buffer.from(buffer)
@@ -132,7 +132,7 @@ export const imgUpload = async (c: Context) => {
 
   await User.updateOne({ _id: user._id }, { $push: { images: result.url } })
 
-  return c.json({ msg: 'User image uploaded successfully' })
+  return c.json({ message: 'User image uploaded successfully' })
 }
 
 export const getUsers = async (c: Context) => {

@@ -27,7 +27,7 @@ app.notFound(c => c.json({ message: 'Route not found' }, 404))
 
 app.onError((err, c) => {
   console.log(err)
-  return c.json({ message: err.message || "Internal sever eror" }, 500)
+  return c.json({ message: err?.message || "Internal sever eror" }, 500)
 })
 
 const port = Number(process.env.PORT || 5000)

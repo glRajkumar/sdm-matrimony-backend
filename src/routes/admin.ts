@@ -11,6 +11,6 @@ adminRoutes.use(roleCheck(["admin"]))
 
 adminRoutes
   .get('/pending-user-list', getPendingList)
-  .put('/approval/:_id', updateApproval)
+  .put('/approval', updateApproval)
 
 export default adminRoutes

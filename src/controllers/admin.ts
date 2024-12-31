@@ -4,20 +4,19 @@ import User from "../models/user.js";
 
 export async function getPendingList(c: Context) {
   const fullList = await User.find({ approvalStatus: "pending" })
-    .select("_id fullName")
+    .select("_id fullName email images gender dob salary")
     .lean()
 
   return c.json(fullList)
 }
 
 export async function updateApproval(c: Context) {
-  const { approvalStatus } = c.req.query()
-  const { _id } = c.req.param()
+  const { _id, approvalStatus } = await c.req.json()
 
   await User.updateOne(
     { _id },
     { $set: { approvalStatus } }
   )
 
-  return c.json({ success: "Updated Successfully" })
+  return c.json({ message: "Status updated successfully" })
 }
