@@ -1,6 +1,6 @@
 
 function strOrArr(by: string, possibleLen: number) {
-  const conBy = by?.includes("[") ? JSON.parse(by) : by
+  const conBy = by?.includes("[") ? JSON.parse(by) : by.includes(",") ? by.split(",") : by
   if (typeof conBy === "string") return conBy
 
   if (Array.isArray(conBy) && conBy?.length < possibleLen) {
