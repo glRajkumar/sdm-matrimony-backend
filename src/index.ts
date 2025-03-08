@@ -7,6 +7,7 @@ import { Hono } from 'hono';
 
 import accountRoutes from './routes/account.js';
 import adminRoutes from './routes/admin.js';
+import fakerRoutes from './routes/faker.js';
 import userRoutes from './routes/user.js';
 
 import connectDb from './lib/connect-db.js';
@@ -24,6 +25,7 @@ app.get("/health", c => c.json({ status: "ok" }))
 app.route("/account", accountRoutes)
 app.route("/user", userRoutes)
 app.route("/admin", adminRoutes)
+app.route("/faker", fakerRoutes)
 
 app.notFound(c => c.json({ message: 'Route not found' }, 404))
 

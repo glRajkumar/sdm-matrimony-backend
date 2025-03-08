@@ -3,7 +3,7 @@
 
 
 ### users list ---- skip=6&limit=8&approvalStatus=["pending","rejected"]&ageRange=below_25&salaryRange=20000_30000
-GET {{host}}/users?approvalStatus=["pending"]
+GET {{host}}/users
 Authorization: {{token}}
 
 

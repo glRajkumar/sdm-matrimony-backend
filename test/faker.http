@@ -1,0 +1,5 @@
+@host = http://localhost:5000/api/faker
+
+#### 
+POST {{host}}
+Content-Type: application/json
