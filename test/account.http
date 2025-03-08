@@ -34,14 +34,14 @@ Content-Type: application/json
 }
 
 
-### register - broker | admin
+### register - broker | admin | user
 POST {{host}}/register
 Content-Type: application/json
 
 {
   "fullName": "WhitneyPeterson",
-  "email": "adminm@gmail.com",
-  "role": "broker",
+  "email": "adminmy@gmail.com",
+  "role": "admin",
   "password": "12345678",
   "address": "680 Nguyen Cliffs\nNew Amy, IL 82099"
 }
@@ -52,7 +52,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "adminm@gmail.com",
+  "email": "adminmy@gmail.com",
   "password": "12345678",
   "role": "admin"
 }
@@ -63,7 +63,7 @@ POST {{host}}/forgot-pass
 Content-Type: application/json
 
 {
-  "email": "admin@gmail.com",
+  "email": "kent11@gmail.com",
   "role": "user"
 }
 
@@ -73,9 +73,9 @@ POST {{host}}/reset-pass
 Content-Type: application/json
 
 {
-  "email": "admin@gmail.com",
+  "email": "kent11@gmail.com",
   "password": "12345678",
-  "otp": 546836,
+  "otp": 863776,
   "role": "user"
 }
 
