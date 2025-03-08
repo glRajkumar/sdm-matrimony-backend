@@ -11,11 +11,13 @@ function strOrArr(by: string, possibleLen: number) {
 }
 
 export function getFilterObj(obj: Record<string, any>) {
-  const { gender, isMarried, salaryRange, ageRange, approvalStatus, rasi, lagna } = obj
+  const { gender, isMarried, salaryRange, ageRange, approvalStatus, rasi, lagna, maritalStatus, isBlocked, isDeleted } = obj
 
   const filter: any = {
     role: 'user',
     approvalStatus: 'approved',
+    isBlocked: false,
+    isDeleted: false,
   }
 
   if (approvalStatus) {
@@ -34,6 +36,21 @@ export function getFilterObj(obj: Record<string, any>) {
 
   if (isMarried) {
     filter.isMarried = isMarried
+  }
+
+  if (isBlocked) {
+    filter.isBlocked = isBlocked
+  }
+
+  if (isDeleted) {
+    filter.isDeleted = isDeleted
+  }
+
+  if (maritalStatus) {
+    const maritalStatusFilter = strOrArr(maritalStatus, 4)
+    if (maritalStatusFilter) {
+      filter.maritalStatus = maritalStatusFilter
+    }
   }
 
   if (salaryRange) {
@@ -81,14 +98,14 @@ export function getFilterObj(obj: Record<string, any>) {
   if (rasi) {
     const rasiFilter = strOrArr(rasi, 12)
     if (rasiFilter) {
-      filter.rasi = rasiFilter
+      filter.vedicHoroscope.rasi = rasiFilter
     }
   }
 
   if (lagna) {
     const lagnaFilter = strOrArr(lagna, 12)
     if (lagnaFilter) {
-      filter.lagna = lagnaFilter
+      filter.vedicHoroscope.lagna = lagnaFilter
     }
   }
 

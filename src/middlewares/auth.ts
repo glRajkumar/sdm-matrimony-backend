@@ -13,7 +13,7 @@ const authMiddleware = createMiddleware(async (c, next) => {
   const _id = payload._id
 
   const Model = role === "user" ? User : Admin
-  const user = await (Model as any).findById(_id).select("-password -__v").lean()
+  const user = await (Model as any).findById(_id).select("_id role token").lean()
   if (!user) return c.json({ message: 'User not found' }, 400)
 
   const tokenIndex = user.token.indexOf(token)

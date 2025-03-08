@@ -103,8 +103,9 @@ export async function resetPass(c: Context) {
 
 export const me = async (c: Context) => {
   const user = c.get('user')
-  const { token, ...rest } = user
-  return c.json(rest)
+  const Model = user?.role === "user" ? User : Admin
+  const userDetail = await (Model as any).findById(user._id).select("-password -token -__v").lean()
+  return c.json(userDetail)
 }
 
 export const logout = async (c: Context) => {

@@ -3,7 +3,7 @@
 
 
 ### users list ---- skip=6&limit=8&approvalStatus=["pending","rejected"]&ageRange=below_25&salaryRange=20000_30000
-GET {{host}}/users
+GET {{host}}/users?approvalStatus=["pending"]
 Authorization: {{token}}
 
 
@@ -13,6 +13,6 @@ Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "_id": "6773a11cc3a23283e1a767e1",
+  "_id": "6773bfda74306db07e6340cb",
   "approvalStatus": "approved"
 }

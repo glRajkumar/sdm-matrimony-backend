@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/account
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNiNjBjYTRiMGVlZjMzM2ZmODc1YTMiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyIsImV4cCI6MTczNTcwMjcwNH0.bLikWnZQvW_pTK9ksuQR9-XKE_1ZMgUxBm4QDzCujvE
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2NjMWNkYjA5MWU0YWViNWJmNDA2ZTMiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyIsImV4cCI6MTc0MTUxNjM5MX0.ubWgze0DtZKyaesCBviy-aaTxxd8mQd6PQyNkjSFfmI
 
 ### register - user
 POST {{host}}/register
@@ -7,34 +7,61 @@ Content-Type: application/json
 
 {
   "fullName": "WhitneyPeterson",
-  "email": "user@gmail.com",
+  "email": "usertrf@gmail.com",
   "password": "12345678",
   "role": "user",
-  "gender": "male",
+  "gender": "Male",
   "dob": "1950-07-16T12:22:00.000Z",
-  "placeofBirth": "Port Elizabethview",
-  "nakshatra": "bharani",
-  "rasi": "kanni",
-  "lagna": "dhanusu",
-  "qualification": "bcom",
-  "work": "education",
-  "salary": 80030,
-  "fatherName": "Aaron",
-  "motherName": "Marissa",
-  "noOfBrothers": 2,
-  "noOfSisters": 2,
-  "birthOrder": 1,
-  "expectation": "nothing else",
-  "formalities": "all",
-  "houseType": "own",
-  "address": "680 Nguyen Cliffs\nNew Amy, IL 82099",
-  "dashaPeriod": "14 months",
-  "height": 180,
-  "color": "brown"
+  "maritalStatus": "Single",
+  "proffessionalDetails":{
+    "qualification": "bcom",
+    "salary": 80030,
+    "work": "education"
+  },
+  "contactDetails":{
+    "mobile": "1234567890",
+    "address": "680 Nguyen Cliffs\nNew Amy, IL 82099"
+  },
+  "familyDetails": {
+    "fatherName": "Aaron",
+    "motherName": "Marissa",
+    "noOfBrothers": 2,
+    "noOfSisters": 2,
+    "birthOrder": 1
+  },
+  "vedicHoroscope": {
+    "rasi": "kanni",
+    "lagna": "dhanusu",
+    "nakshatra": "bharani",
+    "dashaPeriod": "14 months",
+    "placeofBirth": "Port Elizabethview",
+    "timeOfBirth": "8:30 AM",
+    "expectation": "nothing else",
+    "raasiChart": {
+      "house1": [{ "planet": "mars", "degree": 10 }],
+      "house2": [{ "planet": "mercury", "degree": 20 }],
+      "house3": [{ "planet": "venus", "degree": 30 }]
+    },
+    "navamsaChart": {
+      "house1": [{ "planet": "mars", "degree": 10 }],
+      "house2": [{ "planet": "mercury", "degree": 20 }],
+      "house3": [{ "planet": "venus", "degree": 30 }]
+    }
+  },
+  "partnerExpectation": {
+    "maritalStatus": "Single",
+    "qualification": "bcom",
+    "work": "education"
+  },
+  "otherDetails": {
+    "houseType": "own",
+    "height": 180,
+    "color": "brown"
+  }
 }
 
 
-### register - broker | admin | user
+### register - broker | admin
 POST {{host}}/register
 Content-Type: application/json
 
@@ -52,9 +79,9 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "adminmy@gmail.com",
+  "email": "usertrf@gmail.com",
   "password": "12345678",
-  "role": "admin"
+  "role": "user"
 }
 
 

@@ -1,5 +1,31 @@
 import { Schema, model } from 'mongoose';
 
+const maritalStatus = ['Single', 'Divorced', 'Widowed']
+
+const planetSchema = {
+  type: [{
+    planet: String,
+    degree: Number,
+    sign: String,
+  }],
+  default: [],
+}
+
+const houseDetailSchema = {
+  house1: planetSchema,
+  house2: planetSchema,
+  house3: planetSchema,
+  house4: planetSchema,
+  house5: planetSchema,
+  house6: planetSchema,
+  house7: planetSchema,
+  house8: planetSchema,
+  house9: planetSchema,
+  house10: planetSchema,
+  house11: planetSchema,
+  house12: planetSchema,
+}
+
 const userSchema = new Schema({
   fullName: {
     type: String,
@@ -29,19 +55,27 @@ const userSchema = new Schema({
 
   images: [{ type: String }],
 
+  profileImg: String,
+
   brokerAppointed: {
     type: Schema.Types.ObjectId,
     ref: 'Admin',
   },
 
-  isMarried: {
+  maritalStatus: {
+    type: String,
+    enum: maritalStatus,
+    required: true
+  },
+
+  isMarried: { // true if user alliance is fixed
     type: Boolean,
     default: false,
   },
 
   gender: {
     type: String,
-    enum: ['male', 'female', 'other'],
+    enum: ['Male', 'Female', 'Other'],
   },
 
   dob: {
@@ -49,80 +83,31 @@ const userSchema = new Schema({
     required: true,
   },
 
-  placeOfBirth: {
-    type: String,
+  contactDetails: {
+    mobile: String,
+    address: String,
   },
 
-  nakshatra: {
-    type: String,
+  proffessionalDetails: {
+    qualification: String,
+    salary: Number,
+    work: String,
   },
 
-  rasi: {
-    type: String,
-  },
-
-  lagna: {
-    type: String,
-  },
-
-  qualification: {
-    type: String,
-  },
-
-  work: {
-    type: String,
-  },
-
-  salary: {
-    type: Number,
-  },
-
-  fatherName: {
-    type: String,
-  },
-
-  motherName: {
-    type: String,
-  },
-
-  noOfBrothers: {
-    type: Number,
-  },
-
-  noOfSisters: {
-    type: Number,
-  },
-
-  birthOrder: {
-    type: Number,
-  },
-
-  expectation: {
-    type: String,
-  },
-
-  formalities: {
-    type: String,
-  },
-
-  houseType: {
-    type: String,
-  },
-
-  address: {
-    type: String,
-  },
-
-  dashaPeriod: {
-    type: String,
-  },
-
-  height: {
-    type: String,
-  },
-
-  color: {
-    type: String,
+  familyDetails: {
+    fatherName: String,
+    motherName: String,
+    noOfBrothers: Number,
+    noOfSisters: Number,
+    birthOrder: Number,
+    isFatherAlive: {
+      type: Boolean,
+      default: true,
+    },
+    isMotherAlive: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   approvalStatus: {
@@ -131,9 +116,68 @@ const userSchema = new Schema({
     default: 'pending',
   },
 
-  verifiyOtp: {
-    type: Number
+  verifiyOtp: Number,
+
+  vedicHoroscope: {
+    nakshatra: String,
+    rasi: String,
+    lagna: String,
+    dashaPeriod: String,
+    placeOfBirth: String,
+    timeOfBirth: String,
+    raasiChart: houseDetailSchema,
+    navamsaChart: houseDetailSchema,
+    vedicHoroscopePic: String,
   },
+
+  partnerPreferences: {
+    minAge: Number,
+    maxAge: Number,
+    religion: String,
+    caste: String,
+    salary: Number,
+    qualification: String,
+    work: String,
+    motherTongue: String,
+    location: String,
+    expectation: String,
+    maritalStatus: {
+      type: String,
+      enum: maritalStatus,
+    },
+  },
+
+  otherDetails: {
+    motherTongue: String,
+    houseType: String,
+    height: String,
+    color: String,
+  },
+
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+
+  isBlocked: {
+    type: Boolean,
+    default: false,
+  },
+
+  liked: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+
+  disliked: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+
+  payment: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Payment'
+  }],
 
 }, { timestamps: true })
 
