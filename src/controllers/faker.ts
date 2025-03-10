@@ -2,7 +2,7 @@ import {
   randFullName, randEmail, randPassword, randNumber,
   randPastDate, randPhoneNumber, randStreetAddress,
   randJobTitle, randCompanyName, randWord,
-  randBoolean, randLine, rand,
+  randBoolean, randLine, rand, randAvatar,
 } from "@ngneat/falso";
 
 const gender = ['Male', 'Female', 'Other'];
@@ -41,6 +41,7 @@ const generateRandomUser = () => {
       mobile: randPhoneNumber(),
       address: randStreetAddress(),
     },
+    profileImg: randAvatar(),
     proffessionalDetails: {
       qualification: randWord({ length: 2 }).join(' '),
       salary: randNumber({ min: 30000, max: 150000 }),
@@ -97,4 +98,4 @@ const generateRandomUsers = (count: number) => {
   return users;
 };
 
-export const randomUsers = generateRandomUsers(20)
+export const randomUsers = generateRandomUsers(100)
