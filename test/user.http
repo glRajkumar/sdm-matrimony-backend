@@ -25,12 +25,12 @@ GET {{host}}/matches
 Authorization: {{token}}
 
 
-### getLikesList
-GET {{host}}/likes-list
+### get Like/disLikes List ?limit=4&skip=0&type=disliked
+GET {{host}}/likes-list?type=disliked
 Authorization: {{token}}
 
 
-### addLiked
+### add Like/disLike
 POST {{host}}/addliked
 Authorization: {{token}}
 Content-Type: application/json
@@ -41,13 +41,13 @@ Content-Type: application/json
 }
 
 
-### removeLiked
+### remove Like/disLike
 POST {{host}}/removeliked
 Authorization: {{token}}
 Content-Type: application/json`
 
 {
-  "userId": "673b60ca4b0eef333ff875a3",
+  "userId": "67ce9f504ae2647f21bde5c0",
   "type": "liked"
 }
 

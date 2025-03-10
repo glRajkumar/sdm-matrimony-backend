@@ -4,6 +4,8 @@ import { getCloudinary } from '../utils/index.js';
 import { getFilterObj } from '../utils/user-filter-obj.js';
 import User from '../models/user.js';
 
+const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails otherDetails"
+
 export const imgUpload = async (c: Context) => {
   const user = c.get('user')
   const formData = await c.req.formData()
@@ -56,7 +58,7 @@ export const getMatches = async (c: Context) => {
 
   const filters = getFilterObj({ ...rest, ...payload })
   const getMatches = await User.find(filters)
-    .select('-token -password -liked -disliked -verifiyOtp -role -brokerAppointed -approvalStatus')
+    .select(userSelectFields)
     .limit(numLimit)
     .skip(numSkip)
     .lean()
@@ -72,9 +74,15 @@ export const getLikesList = async (c: Context) => {
   const numSkip = Number(skip || 0)
 
   const list = await User.findOne({ _id })
-    .populate(type, "-token -password -liked -disliked -verifiyOtp -role -brokerAppointed -approvalStatus")
-    .limit(numLimit)
-    .skip(numSkip)
+    .select(type)
+    .populate({
+      path: type,
+      select: userSelectFields,
+      options: {
+        limit: numLimit,
+        skip: numSkip,
+      },
+    })
     .lean()
 
   return c.json(list)
@@ -82,8 +90,11 @@ export const getLikesList = async (c: Context) => {
 
 export const addLiked = async (c: Context) => {
   const { _id } = c.get("user")
-  const { userId, type } = await c.req.json()
-  await User.updateOne({ _id }, { $push: { [type]: userId } })
+  const { userId, type = "liked" } = await c.req.json()
+  const updateObj: any = { $push: { [type]: userId } }
+  const otherType = type === "liked" ? "disliked" : "liked"
+  updateObj.$pull = { [otherType]: userId }
+  await User.updateOne({ _id }, updateObj)
   return c.json({ message: `User added to ${type} list successfully` })
 }
 
