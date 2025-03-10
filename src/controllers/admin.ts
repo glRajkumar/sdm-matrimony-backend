@@ -11,7 +11,7 @@ export async function getUsers(c: Context) {
   const numSkip = Number(skip || 0)
 
   const fullList = await User.find(filters)
-    .select("_id fullName email images gender dob salary")
+    .select("_id fullName email profileImg gender dob maritalStatus proffessionalDetails.salary approvalStatus")
     .limit(numLimit)
     .skip(numSkip)
     .lean()
