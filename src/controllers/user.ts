@@ -32,26 +32,31 @@ export const imgUpload = async (c: Context) => {
   return c.json({ message: 'User image uploaded successfully' })
 }
 
-export const getUsers = async (c: Context) => {
-  const users = await User.find()
-  return c.json(users)
-}
-
 export const getUserDetails = async (c: Context) => {
   const { _id } = c.req.param()
-  const userDetails = await User.findOne({ _id }).select('-token -password')
+  const userDetails = await User.findOne({ _id }).select('-token -password -likes -dislikes -verifiyOtp -role -brokerAppointed -approvalStatus')
   return c.json(userDetails)
 }
 
 export const getMatches = async (c: Context) => {
   const { limit, skip, ...rest } = c.req.query()
-  const filters = getFilterObj(rest)
-
+  const { _id } = c.get("user")
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
 
+  const user = await User.findById(_id).lean()
+  const payload: any = {}
+
+  if (user?.gender === "Male") {
+    payload.gender = ["Female", "Other"]
+  }
+  else if (user?.gender === "Female") {
+    payload.gender = ["Female", "Other"]
+  }
+
+  const filters = getFilterObj({ ...rest, ...payload })
   const getMatches = await User.find(filters)
-    .select('-token -password -role -brokerAppointed -approvalStatus -verifiyOtp')
+    .select('-token -password -likes -dislikes -verifiyOtp -role -brokerAppointed -approvalStatus')
     .limit(numLimit)
     .skip(numSkip)
     .lean()

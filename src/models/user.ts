@@ -152,6 +152,7 @@ const userSchema = new Schema({
     houseType: String,
     height: String,
     color: String,
+    caste: String,
   },
 
   isDeleted: {
