@@ -1,9 +1,9 @@
 @host = http://localhost:5000/api/admin
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzczYzdkOWY5OTljNWNiNWQyM2RiOTIiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NDE0OTQyNjd9.SAxXuIajPOTmT5oN_aah0qpJxKXtbm76yS4p96MNzRQ
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2NlNzE3YTFhNmYwNDkwMTQ5MWM0ZTAiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NDE2ODgzNzB9.npIzsbxzaHpXMNg4rNel5ZHInZQegoBO2Kg-mR7_F9s
 
 
 ### users list ---- skip=6&limit=8&approvalStatus=["pending","rejected"]&ageRange=below_25&salaryRange=20000_30000
-GET {{host}}/users
+GET {{host}}/users?approvalStatus=pending
 Authorization: {{token}}
 
 
@@ -13,6 +13,6 @@ Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "_id": "6773bfda74306db07e6340cb",
+  "_id": "67cec22e3fce9250355851e9",
   "approvalStatus": "approved"
 }

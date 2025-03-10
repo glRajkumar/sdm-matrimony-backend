@@ -34,7 +34,7 @@ export const imgUpload = async (c: Context) => {
 
 export const getUserDetails = async (c: Context) => {
   const { _id } = c.req.param()
-  const userDetails = await User.findOne({ _id }).select('-token -password -likes -dislikes -verifiyOtp -role -brokerAppointed -approvalStatus')
+  const userDetails = await User.findOne({ _id }).select('-token -password -liked -disliked -verifiyOtp -role -brokerAppointed -approvalStatus')
   return c.json(userDetails)
 }
 
@@ -56,10 +56,40 @@ export const getMatches = async (c: Context) => {
 
   const filters = getFilterObj({ ...rest, ...payload })
   const getMatches = await User.find(filters)
-    .select('-token -password -likes -dislikes -verifiyOtp -role -brokerAppointed -approvalStatus')
+    .select('-token -password -liked -disliked -verifiyOtp -role -brokerAppointed -approvalStatus')
     .limit(numLimit)
     .skip(numSkip)
     .lean()
 
   return c.json(getMatches)
+}
+
+export const getLikesList = async (c: Context) => {
+  const { limit, skip, type = 'liked' } = c.req.query()
+  const { _id } = c.get("user")
+
+  const numLimit = Number(limit || 10)
+  const numSkip = Number(skip || 0)
+
+  const list = await User.findOne({ _id })
+    .populate(type, "-token -password -liked -disliked -verifiyOtp -role -brokerAppointed -approvalStatus")
+    .limit(numLimit)
+    .skip(numSkip)
+    .lean()
+
+  return c.json(list)
+}
+
+export const addLiked = async (c: Context) => {
+  const { _id } = c.get("user")
+  const { userId, type } = await c.req.json()
+  await User.updateOne({ _id }, { $push: { [type]: userId } })
+  return c.json({ message: `User added to ${type} list successfully` })
+}
+
+export const removeLiked = async (c: Context) => {
+  const { _id } = c.get("user")
+  const { userId, type } = await c.req.json()
+  await User.updateOne({ _id }, { $pull: { [type]: userId } })
+  return c.json({ message: `User removed from ${type} list successfully` })
 }

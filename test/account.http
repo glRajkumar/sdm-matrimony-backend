@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/account
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2NjMWNkYjA5MWU0YWViNWJmNDA2ZTMiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyIsImV4cCI6MTc0MTUxNjM5MX0.ubWgze0DtZKyaesCBviy-aaTxxd8mQd6PQyNkjSFfmI
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2NlYzIyZTNmY2U5MjUwMzU1ODUxZTkiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyIsImV4cCI6MTc0MTY4OTc5N30.8cvqcRzMNdb1A1bJpnT3TJrqELRTDrstHDSzl4oq-AY
 
 ### register - user
 POST {{host}}/register
@@ -7,7 +7,7 @@ Content-Type: application/json
 
 {
   "fullName": "WhitneyPeterson",
-  "email": "usertrf@gmail.com",
+  "email": "raj@gmail.com",
   "password": "12345678",
   "role": "user",
   "gender": "Male",
@@ -79,7 +79,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "usertrf@gmail.com",
+  "email": "raj@gmail.com",
   "password": "12345678",
   "role": "user"
 }

@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/user
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNiNjBjYTRiMGVlZjMzM2ZmODc1YTMiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyIsImV4cCI6MTczNTcwMjcwNH0.bLikWnZQvW_pTK9ksuQR9-XKE_1ZMgUxBm4QDzCujvE
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2NlYzIyZTNmY2U5MjUwMzU1ODUxZTkiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQiLCJleHAiOjE3NDE2OTgxMTJ9.Xg01ynGPBC8eWJZ9z2817a61rZbjDeR1eETpnyq39JY
 
 
 ### upload img
@@ -21,7 +21,34 @@ Authorization: {{token}}
 
 
 ### getMathces
-GET {{host}}/matches?gender=female
+GET {{host}}/matches
 Authorization: {{token}}
+
+
+### getLikesList
+GET {{host}}/likes-list
+Authorization: {{token}}
+
+
+### addLiked
+POST {{host}}/addliked
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "userId": "67ce9f504ae2647f21bde5c0",
+  "type": "disliked"
+}
+
+
+### removeLiked
+POST {{host}}/removeliked
+Authorization: {{token}}
+Content-Type: application/json`
+
+{
+  "userId": "673b60ca4b0eef333ff875a3",
+  "type": "liked"
+}
 
 
