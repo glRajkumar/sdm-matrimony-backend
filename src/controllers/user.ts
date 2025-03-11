@@ -85,7 +85,8 @@ export const getLikesList = async (c: Context) => {
     })
     .lean()
 
-  return c.json(list)
+  // @ts-ignore
+  return c.json(list?.[type] || [])
 }
 
 export const addLiked = async (c: Context) => {

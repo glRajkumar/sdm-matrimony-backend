@@ -10,7 +10,7 @@ userRoutes.use(authMiddleware)
 userRoutes
   .get('/matches', getMatches)
   .get('/likes-list', getLikesList)
-  .get('/:_id', getUserDetails)
+  .get('/profile/:_id', getUserDetails)
   .post('/addliked', addLiked)
   .post('/removeliked', removeLiked)
   .put('/imgupload', imgUpload)
