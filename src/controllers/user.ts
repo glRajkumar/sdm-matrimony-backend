@@ -46,7 +46,7 @@ export const getMatches = async (c: Context) => {
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
 
-  const user = await User.findById(_id).lean()
+  const user = await User.findById(_id).select("-token -images -verifiyOtp -role -brokerAppointed").lean()
   const payload: any = {}
 
   if (user?.gender === "Male") {
@@ -56,14 +56,44 @@ export const getMatches = async (c: Context) => {
     payload.gender = ["Female", "Other"]
   }
 
-  const filters = getFilterObj({ ...rest, ...payload })
-  const getMatches = await User.find(filters)
-    .select(userSelectFields)
-    .limit(numLimit)
-    .skip(numSkip)
-    .lean()
+  const filters = getFilterObj({ ...rest, ...payload, })
 
-  return c.json(getMatches)
+  const liked = user?.liked || []
+  const disliked = user?.disliked || []
+
+  // const getMatches = await User.find({ ...filters, _id: { $ne: _id } })
+  //   .select(userSelectFields)
+  //   .limit(numLimit)
+  //   .skip(numSkip)
+  //   .lean()
+
+  // const final = getMatches.map(us => ({
+  //   ...us,
+  //   isLiked: liked.includes(us._id),
+  //   isDisliked: disliked.includes(us._id)
+  // }))
+
+
+  const baseFilters = { ...filters, _id: { $ne: _id } }
+  const select = userSelectFields.split(" ").reduce((acc, field) => ({ ...acc, [field]: 1 }), {})
+  const final = await User.aggregate([
+    { $match: baseFilters },
+    { $skip: numSkip },
+    { $limit: numLimit },
+    { $project: select },
+    {
+      $addFields: {
+        isLiked: {
+          $in: ["$_id", liked]
+        },
+        isDisliked: {
+          $in: ["$_id", disliked]
+        }
+      }
+    }
+  ])
+
+  return c.json(final)
 }
 
 export const getLikesList = async (c: Context) => {
