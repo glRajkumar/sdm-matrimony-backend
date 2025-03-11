@@ -1,22 +1,9 @@
 @host = http://localhost:5000/api/user
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2NlYzIyZTNmY2U5MjUwMzU1ODUxZTkiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQiLCJleHAiOjE3NDE2OTgxMTJ9.Xg01ynGPBC8eWJZ9z2817a61rZbjDeR1eETpnyq39JY
-
-
-### upload img
-PUT {{host}}/imgupload
-Authorization: {{token}}
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
-
-------WebKitFormBoundary
-Content-Disposition: form-data; name="file"; filename="1.png"
-Content-Type: image/png
-
-< ./1.png
-------WebKitFormBoundary--
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2NlYzIyZTNmY2U5MjUwMzU1ODUxZTkiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQiLCJleHAiOjE3NDE3ODUxODF9.0FnTpi22R-fMXs_ered0yQdzKvOM3Ox1ArQkgo8Yi4g
 
 
 ### user details
-GET {{host}}/673b60ca4b0eef333ff875a3
+GET {{host}}/profile/67cec22e3fce9250355851e9
 Authorization: {{token}}
 
 
@@ -26,7 +13,7 @@ Authorization: {{token}}
 
 
 ### get Like/disLikes List ?limit=4&skip=0&type=disliked
-GET {{host}}/likes-list?type=disliked
+GET {{host}}/likes-list
 Authorization: {{token}}
 
 
@@ -52,3 +39,24 @@ Content-Type: application/json`
 }
 
 
+### update profile details
+PUT {{host}}/profile
+Authorization: {{token}}
+Content-Type: application/json`
+
+{
+  "fullName": "Raj kumar"
+}
+
+
+### upload img
+PUT {{host}}/imgupload
+Authorization: {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename="1.png"
+Content-Type: image/png
+
+< ./1.png
+------WebKitFormBoundary--
