@@ -36,7 +36,14 @@ export const imgUpload = async (c: Context) => {
 
 export const getUserDetails = async (c: Context) => {
   const { _id } = c.req.param()
-  const userDetails = await User.findOne({ _id }).select('-token -password -liked -disliked -verifiyOtp -role -brokerAppointed -approvalStatus')
+  const user = c.get("user")
+
+  const isAuthorised = user._id.toString() === _id
+  const select = `-token -password -liked -disliked -verifiyOtp -role -brokerAppointed -approvalStatus ${isAuthorised ? "" : "-contactDetails -email -payment"}`.trim()
+  const userDetails = await User.findOne({ _id })
+    .select(select)
+    .lean()
+
   return c.json(userDetails)
 }
 

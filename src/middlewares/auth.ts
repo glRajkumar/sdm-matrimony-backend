@@ -19,7 +19,7 @@ const authMiddleware = createMiddleware(async (c, next) => {
   const tokenIndex = user.token.indexOf(token)
   if (tokenIndex === -1) return c.json({ message: 'Invalid token' }, 401)
 
-  c.set("user", user)
+  c.set("user", { _id, role })
   c.set("token", token)
 
   await next()
