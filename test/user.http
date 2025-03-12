@@ -55,8 +55,12 @@ Authorization: {{token}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
 ------WebKitFormBoundary
-Content-Disposition: form-data; name="file"; filename="1.png"
-Content-Type: image/png
+Content-Disposition: form-data; name="file"; filename="1.jpg"
+Content-Type: image/jpg
 
-< ./1.png
+< ./male.jpg
+------WebKitFormBoundary
+Content-Disposition: form-data; name="isProfilePic"
+
+true
 ------WebKitFormBoundary--

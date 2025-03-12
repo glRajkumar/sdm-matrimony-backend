@@ -125,6 +125,8 @@ export const updateProfile = async (c: Context) => {
 export const imgUpload = async (c: Context) => {
   const user = c.get('user')
   const formData = await c.req.formData()
+
+  const isProfilePic = formData.get("isProfilePic") === "true"
   const file = formData.get("file")
 
   if (!file) return c.json({ message: 'No file uploaded' }, 400)
@@ -145,7 +147,10 @@ export const imgUpload = async (c: Context) => {
     uploadStream.end(nodeBuffer)
   })
 
-  await User.updateOne({ _id: user._id }, { $push: { images: result.url } })
+  await User.updateOne({ _id: user._id }, {
+    $push: { images: result.url },
+    ...(isProfilePic && { profileImg: result.url }),
+  })
 
   return c.json({ message: 'User image uploaded successfully' })
 }
