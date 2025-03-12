@@ -50,7 +50,7 @@ Content-Type: application/json`
 
 
 ### upload profile img
-PUT {{host}}/imgupload
+PUT {{host}}/images
 Authorization: {{token}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
@@ -67,7 +67,7 @@ true
 
 
 ### upload multiple images
-PUT {{host}}/imgupload
+PUT {{host}}/images
 Authorization: {{token}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 

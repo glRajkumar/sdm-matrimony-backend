@@ -107,6 +107,18 @@ Content-Type: application/json
 }
 
 
+### upload register profile img
+POST {{host}}/register-image
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="image"; filename="1.jpg"
+Content-Type: image/jpg
+
+< ./male.jpg
+------WebKitFormBoundary--
+
+
 ### user details
 GET {{host}}/me
 Authorization: {{token}}

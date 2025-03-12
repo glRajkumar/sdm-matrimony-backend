@@ -14,6 +14,6 @@ userRoutes
   .post('/addliked', addLiked)
   .post('/removeliked', removeLiked)
   .put('/profile', updateProfile)
-  .put('/imgupload', imgUpload)
+  .put('/images', imgUpload)
 
 export default userRoutes

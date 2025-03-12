@@ -131,16 +131,16 @@ export const imgUpload = async (c: Context) => {
 
   if (!images || (Array.isArray(images) && images.length === 0)) return c.json({ message: 'No images found' }, 400)
 
-  const uploadResults = await Promise.all(images.map(async (image) => await getImgUrl(image)))
+  const uploadedImages = await Promise.all(images.map(async (image) => await getImgUrl(image)))
 
   const updateQuery: any = {
     $push: {
-      images: { $each: uploadResults }
+      images: { $each: uploadedImages }
     }
   }
 
   if (isProfilePic) {
-    updateQuery.profileImg = uploadResults[0]
+    updateQuery.profileImg = uploadedImages[0]
   }
 
   await User.updateOne({ _id: user._id }, updateQuery)

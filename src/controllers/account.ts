@@ -1,6 +1,6 @@
 import type { Context } from 'hono';
 
-import { generateOtp, getToken } from '../utils/index.js';
+import { generateOtp, getImgUrl, getToken } from '../utils/index.js';
 import { comparePasswords, hashPassword } from "../utils/password.js";
 // import transporter from '../utils/transporter.js';
 
@@ -99,6 +99,18 @@ export async function resetPass(c: Context) {
   await user.save()
 
   return c.json({ message: "Password reseted successfully" })
+}
+
+export const imgUpload = async (c: Context) => {
+  const formData = await c.req.formData()
+
+  const image = formData.get("image")
+
+  if (!image) return c.json({ message: 'No images found' }, 400)
+
+  const url = await getImgUrl(image)
+
+  return c.json({ url })
 }
 
 export const me = async (c: Context) => {
