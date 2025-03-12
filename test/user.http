@@ -49,13 +49,13 @@ Content-Type: application/json`
 }
 
 
-### upload img
+### upload profile img
 PUT {{host}}/imgupload
 Authorization: {{token}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
 ------WebKitFormBoundary
-Content-Disposition: form-data; name="file"; filename="1.jpg"
+Content-Disposition: form-data; name="images"; filename="1.jpg"
 Content-Type: image/jpg
 
 < ./male.jpg
@@ -64,3 +64,23 @@ Content-Disposition: form-data; name="isProfilePic"
 
 true
 ------WebKitFormBoundary--
+
+
+### upload multiple images
+PUT {{host}}/imgupload
+Authorization: {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="images"; filename="1.jpg"
+Content-Type: image/jpg
+
+< ./male.jpg
+------WebKitFormBoundary
+Content-Disposition: form-data; name="images"; filename="2.jpg"
+Content-Type: image/jpg
+
+< ./female.jpg
+------WebKitFormBoundary--
+
+

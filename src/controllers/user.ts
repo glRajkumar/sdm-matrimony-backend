@@ -1,7 +1,7 @@
 import type { Context } from 'hono';
 
-import { getCloudinary } from '../utils/index.js';
 import { getFilterObj } from '../utils/user-filter-obj.js';
+import { getImgUrl } from '../utils/index.js';
 import User from '../models/user.js';
 
 const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails otherDetails"
@@ -127,30 +127,23 @@ export const imgUpload = async (c: Context) => {
   const formData = await c.req.formData()
 
   const isProfilePic = formData.get("isProfilePic") === "true"
-  const file = formData.get("file")
+  const images = formData.getAll("images")
 
-  if (!file) return c.json({ message: 'No file uploaded' }, 400)
+  if (!images || (Array.isArray(images) && images.length === 0)) return c.json({ message: 'No images found' }, 400)
 
-  const buffer = await (file as Blob).arrayBuffer()
-  const nodeBuffer = Buffer.from(buffer)
+  const uploadResults = await Promise.all(images.map(async (image) => await getImgUrl(image)))
 
-  const cloudinary = getCloudinary()
-  const result: any = await new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      { folder: 'my_uploads' },
-      (error: any, result: any) => {
-        if (error) reject(error)
-        else resolve(result)
-      }
-    )
+  const updateQuery: any = {
+    $push: {
+      images: { $each: uploadResults }
+    }
+  }
 
-    uploadStream.end(nodeBuffer)
-  })
+  if (isProfilePic) {
+    updateQuery.profileImg = uploadResults[0]
+  }
 
-  await User.updateOne({ _id: user._id }, {
-    $push: { images: result.url },
-    ...(isProfilePic && { profileImg: result.url }),
-  })
+  await User.updateOne({ _id: user._id }, updateQuery)
 
   return c.json({ message: 'User image uploaded successfully' })
 }
