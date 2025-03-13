@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 
-import { getUsers, updateApproval } from '../controllers/admin.js';
+import { createUsers, getUsers, updateUser } from '../controllers/admin.js';
 import authMiddleware from '../middlewares/auth.js';
 import roleCheck from '../middlewares/role-check.js';
 
@@ -11,6 +11,7 @@ adminRoutes.use(roleCheck(["admin"]))
 
 adminRoutes
   .get('/users', getUsers)
-  .put('/approval', updateApproval)
+  .post('/users', createUsers)
+  .put('/user', updateUser)
 
 export default adminRoutes

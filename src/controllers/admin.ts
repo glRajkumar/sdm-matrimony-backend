@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 
 import { getFilterObj } from "../utils/user-filter-obj.js";
+import { hashPassword } from "../utils/password.js";
 import User from "../models/user.js";
 
 export async function getUsers(c: Context) {
@@ -19,13 +20,50 @@ export async function getUsers(c: Context) {
   return c.json(fullList)
 }
 
-export async function updateApproval(c: Context) {
-  const { _id, approvalStatus } = await c.req.json()
+export async function createUsers(c: Context) {
+  // const users = await c.req.json()
 
-  await User.updateOne(
-    { _id },
-    { $set: { approvalStatus } }
-  )
+  // const payload = await Promise.all(users.map(async (user: any) => {
+  //   const hashedPass = await hashPassword(user.password)
+  //   return {
+  //     ...user,
+  //     password: hashedPass,
+  //     approvalStatus: "approved",
+  //   }
+  // }))
 
-  return c.json({ message: "Status updated successfully" })
+  // await User.insertMany(payload)
+
+  // return c.json({ message: "Status updated successfully" })
+
+  const users = await c.req.json()
+  const results = []
+
+  for (const user of users) {
+    try {
+      const hashedPass = await hashPassword(user.password)
+      const newUser = new User({
+        ...user,
+        password: hashedPass,
+        approvalStatus: "approved",
+      })
+
+      const savedUser = await newUser.save()
+
+      results.push({ _id: savedUser._id, email: savedUser.email, error: null })
+
+    } catch (error: any) {
+      results.push({ _id: null, email: user.email, error: error.message })
+    }
+  }
+
+  return c.json({ results })
+}
+
+export async function updateUser(c: Context) {
+  const { _id, ...rest } = await c.req.json()
+
+  await User.updateOne({ _id }, rest)
+
+  return c.json({ message: "User details updated successfully" })
 }
