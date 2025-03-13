@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/account
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2NlYzIyZTNmY2U5MjUwMzU1ODUxZTkiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQiLCJleHAiOjE3NDE3ODUxODF9.0FnTpi22R-fMXs_ered0yQdzKvOM3Ox1ArQkgo8Yi4g
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2QyYTIxN2ZkMTIwYTZkNmRjMTRmYTYiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyIsImV4cCI6MTc0MTk0Mzc2N30.9JgkB6OjYK5DcAX3Lcr8O7Tl3d0woB-ur5DZrozJH5s
 
 ### register - user
 POST {{host}}/register
@@ -74,12 +74,23 @@ Content-Type: application/json
 }
 
 
-### login
+### admin login
 POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "raj@gmail.com",
+  "email": "admin@gmail.com",
+  "password": "12345678",
+  "role": "admin"
+}
+
+
+### user login
+POST {{host}}/login
+Content-Type: application/json
+
+{
+  "email": "raj2@gmail.com",
   "password": "12345678",
   "role": "user"
 }
@@ -117,6 +128,11 @@ Content-Type: image/jpg
 
 < ./male.jpg
 ------WebKitFormBoundary--
+
+
+### user details
+GET {{host}}/check-approval-status
+Authorization: {{token}}
 
 
 ### user details

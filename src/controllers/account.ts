@@ -113,6 +113,46 @@ export const imgUpload = async (c: Context) => {
   return c.json({ url })
 }
 
+export const approvalStatusRefresh = async (c: Context) => {
+  const { role, _id } = c.get('user')
+  const token = c.get("token")
+
+  const Model = role === "user" ? User : Admin
+  const user = await (Model as any).findOne({ _id })
+  if (!user) return c.json({ message: 'Cannot find user in db' }, 401)
+
+  if (user.approvalStatus === "pending") {
+    return c.json({ message: "Account not approved yet" }, 400)
+  }
+
+  if (user.approvalStatus === "rejected") {
+    return c.json({ message: "Account rejected" }, 400)
+  }
+
+  const payload: any = { _id: user._id.toString(), role: user.role }
+  if (payload.role === "user") {
+    payload.approvalStatus = user.approvalStatus
+  }
+  const newToken = await getToken(payload)
+  user.token = user.token.filter((t: string) => t !== token).concat(newToken)
+  await user.save()
+
+  const output: any = {
+    token: newToken,
+    _id: user?._id,
+    email: user?.email,
+    fullName: user?.fullName,
+    role: user?.role,
+    approvalStatus: user?.approvalStatus,
+  }
+
+  if (role === "user") {
+    output.gender = user?.gender
+  }
+
+  return c.json(output)
+}
+
 export const me = async (c: Context) => {
   const user = c.get('user')
   const Model = user?.role === "user" ? User : Admin
