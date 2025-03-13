@@ -40,10 +40,12 @@ export function getFilterObj(obj: Record<string, any>) {
 
   if (isBlocked) {
     filter.isBlocked = isBlocked
+    delete filter.approvalStatus
   }
 
   if (isDeleted) {
     filter.isDeleted = isDeleted
+    delete filter.approvalStatus
   }
 
   if (maritalStatus) {
