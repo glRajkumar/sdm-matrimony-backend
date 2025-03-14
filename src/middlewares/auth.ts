@@ -8,19 +8,17 @@ const authMiddleware = createMiddleware(async (c, next) => {
   const token = c.req.header("Authorization")?.replace('Bearer ', '')
   if (!token) return c.json({ message: 'No token provided' }, 400)
 
-  const payload = await verifyToken(token)
-  const role = payload.role
-  const _id = payload._id
+  const { _id, role, type } = await verifyToken(token, "access_token")
+
+  if (type !== "access") return c.json({ message: 'Invalid token' }, 400)
 
   const Model = role === "user" ? User : Admin
-  const user = await (Model as any).findById(_id).select("_id role token").lean()
+  const user = await (Model as any).findById(_id).select("_id role isBlocked isDeleted").lean()
   if (!user) return c.json({ message: 'User not found' }, 400)
 
-  const tokenIndex = user.token.indexOf(token)
-  if (tokenIndex === -1) return c.json({ message: 'Invalid token' }, 401)
+  if (user.role === "user" && (user.isDeleted || user.isBlocked)) return c.json({ message: 'Access denied' }, 400)
 
   c.set("user", { _id, role })
-  c.set("token", token)
 
   await next()
 })

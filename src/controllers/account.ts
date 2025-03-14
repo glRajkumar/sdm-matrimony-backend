@@ -1,6 +1,7 @@
 import type { Context } from 'hono';
+import { getCookie, setCookie, deleteCookie } from 'hono/cookie';
 
-import { generateOtp, getImgUrl, getToken } from '../utils/index.js';
+import { env, generateOtp, getImgUrl, getToken, verifyToken } from '../utils/index.js';
 import { comparePasswords, hashPassword } from "../utils/password.js";
 // import transporter from '../utils/transporter.js';
 
@@ -37,16 +38,20 @@ export const login = async (c: Context) => {
   if (payload.role === "user") {
     payload.approvalStatus = user.approvalStatus
   }
-  const newToken = await getToken(payload)
-  user.token = user.token.concat(newToken)
+
+  const refresh_token = await getToken(payload, "refresh_token")
+  const access_token = await getToken(payload, "access_token")
+
+  user.refreshTokens = user.refreshTokens.concat(refresh_token)
   await user.save()
 
   const output: any = {
-    token: newToken,
+    access_token,
+    refresh_token,
     _id: user?._id,
+    role: user?.role,
     email: user?.email,
     fullName: user?.fullName,
-    role: user?.role,
     approvalStatus: user?.approvalStatus,
   }
 
@@ -54,7 +59,41 @@ export const login = async (c: Context) => {
     output.gender = user?.gender
   }
 
+  setCookie(c, "refresh_token", refresh_token, {
+    httpOnly: true,
+    sameSite: "Lax",
+    secure: env.NODE_ENV === 'production',
+    maxAge: 60 * 60 * 24 * 7,
+  })
+
   return c.json(output)
+}
+
+export async function accessToken(c: Context) {
+  const refresh_token = getCookie(c, 'refresh_token')
+
+  if (!refresh_token) return c.json({ message: 'Refresh token is required' }, 400)
+
+  const { _id, role, type } = await verifyToken(refresh_token, "refresh_token")
+
+  if (type !== "refresh") return c.json({ message: 'Invalid token' }, 400)
+
+  const Model = role === "user" ? User : Admin
+
+  const user = await (Model as any).findOne({ _id, refreshTokens: refresh_token })
+    .select("_id role approvalStatus")
+    .lean()
+
+  if (!user) return c.json({ message: 'Invalid refresh token or User not found' }, 400)
+
+  const payload: any = { _id: user._id.toString(), role: user.role }
+  if (payload.role === "user") {
+    payload.approvalStatus = user.approvalStatus
+  }
+
+  const access_token = await getToken(payload, "access_token")
+
+  return c.json({ access_token })
 }
 
 export async function forgetPass(c: Context) {
@@ -115,7 +154,6 @@ export const imgUpload = async (c: Context) => {
 
 export const approvalStatusRefresh = async (c: Context) => {
   const { role, _id } = c.get('user')
-  const token = c.get("token")
 
   const Model = role === "user" ? User : Admin
   const user = await (Model as any).findOne({ _id })
@@ -133,16 +171,20 @@ export const approvalStatusRefresh = async (c: Context) => {
   if (payload.role === "user") {
     payload.approvalStatus = user.approvalStatus
   }
-  const newToken = await getToken(payload)
-  user.token = user.token.filter((t: string) => t !== token).concat(newToken)
+
+  const refresh_token = await getToken(payload, "refresh_token")
+  const access_token = await getToken(payload, "access_token")
+
+  user.refreshTokens = [refresh_token]
   await user.save()
 
   const output: any = {
-    token: newToken,
+    access_token,
+    refresh_token,
     _id: user?._id,
+    role: user?.role,
     email: user?.email,
     fullName: user?.fullName,
-    role: user?.role,
     approvalStatus: user?.approvalStatus,
   }
 
@@ -156,15 +198,18 @@ export const approvalStatusRefresh = async (c: Context) => {
 export const me = async (c: Context) => {
   const user = c.get('user')
   const Model = user?.role === "user" ? User : Admin
-  const userDetail = await (Model as any).findById(user._id).select("-password -token -__v").lean()
+  const userDetail = await (Model as any).findById(user._id).select("-password -refreshTokens -__v").lean()
   return c.json(userDetail)
 }
 
 export const logout = async (c: Context) => {
   const user = c.get('user')
-  const token = c.get('token')
+  const refresh_token = getCookie(c, "refresh_token")
 
   const Model = user?.role === "user" ? User : Admin
-  await Model.updateOne({ _id: user._id }, { $pull: { token } })
+  await Model.updateOne({ _id: user._id }, {
+    $pull: { refreshTokens: refresh_token }
+  })
+  deleteCookie(c, "refresh_token")
   return c.json({ message: 'User logged out successfully' })
 }

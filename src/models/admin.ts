@@ -25,7 +25,7 @@ const adminSchema = new Schema({
     required: [true, 'Password is required'],
   },
 
-  token: [{ type: String }],
+  refreshTokens: [{ type: String }],
 
   address: {
     type: String,

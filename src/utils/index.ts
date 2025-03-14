@@ -5,10 +5,14 @@ import 'dotenv/config';
 
 export const env = {
   MONGODB_URL: process.env.MONGODB_URL || "",
-  JWT_SECRET: process.env.JWT_SECRET || "",
+
+  ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || "",
+  REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || "",
+
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || "",
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || "",
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || "",
+
   NODE_ENV: process.env.NODE_ENV || "",
 }
 
@@ -18,18 +22,27 @@ export function generateOtp() {
   return otp
 }
 
-export async function getToken(data: Record<string, string | number | boolean>) {
+type token_types = "access_token" | "refresh_token"
+export async function getToken(data: Record<string, string | number | boolean>, type: token_types) {
+  const isAccessToken = type === "access_token"
+  const secret = isAccessToken ? env.ACCESS_TOKEN_SECRET : env.REFRESH_TOKEN_SECRET
+
   const payload = {
+    exp: isAccessToken
+      ? Math.floor(Date.now() / 1000) + (60 * 30) // 30 min
+      : Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7), // 7 days
+    type: isAccessToken ? "access" : "refresh",
     ...data,
-    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 1),
   }
-  const secret = env.JWT_SECRET
-  const newToken = await sign(payload, secret)
-  return newToken
+
+  return await sign(payload, secret)
 }
 
-export async function verifyToken(token: string) {
-  return verify(token, env.JWT_SECRET)
+export async function verifyToken(token: string, type: token_types) {
+  const isAccessToken = type === "access_token"
+  const secret = isAccessToken ? env.ACCESS_TOKEN_SECRET : env.REFRESH_TOKEN_SECRET
+
+  return verify(token, secret)
 }
 
 export function getCloudinary() {

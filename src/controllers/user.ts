@@ -11,7 +11,7 @@ export const getUserDetails = async (c: Context) => {
   const user = c.get("user")
 
   const isAuthorised = user._id.toString() === _id
-  const select = `-token -password -liked -disliked -verifiyOtp -role -brokerAppointed -approvalStatus ${isAuthorised ? "" : "-contactDetails -email -payment"}`.trim()
+  const select = `-refreshTokens -password -liked -disliked -verifiyOtp -role -brokerAppointed -approvalStatus ${isAuthorised ? "" : "-contactDetails -email -payment"}`.trim()
   const userDetails = await User.findOne({ _id })
     .select(select)
     .lean()
@@ -25,7 +25,7 @@ export const getMatches = async (c: Context) => {
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
 
-  const user = await User.findById(_id).select("-token -images -verifiyOtp -role -brokerAppointed").lean()
+  const user = await User.findById(_id).select("-refreshTokens -images -verifiyOtp -role -brokerAppointed").lean()
   const payload: any = {}
 
   if (user?.gender === "Male") {

@@ -1,5 +1,6 @@
 @host = http://localhost:5000/api/account
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2QyYTIxN2ZkMTIwYTZkNmRjMTRmYTYiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyIsImV4cCI6MTc0MTk0Mzc2N30.9JgkB6OjYK5DcAX3Lcr8O7Tl3d0woB-ur5DZrozJH5s
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDE5NTU1ODMsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q0MDI4NTM1MjdkZjgyZGMzNzI2OTUiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyJ9.4jJpymLC9Dw69UsH9z0HP7UgchbSSunjenFqFx465HU
+
 
 ### register - user
 POST {{host}}/register
@@ -7,7 +8,7 @@ Content-Type: application/json
 
 {
   "fullName": "WhitneyPeterson",
-  "email": "raj@gmail.com",
+  "email": "raj7@gmail.com",
   "password": "12345678",
   "role": "user",
   "gender": "Male",
@@ -79,7 +80,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "admin@gmail.com",
+  "email": "admin1@gmail.com",
   "password": "12345678",
   "role": "admin"
 }
@@ -90,10 +91,14 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "raj3@gmail.com",
-  "password": "12345678",
-  "role": "user"
+  "email": "raj7@gmail.com",
+  "password": "12345678"
 }
+
+
+### get access token using refresh token
+POST {{host}}/access-token
+Content-Type: application/json
 
 
 ### forget password
