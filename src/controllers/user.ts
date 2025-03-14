@@ -116,9 +116,12 @@ export const removeLiked = async (c: Context) => {
 }
 
 export const updateProfile = async (c: Context) => {
-  const { _id } = c.get("user")
+  const user = c.get("user")
   const payload = await c.req.json()
+
+  const _id = user.role === "admin" ? payload._id : user._id
   await User.updateOne({ _id }, payload)
+
   return c.json({ message: "User details updated successfully" })
 }
 
@@ -143,7 +146,8 @@ export const imgUpload = async (c: Context) => {
     updateQuery.profileImg = uploadedImages[0]
   }
 
-  await User.updateOne({ _id: user._id }, updateQuery)
+  const _id = user.role === "admin" ? formData.get("_id") : user._id
+  await User.updateOne({ _id }, updateQuery)
 
   return c.json({ message: 'User image uploaded successfully' })
 }
