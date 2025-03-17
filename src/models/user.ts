@@ -150,6 +150,7 @@ const userSchema = new Schema({
   otherDetails: {
     motherTongue: String,
     houseType: String,
+    religion: String,
     height: String,
     color: String,
     caste: String,
