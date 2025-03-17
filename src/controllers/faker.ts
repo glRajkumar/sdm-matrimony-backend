@@ -5,14 +5,10 @@ import {
   randBoolean, randLine, rand, randAvatar,
 } from "@ngneat/falso";
 
-const gender = ['Male', 'Female', 'Other'];
-const approvalStatus = ['pending', 'approved', 'rejected'];
-const maritalStatus = ['Single', 'Divorced', 'Widowed'];
-const nakshatra = ['Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashira', 'Ardra', 'Punarvasu', 'Pushya', 'Ashlesha', 'Magha', 'Purva Phalguni', 'Uttara Phalguni', 'Hasta', 'Chitra', 'Swati', 'Vishakha', 'Anuradha', 'Jyeshtha', 'Mula', 'Purva Ashadha', 'Uttara Ashadha', 'Shravana', 'Dhanishta', 'Shatabhisha', 'Purva Bhadrapada', 'Uttara Bhadrapada', 'Revati'];
-const planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'];
-const raasi = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
-const castes = ['Brahmin', 'Kshatriya', 'Vaishya', 'Shudra', "Muthaliyar", "Vannear", "Nadar"];
-const religions = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Jain', 'Buddhism', 'Zoroastrianism', 'Parsi', 'Jewish', 'Bahaism', 'Other'];
+import {
+  approvalStatus, maritalStatus, gender,
+  nakshatra, planets, raasi, castes, religions
+} from '../utils/index.js';
 
 const generatePlanetData = () => {
   return {
