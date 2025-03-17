@@ -1,8 +1,10 @@
 import type { Context } from 'hono';
 import { getCookie, setCookie, deleteCookie } from 'hono/cookie';
 
-import { env, generateOtp, getImgUrl, getToken, verifyToken, comparePasswords, hashPassword, tokenEnums, tokenValidity } from '../utils/index.js';
-// import transporter from '../utils/transporter.js';
+import {
+  env, generateOtp, getImgUrl, getToken, verifyToken,
+  comparePasswords, hashPassword, tokenEnums, tokenValidity,
+} from '../utils/index.js';
 
 import Admin from '../models/admin.js';
 import User from '../models/user.js';
