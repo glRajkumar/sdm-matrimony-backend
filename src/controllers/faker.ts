@@ -11,6 +11,8 @@ const maritalStatus = ['Single', 'Divorced', 'Widowed'];
 const nakshatra = ['Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashira', 'Ardra', 'Punarvasu', 'Pushya', 'Ashlesha', 'Magha', 'Purva Phalguni', 'Uttara Phalguni', 'Hasta', 'Chitra', 'Swati', 'Vishakha', 'Anuradha', 'Jyeshtha', 'Mula', 'Purva Ashadha', 'Uttara Ashadha', 'Shravana', 'Dhanishta', 'Shatabhisha', 'Purva Bhadrapada', 'Uttara Bhadrapada', 'Revati'];
 const planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'];
 const raasi = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+const castes = ['Brahmin', 'Kshatriya', 'Vaishya', 'Shudra', "Muthaliyar", "Vannear", "Nadar"];
+const religions = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Jain', 'Buddhism', 'Zoroastrianism', 'Parsi', 'Jewish', 'Bahaism', 'Other'];
 
 const generatePlanetData = () => {
   return {
@@ -86,6 +88,8 @@ const generateRandomUser = () => {
       houseType: rand(['Own', 'Lease', 'Rental']),
       height: randNumber({ min: 150, max: 200 }),
       color: randWord(),
+      caste: rand(castes),
+      religion: rand(religions),
     },
   };
 };

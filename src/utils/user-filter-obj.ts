@@ -11,7 +11,11 @@ function strOrArr(by: string, possibleLen: number) {
 }
 
 export function getFilterObj(obj: Record<string, any>) {
-  const { gender, isMarried, salaryRange, ageRange, approvalStatus, rasi, lagna, maritalStatus, isBlocked, isDeleted } = obj
+  const {
+    gender, isMarried, salaryRange, ageRange, approvalStatus,
+    rasi, lagna, maritalStatus, isBlocked, isDeleted,
+    caste, religion, minAge, maxAge
+  } = obj
 
   const filter: any = {
     role: 'user',
@@ -109,6 +113,38 @@ export function getFilterObj(obj: Record<string, any>) {
     if (lagnaFilter) {
       filter.vedicHoroscope.lagna = lagnaFilter
     }
+  }
+
+  if (caste) {
+    const casteFilter = strOrArr(caste, 100)
+    if (casteFilter) {
+      filter.otherDetails.caste = casteFilter
+    }
+  }
+
+  if (religion) {
+    const religionFilter = strOrArr(religion, 100)
+    if (religionFilter) {
+      filter.otherDetails.religion = religionFilter
+    }
+  }
+
+  if (minAge) {
+    const currentDate = new Date()
+    const currYear = currentDate.getFullYear()
+    const currMonth = currentDate.getMonth()
+    const currDate = currentDate.getDate()
+
+    filter.dob = { $gte: new Date(currYear - minAge, currMonth, currDate) }
+  }
+
+  if (maxAge) {
+    const currentDate = new Date()
+    const currYear = currentDate.getFullYear()
+    const currMonth = currentDate.getMonth()
+    const currDate = currentDate.getDate()
+
+    filter.dob = { $lte: new Date(currYear - maxAge, currMonth, currDate) }
   }
 
   return filter
