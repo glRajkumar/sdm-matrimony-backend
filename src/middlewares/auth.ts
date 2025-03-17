@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory';
 
-import { verifyToken } from '../utils/index.js';
+import { tokenEnums, verifyToken } from '../utils/index.js';
 import Admin from '../models/admin.js';
 import User from '../models/user.js';
 
@@ -8,7 +8,7 @@ const authMiddleware = createMiddleware(async (c, next) => {
   const token = c.req.header("Authorization")?.replace('Bearer ', '')
   if (!token) return c.json({ message: 'No token provided' }, 400)
 
-  const { _id, role, type } = await verifyToken(token, "access_token")
+  const { _id, role, type } = await verifyToken(token, tokenEnums.accessToken)
 
   if (type !== "access") return c.json({ message: 'Invalid token' }, 400)
 

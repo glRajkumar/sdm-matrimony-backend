@@ -1,15 +1,16 @@
 import { sign, verify } from "hono/jwt";
-import { env } from "./enums.js";
 
-type token_types = "access_token" | "refresh_token"
+import { env, tokenEnums, tokenValidity } from "./enums.js";
+
+type token_types = (typeof tokenEnums)[keyof typeof tokenEnums]
 export async function getToken(data: Record<string, string | number | boolean>, type: token_types) {
-  const isAccessToken = type === "access_token"
+  const isAccessToken = type === tokenEnums.accessToken
   const secret = isAccessToken ? env.ACCESS_TOKEN_SECRET : env.REFRESH_TOKEN_SECRET
 
   const payload = {
     exp: isAccessToken
-      ? Math.floor(Date.now() / 1000) + (60 * 30) // 30 min
-      : Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7), // 7 days
+      ? Math.floor(Date.now() / 1000) + tokenValidity.accessToken
+      : Math.floor(Date.now() / 1000) + tokenValidity.refreshToken,
     type: isAccessToken ? "access" : "refresh",
     ...data,
   }

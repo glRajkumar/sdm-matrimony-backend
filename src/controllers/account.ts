@@ -1,7 +1,7 @@
 import type { Context } from 'hono';
 import { getCookie, setCookie, deleteCookie } from 'hono/cookie';
 
-import { env, generateOtp, getImgUrl, getToken, verifyToken, comparePasswords, hashPassword } from '../utils/index.js';
+import { env, generateOtp, getImgUrl, getToken, verifyToken, comparePasswords, hashPassword, tokenEnums, tokenValidity } from '../utils/index.js';
 // import transporter from '../utils/transporter.js';
 
 import Admin from '../models/admin.js';
@@ -38,8 +38,8 @@ export const login = async (c: Context) => {
     payload.approvalStatus = user.approvalStatus
   }
 
-  const refresh_token = await getToken(payload, "refresh_token")
-  const access_token = await getToken(payload, "access_token")
+  const refresh_token = await getToken(payload, tokenEnums.refreshToken)
+  const access_token = await getToken(payload, tokenEnums.accessToken)
 
   user.refreshTokens = user.refreshTokens.concat(refresh_token)
   await user.save()
@@ -57,22 +57,22 @@ export const login = async (c: Context) => {
     output.gender = user?.gender
   }
 
-  setCookie(c, "refresh_token", refresh_token, {
+  setCookie(c, tokenEnums.refreshToken, refresh_token, {
     httpOnly: true,
     sameSite: "Lax",
     secure: env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: tokenValidity.refreshToken,
   })
 
   return c.json(output)
 }
 
 export async function accessToken(c: Context) {
-  const refresh_token = getCookie(c, 'refresh_token')
+  const refresh_token = getCookie(c, tokenEnums.refreshToken)
 
   if (!refresh_token) return c.json({ message: 'Refresh token is required' }, 400)
 
-  const { _id, role, type } = await verifyToken(refresh_token, "refresh_token")
+  const { _id, role, type } = await verifyToken(refresh_token, tokenEnums.refreshToken)
 
   if (type !== "refresh") return c.json({ message: 'Invalid token' }, 400)
 
@@ -89,7 +89,7 @@ export async function accessToken(c: Context) {
     payload.approvalStatus = user.approvalStatus
   }
 
-  const access_token = await getToken(payload, "access_token")
+  const access_token = await getToken(payload, tokenEnums.accessToken)
 
   return c.json({ access_token })
 }
@@ -170,15 +170,14 @@ export const approvalStatusRefresh = async (c: Context) => {
     payload.approvalStatus = user.approvalStatus
   }
 
-  const refresh_token = await getToken(payload, "refresh_token")
-  const access_token = await getToken(payload, "access_token")
+  const refresh_token = await getToken(payload, tokenEnums.refreshToken)
+  const access_token = await getToken(payload, tokenEnums.accessToken)
 
   user.refreshTokens = [refresh_token]
   await user.save()
 
   const output: any = {
     access_token,
-    refresh_token,
     _id: user?._id,
     role: user?.role,
     email: user?.email,
@@ -189,6 +188,13 @@ export const approvalStatusRefresh = async (c: Context) => {
   if (role === "user") {
     output.gender = user?.gender
   }
+
+  setCookie(c, tokenEnums.refreshToken, refresh_token, {
+    httpOnly: true,
+    sameSite: "Lax",
+    secure: env.NODE_ENV === 'production',
+    maxAge: tokenValidity.refreshToken,
+  })
 
   return c.json(output)
 }
@@ -202,12 +208,13 @@ export const me = async (c: Context) => {
 
 export const logout = async (c: Context) => {
   const user = c.get('user')
-  const refresh_token = getCookie(c, "refresh_token")
+  const refresh_token = getCookie(c, tokenEnums.refreshToken)
 
   const Model = user?.role === "user" ? User : Admin
   await Model.updateOne({ _id: user._id }, {
     $pull: { refreshTokens: refresh_token }
   })
-  deleteCookie(c, "refresh_token")
+
+  deleteCookie(c, tokenEnums.refreshToken)
   return c.json({ message: 'User logged out successfully' })
 }
