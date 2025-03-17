@@ -1,8 +1,7 @@
 import type { Context } from 'hono';
 import { getCookie, setCookie, deleteCookie } from 'hono/cookie';
 
-import { env, generateOtp, getImgUrl, getToken, verifyToken } from '../utils/index.js';
-import { comparePasswords, hashPassword } from "../utils/password.js";
+import { env, generateOtp, getImgUrl, getToken, verifyToken, comparePasswords, hashPassword } from '../utils/index.js';
 // import transporter from '../utils/transporter.js';
 
 import Admin from '../models/admin.js';
@@ -47,7 +46,6 @@ export const login = async (c: Context) => {
 
   const output: any = {
     access_token,
-    refresh_token,
     _id: user?._id,
     role: user?.role,
     email: user?.email,

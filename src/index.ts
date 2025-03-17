@@ -2,7 +2,7 @@ import { serve } from '@hono/node-server';
 
 import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
-// import { csrf } from 'hono/csrf';
+import { csrf } from 'hono/csrf';
 import { Hono } from 'hono';
 
 import accountRoutes from './routes/account.js';
@@ -11,12 +11,13 @@ import fakerRoutes from './routes/faker.js';
 import userRoutes from './routes/user.js';
 
 import connectDb from './lib/connect-db.js';
+import { env } from './utils/enums.js';
 
 const app = new Hono().basePath("api")
 
 app.use(logger())
-app.use(cors())
-// app.use(csrf())
+app.use(cors({ origin: env.FRONTEND_URL, credentials: true }))
+app.use(csrf({ origin: env.FRONTEND_URL }))
 
 await connectDb()
 

@@ -1,12 +1,10 @@
 import nodemailer from 'nodemailer';
-import 'dotenv/config';
+import { env } from './enums.js';
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.GMAIL_ID,
-    pass: process.env.GMAIL_PASS
+    user: env.GMAIL_ID,
+    pass: env.GMAIL_PASS
   }
 })
-
-export default transporter

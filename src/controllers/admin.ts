@@ -1,7 +1,6 @@
 import type { Context } from "hono";
 
-import { getFilterObj } from "../utils/user-filter-obj.js";
-import { hashPassword } from "../utils/password.js";
+import { hashPassword, getFilterObj } from "../utils/index.js";
 import User from "../models/user.js";
 
 export async function getUsers(c: Context) {

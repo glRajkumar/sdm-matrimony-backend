@@ -1,7 +1,6 @@
 import type { Context } from 'hono';
 
-import { getFilterObj } from '../utils/user-filter-obj.js';
-import { getImgUrl } from '../utils/index.js';
+import { getImgUrl, getFilterObj } from '../utils/index.js';
 import User from '../models/user.js';
 
 const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails otherDetails"
