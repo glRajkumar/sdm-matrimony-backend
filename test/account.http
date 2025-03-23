@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/account
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDE5NTU1ODMsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q0MDI4NTM1MjdkZjgyZGMzNzI2OTUiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyJ9.4jJpymLC9Dw69UsH9z0HP7UgchbSSunjenFqFx465HU
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI3MDg3MDUsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q3ZWYyMjBiMzhlZDFiOWY5Mjk3YTYiLCJyb2xlIjoiYWRtaW4ifQ.Hkbuqg4wP8ofei0r_phxv2W13JR1s4teD5iK-FZ97YQ
 
 
 ### register - user
@@ -7,17 +7,19 @@ POST {{host}}/register
 Content-Type: application/json
 
 {
-  "fullName": "WhitneyPeterson",
-  "email": "raj7@gmail.com",
+  "fullName": "Raj kumar",
+  "email": "raj@gmail.com",
   "password": "12345678",
   "role": "user",
   "gender": "Male",
-  "dob": "1950-07-16T12:22:00.000Z",
+  "dob": "1999-07-16T12:22:00.000Z",
   "maritalStatus": "Single",
   "proffessionalDetails":{
-    "qualification": "bcom",
-    "salary": 80030,
-    "work": "education"
+    "highestQualification": "Master's",
+    "qualifications": "B.Com, M.Com",
+    "companyName": "TCS",
+    "profession": "Software Engineer",
+    "salary": 80030
   },
   "contactDetails":{
     "mobile": "1234567890",
@@ -50,9 +52,7 @@ Content-Type: application/json
     }
   },
   "partnerExpectation": {
-    "maritalStatus": "Single",
-    "qualification": "bcom",
-    "work": "education"
+    "maritalStatus": "Single"
   },
   "otherDetails": {
     "houseType": "own",
@@ -80,7 +80,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "admin1@gmail.com",
+  "email": "adminmy@gmail.com",
   "password": "12345678",
   "role": "admin"
 }
@@ -91,8 +91,9 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "raj10@gmail.com",
-  "password": "12345678"
+  "email": "raj@gmail.com",
+  "password": "12345678",
+  "role": "user"
 }
 
 

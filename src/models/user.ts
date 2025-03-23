@@ -73,6 +73,11 @@ const userSchema = new Schema({
     default: false,
   },
 
+  marriedTo: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
+
   gender: {
     type: String,
     enum: ['Male', 'Female', 'Other'],
@@ -89,9 +94,11 @@ const userSchema = new Schema({
   },
 
   proffessionalDetails: {
-    qualification: String,
+    highestQualification: String,
+    qualifications: String,
+    companyName: String,
+    profession: String,
     salary: Number,
-    work: String,
   },
 
   familyDetails: {
@@ -135,9 +142,9 @@ const userSchema = new Schema({
     maxAge: Number,
     religion: String,
     caste: String,
-    salary: Number,
-    qualification: String,
-    work: String,
+    minSalary: Number,
+    minQualification: String,
+    profession: String,
     motherTongue: String,
     location: String,
     expectation: String,

@@ -1,13 +1,14 @@
 import {
   randFullName, randEmail, randPassword, randNumber,
   randPastDate, randPhoneNumber, randStreetAddress,
-  randJobTitle, randCompanyName, randWord,
-  randBoolean, randLine, rand, randAvatar,
+  randCompanyName, randWord, randBoolean, randLine,
+  rand, randAvatar,
 } from "@ngneat/falso";
 
 import {
   approvalStatus, maritalStatus, gender,
-  nakshatra, planets, raasi, castes, religions
+  nakshatra, planets, raasi, castes, religions,
+  professions, educationLevels,
 } from '../utils/index.js';
 
 const generatePlanetData = () => {
@@ -41,9 +42,11 @@ const generateRandomUser = () => {
     },
     profileImg: randAvatar(),
     proffessionalDetails: {
-      qualification: randWord({ length: 2 }).join(' '),
+      highestQualification: rand(educationLevels),
+      qualifications: randWord({ length: 10 }).join(' '),
+      companyName: randCompanyName(),
+      profession: rand(professions),
       salary: randNumber({ min: 30000, max: 150000 }),
-      work: randJobTitle() + " " + randCompanyName(),
     },
     familyDetails: {
       fatherName: randFullName({ gender: 'male' }),
@@ -71,9 +74,9 @@ const generateRandomUser = () => {
       maxAge: randNumber({ min: 30, max: 40 }),
       religion: randWord(),
       caste: randWord(),
-      salary: randNumber({ min: 30000, max: 100000 }),
-      qualification: randWord(),
-      work: randJobTitle(),
+      minSalary: randNumber({ min: 30000, max: 100000 }),
+      minQualification: rand(educationLevels),
+      profession: rand(professions),
       motherTongue: randWord(),
       location: randStreetAddress(),
       expectation: randLine(),
