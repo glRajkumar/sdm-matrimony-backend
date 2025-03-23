@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/user
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDE5NTU1ODMsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q0MDI4NTM1MjdkZjgyZGMzNzI2OTUiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyJ9.4jJpymLC9Dw69UsH9z0HP7UgchbSSunjenFqFx465HU
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI3MTM4ODUsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2RmOWI1M2Y5NGI0MGFiM2JhZTVjZmEiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.wsgSkoDNY27Dyw_RTub-vPL4DNRgsloqIG6EVQQ7XgE
 
 
 ### user details
@@ -7,7 +7,7 @@ GET {{host}}/profile/67cec22e3fce9250355851e9
 Authorization: {{token}}
 
 
-### getMathces
+### getMathces ?limit=4&skip=0&ageRange=above_40&rasi=Aries&lagna=Aries&maritalStatus=Married&isBlocked=false&isDeleted=false&minSalary=10000&minQualification=Bachelor&profession=Software Engineer&motherTongue=["Hindi","English"]
 GET {{host}}/matches
 Authorization: {{token}}
 

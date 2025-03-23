@@ -13,8 +13,9 @@ function strOrArr(by: string, possibleLen: number) {
 export function getFilterObj(obj: Record<string, any>) {
   const {
     gender, isMarried, salaryRange, ageRange, approvalStatus,
+    minQualification, profession, minSalary, motherTongue,
     rasi, lagna, maritalStatus, isBlocked, isDeleted,
-    caste, religion, minAge, maxAge
+    caste, religion, minAge, maxAge,
   } = obj
 
   const filter: any = {
@@ -22,12 +23,16 @@ export function getFilterObj(obj: Record<string, any>) {
     approvalStatus: 'approved',
     isBlocked: false,
     isDeleted: false,
+    isMarried: false,
   }
 
   if (approvalStatus) {
     const approvalStatusFilter = strOrArr(approvalStatus, 3)
     if (approvalStatusFilter) {
       filter.approvalStatus = approvalStatusFilter
+    }
+    else {
+      delete filter.approvalStatus
     }
   }
 
@@ -69,7 +74,31 @@ export function getFilterObj(obj: Record<string, any>) {
     }
 
     if (salaryList[salaryRange]) {
-      filter.salary = salaryList[salaryRange]
+      filter.proffessionalDetails = {
+        ...filter.proffessionalDetails,
+        salary: salaryList[salaryRange]
+      }
+    }
+  }
+
+  if (minSalary) {
+    filter.proffessionalDetails = {
+      ...filter.proffessionalDetails,
+      salary: { $gte: Number(minSalary) }
+    }
+  }
+
+  if (minQualification) {
+    filter.proffessionalDetails = {
+      ...filter.proffessionalDetails,
+      highestQualification: minQualification
+    }
+  }
+
+  if (profession) {
+    filter.proffessionalDetails = {
+      ...filter.proffessionalDetails,
+      profession
     }
   }
 
@@ -104,28 +133,50 @@ export function getFilterObj(obj: Record<string, any>) {
   if (rasi) {
     const rasiFilter = strOrArr(rasi, 12)
     if (rasiFilter) {
-      filter.vedicHoroscope.rasi = rasiFilter
+      filter.vedicHoroscope = {
+        ...filter.vedicHoroscope,
+        rasi: rasiFilter
+      }
     }
   }
 
   if (lagna) {
     const lagnaFilter = strOrArr(lagna, 12)
     if (lagnaFilter) {
-      filter.vedicHoroscope.lagna = lagnaFilter
+      filter.vedicHoroscope = {
+        ...filter.vedicHoroscope,
+        lagna: lagnaFilter
+      }
     }
   }
 
   if (caste) {
     const casteFilter = strOrArr(caste, 100)
     if (casteFilter) {
-      filter.otherDetails.caste = casteFilter
+      filter.otherDetails = {
+        ...filter.otherDetails,
+        caste: casteFilter
+      }
     }
   }
 
   if (religion) {
     const religionFilter = strOrArr(religion, 100)
     if (religionFilter) {
-      filter.otherDetails.religion = religionFilter
+      filter.otherDetails = {
+        ...filter.otherDetails,
+        religion: religionFilter
+      }
+    }
+  }
+
+  if (motherTongue) {
+    const motherTongueFilter = strOrArr(motherTongue, 100)
+    if (motherTongueFilter) {
+      filter.otherDetails = {
+        ...filter.otherDetails,
+        motherTongue: motherTongueFilter
+      }
     }
   }
 
@@ -135,7 +186,10 @@ export function getFilterObj(obj: Record<string, any>) {
     const currMonth = currentDate.getMonth()
     const currDate = currentDate.getDate()
 
-    filter.dob = { $gte: new Date(currYear - minAge, currMonth, currDate) }
+    filter.dob = {
+      ...filter.dob,
+      $lte: new Date(currYear - minAge, currMonth, currDate)
+    }
   }
 
   if (maxAge) {
@@ -144,7 +198,10 @@ export function getFilterObj(obj: Record<string, any>) {
     const currMonth = currentDate.getMonth()
     const currDate = currentDate.getDate()
 
-    filter.dob = { $lte: new Date(currYear - maxAge, currMonth, currDate) }
+    filter.dob = {
+      ...filter.dob,
+      $gte: new Date(currYear - maxAge, currMonth, currDate)
+    }
   }
 
   return filter

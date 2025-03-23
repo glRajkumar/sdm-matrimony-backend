@@ -28,16 +28,16 @@ export const getMatches = async (c: Context) => {
   const payload: any = {}
 
   if (user?.gender === "Male") {
-    payload.gender = ["Female", "Other"]
+    payload.gender = "Female" // ["Female", "Other"]
   }
   else if (user?.gender === "Female") {
-    payload.gender = ["Female", "Other"]
+    payload.gender = "Male" // ["Female", "Other"]
   }
 
   const filters = getFilterObj({ ...rest, ...payload, })
 
   const liked = user?.liked || []
-  const disliked = user?.disliked || []
+  // const disliked = user?.disliked || []
 
   // const getMatches = await User.find({ ...filters, _id: { $ne: _id } })
   //   .select(userSelectFields)
@@ -64,9 +64,9 @@ export const getMatches = async (c: Context) => {
         isLiked: {
           $in: ["$_id", liked]
         },
-        isDisliked: {
-          $in: ["$_id", disliked]
-        }
+        // isDisliked: {
+        //   $in: ["$_id", disliked]
+        // }
       }
     }
   ])
