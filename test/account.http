@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/account
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI3MDg3MDUsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q3ZWYyMjBiMzhlZDFiOWY5Mjk3YTYiLCJyb2xlIjoiYWRtaW4ifQ.Hkbuqg4wP8ofei0r_phxv2W13JR1s4teD5iK-FZ97YQ
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI4MzA3OTAsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q3ZWYyMjBiMzhlZDFiOWY5Mjk3YTYiLCJyb2xlIjoiYWRtaW4ifQ.B8ht5ALmY5c7Vs2-btvKc-nDOYpk5eUx2LZ98HTvYRI
 
 
 ### register - user

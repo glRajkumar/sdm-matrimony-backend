@@ -19,6 +19,20 @@ export async function getUsers(c: Context) {
   return c.json(fullList)
 }
 
+export async function getMarriedUsers(c: Context) {
+  const select = "_id fullName email profileImg dob proffessionalDetails.salary marriedTo"
+  const marriedUsers = await User.find({
+    marriedTo: { $exists: true },
+    isMarried: true,
+    gender: "Male"
+  })
+    .select(select)
+    .populate("marriedTo", select.replace(" marriedTo", ""))
+    .lean()
+
+  return c.json(marriedUsers)
+}
+
 export async function createUsers(c: Context) {
   // const users = await c.req.json()
 
@@ -57,6 +71,27 @@ export async function createUsers(c: Context) {
   }
 
   return c.json({ results })
+}
+
+export async function userMarriedTo(c: Context) {
+  const { _id, marriedTo } = await c.req.json()
+
+  await User.bulkWrite([
+    {
+      updateOne: {
+        filter: { _id },
+        update: { $set: { marriedTo, isMarried: true } }
+      }
+    },
+    {
+      updateOne: {
+        filter: { _id: marriedTo },
+        update: { $set: { marriedTo: _id, isMarried: true } }
+      }
+    }
+  ])
+
+  return c.json({ message: "User married to updated successfully" })
 }
 
 export async function updateUser(c: Context) {
