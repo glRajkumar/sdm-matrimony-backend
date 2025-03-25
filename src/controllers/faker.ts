@@ -1,14 +1,14 @@
 import {
   randFullName, randEmail, randPassword, randNumber,
   randPastDate, randPhoneNumber, randStreetAddress,
-  randCompanyName, randWord, randBoolean, randLine,
-  rand, randAvatar,
+  randCompanyName, randWord, randBoolean, randText,
+  rand, toCollection,
 } from "@ngneat/falso";
 
 import {
-  approvalStatus, maritalStatus, gender,
+  approvalStatuses, maritalStatuses, genders,
   nakshatra, planets, raasi, castes, religions,
-  professions, educationLevels,
+  professions, educationLevels, languages,
 } from '../utils/index.js';
 
 const generatePlanetData = () => {
@@ -28,62 +28,71 @@ const generateHouseDetails = () => {
 };
 
 const generateRandomUser = () => {
+  const gender = rand(genders)
+  const noOfBrothers = randNumber({ min: 0, max: 5 })
+  const noOfSisters = randNumber({ min: 0, max: 5 })
+  const birthOrder = randNumber({ min: 1, max: noOfBrothers + noOfSisters + 1 })
+  const minAge = randNumber({ min: 20, max: 30 })
+  const maxAge = randNumber({ min: minAge, max: 45 })
+
+  const profileImg = `https://randomuser.me/api/portraits/med/${gender === "Male" ? "men" : "women"}/${randNumber({ min: 1, max: 99 })}.jpg`
+
   return {
-    fullName: randFullName(),
+    fullName: randFullName({ gender: gender.toLowerCase() as "male" | "female" }),
     email: randEmail(),
     password: randPassword(),
-    maritalStatus: rand(maritalStatus),
+    maritalStatus: rand(maritalStatuses),
     isMarried: randBoolean(),
-    gender: rand(gender),
-    dob: randPastDate({ years: 30 }), // Random date within the last 30 years
+    gender,
+    dob: randPastDate({ years: 30 }),
     contactDetails: {
       mobile: randPhoneNumber(),
       address: randStreetAddress(),
     },
-    profileImg: randAvatar(),
+    profileImg,
     proffessionalDetails: {
       highestQualification: rand(educationLevels),
       qualifications: randWord({ length: 10 }).join(' '),
       companyName: randCompanyName(),
       profession: rand(professions),
-      salary: randNumber({ min: 30000, max: 150000 }),
+      salary: randNumber({ min: 10000, max: 150000 }),
     },
     familyDetails: {
       fatherName: randFullName({ gender: 'male' }),
       motherName: randFullName({ gender: 'female' }),
-      noOfBrothers: randNumber({ min: 0, max: 5 }),
-      noOfSisters: randNumber({ min: 0, max: 5 }),
-      birthOrder: randNumber({ min: 1, max: 5 }),
+      noOfBrothers,
+      noOfSisters,
+      birthOrder,
       isFatherAlive: randBoolean(),
       isMotherAlive: randBoolean(),
     },
-    approvalStatus: rand(approvalStatus),
+    approvalStatus: rand(approvalStatuses),
     vedicHoroscope: {
       nakshatra: rand(nakshatra),
       rasi: rand(raasi),
       lagna: rand(raasi),
       dashaPeriod: randWord(),
-      placeOfBirth: randStreetAddress(),
-      timeOfBirth: `${randNumber({ min: 1, max: 12 })}:${randNumber({ min: 0, max: 59 })} ${randWord({ length: 1, dictionary: ['AM', 'PM'] })[0]}`,
-      raasiChart: generateHouseDetails(),
-      navamsaChart: generateHouseDetails(),
+      // placeOfBirth: randStreetAddress(),
+      // timeOfBirth: `${randNumber({ min: 1, max: 12 })}:${randNumber({ min: 0, max: 59 })} ${randWord({ length: 1, dictionary: ['AM', 'PM'] })[0]}`,
+      // raasiChart: generateHouseDetails(),
+      // navamsaChart: generateHouseDetails(),
       vedicHoroscopePic: "",
     },
     partnerPreferences: {
-      minAge: randNumber({ min: 20, max: 30 }),
-      maxAge: randNumber({ min: 30, max: 40 }),
-      religion: randWord(),
-      caste: randWord(),
+      minAge,
+      maxAge,
+      religion: rand(religions),
+      caste: rand(castes),
       minSalary: randNumber({ min: 30000, max: 100000 }),
       minQualification: rand(educationLevels),
       profession: rand(professions),
-      motherTongue: randWord(),
+      motherTongue: rand(languages),
       location: randStreetAddress(),
-      expectation: randLine(),
-      maritalStatus: rand(maritalStatus),
+      expectation: randText({ charCount: 16 }),
+      maritalStatus: rand(maritalStatuses),
     },
     otherDetails: {
-      motherTongue: randWord(),
+      motherTongue: rand(languages),
       houseType: rand(['Own', 'Lease', 'Rental']),
       height: randNumber({ min: 150, max: 200 }),
       color: randWord(),
@@ -93,12 +102,4 @@ const generateRandomUser = () => {
   };
 };
 
-const generateRandomUsers = (count: number) => {
-  const users = [];
-  for (let i = 0; i < count; i++) {
-    users.push(generateRandomUser());
-  }
-  return users;
-};
-
-export const randomUsers = generateRandomUsers(100)
+export const randomUsers = () => toCollection(() => generateRandomUser(), { length: 100 })

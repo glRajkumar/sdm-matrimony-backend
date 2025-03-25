@@ -27,9 +27,9 @@ export const tokenValidity = {
   refreshToken: 60 * 60 * 24 * 7, // 7 days
 } as const
 
-export const approvalStatus = ["pending", "approved", "rejected"] as const
-export const maritalStatus = ["Single", "Divorced", "Widowed"] as const
-export const gender = ["Male", "Female"] as const // "Other"
+export const approvalStatuses = ["pending", "approved", "rejected"] as const
+export const maritalStatuses = ["Single", "Divorced", "Widowed"] as const
+export const genders = ["Male", "Female"] as const // "Other"
 
 export const religions = ["Hindu", "Muslim", "Christian", "Sikh", "Buddhist", "Jain", "Parsi", "Jewish", "Spiritual", "Other"] as const
 
