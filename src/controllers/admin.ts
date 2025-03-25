@@ -20,6 +20,11 @@ export async function getUsers(c: Context) {
 }
 
 export async function getMarriedUsers(c: Context) {
+  const { limit, skip } = c.req.query()
+
+  const numLimit = Number(limit || 10)
+  const numSkip = Number(skip || 0)
+
   const select = "_id fullName email profileImg dob proffessionalDetails.salary marriedTo"
   const marriedUsers = await User.find({
     marriedTo: { $exists: true },
@@ -28,9 +33,30 @@ export async function getMarriedUsers(c: Context) {
   })
     .select(select)
     .populate("marriedTo", select.replace(" marriedTo", ""))
+    .limit(numLimit)
+    .skip(numSkip)
     .lean()
 
   return c.json(marriedUsers)
+}
+
+export async function findUser(c: Context) {
+  const query = c.req.query()
+  const filters = Object.keys(query).reduce((acc: any, key) => {
+    if (key === "fullName") {
+      acc[key] = { $regex: query[key], $options: "i" }
+    }
+    else {
+      acc[key] = query[key]
+    }
+    return acc
+  }, {})
+
+  const user = await User.find(filters)
+    .select("_id fullName email profileImg dob gender maritalStatus proffessionalDetails.salary")
+    .lean()
+
+  return c.json(user)
 }
 
 export async function createUsers(c: Context) {

@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/admin
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI4MzA3OTAsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q3ZWYyMjBiMzhlZDFiOWY5Mjk3YTYiLCJyb2xlIjoiYWRtaW4ifQ.B8ht5ALmY5c7Vs2-btvKc-nDOYpk5eUx2LZ98HTvYRI
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI4ODYzOTgsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q3ZWYyMjBiMzhlZDFiOWY5Mjk3YTYiLCJyb2xlIjoiYWRtaW4ifQ.ZnoMnyYlc8T7aT8AbMn4xLOwNq-cPm8FMqQbJIdHMMA
 
 
 ### users list ---- skip=6&limit=8&approvalStatus=["pending","rejected"]&ageRange=below_25&salaryRange=20000_30000
@@ -7,8 +7,13 @@ GET {{host}}/users?approvalStatus=approved
 Authorization: {{token}}
 
 
-### married users
+### married users --- limit=4&skip=20
 GET {{host}}/users/married
+Authorization: {{token}}
+
+
+### find user --- _id,email,mobile,fullName
+GET {{host}}/user/find?email=
 Authorization: {{token}}
 
 
@@ -135,8 +140,8 @@ Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "_id": "67df9a42fea06db4108cf3b3",
-  "marriedTo": "67df9a42fea06db4108cf449"
+  "_id": "67df9a43fea06db4108cff07",
+  "marriedTo": "67df9a43fea06db4108d012d"
 }
 
 
