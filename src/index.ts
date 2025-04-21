@@ -5,6 +5,7 @@ import { cors } from 'hono/cors';
 import { csrf } from 'hono/csrf';
 import { Hono } from 'hono';
 
+import extractorRoutes from './routes/extractor.js';
 import accountRoutes from './routes/account.js';
 import adminRoutes from './routes/admin.js';
 import fakerRoutes from './routes/faker.js';
@@ -26,6 +27,7 @@ app.get("/health", c => c.json({ status: "ok" }))
 app.route("/account", accountRoutes)
 app.route("/user", userRoutes)
 app.route("/admin", adminRoutes)
+app.route("/extractor", extractorRoutes)
 app.route("/faker", fakerRoutes)
 
 app.notFound(c => c.json({ message: 'Route not found' }, 404))
