@@ -11,7 +11,8 @@
     "cloudinary": "^2.5.1",
     "hono": "^4.6.10",
     "mongoose": "^8.8.1",
-    "nodemailer": "^6.9.16"
+    "nodemailer": "^6.9.16",
+    "ollama": "^0.5.15"
   },
   "devDependencies": {
     "@ngneat/falso": "^7.3.0",
