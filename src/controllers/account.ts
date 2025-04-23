@@ -4,22 +4,48 @@ import { getCookie, setCookie, deleteCookie } from 'hono/cookie';
 import {
   env, generateOtp, getImgUrl, getToken, verifyToken,
   comparePasswords, hashPassword, tokenEnums, tokenValidity,
+  isEmail,
 } from '../utils/index.js';
 
 import Admin from '../models/admin.js';
 import User from '../models/user.js';
 
 export const register = async (c: Context) => {
-  const { fullName, email, password, role = "user", ...rest } = await c.req.json()
+  const { email, password, role = "user", ...rest } = await c.req.json()
+
+  if (!email && !rest?.contactDetails?.mobile) return c.json({ message: "Email or Mobile is required" }, 400)
+  if (!password) return c.json({ message: "Password shouldn't be empty" }, 400)
 
   const Model = role === "user" ? User : Admin
-  const userExist = await (Model as any).findOne({ email }).select('_id')
-  if (userExist) return c.json({ message: 'Email already exists' }, 400)
-  if (!password) return c.json({ message: "Password shouldn't be empty" }, 400)
+
+  const findBy: Record<string, any> = {}
+  if (email && rest.contactDetails.mobile) {
+    findBy.$or = [{ email }, { "contactDetails.mobile": rest.contactDetails.mobile }]
+  }
+  else if (email) {
+    findBy.email = email
+  }
+  else {
+    findBy["contactDetails.mobile"] = rest.contactDetails.mobile
+  }
+
+  const userExist = await (Model as any).findOne(findBy).select('_id email contactDetails').lean()
+
+  if (userExist) return c.json({ message: 'Email or Moboile number already exists' }, 400)
 
   const hashedPass = await hashPassword(password)
 
-  const user = new Model({ fullName, email, password: hashedPass, role, ...rest })
+  const user = new Model({
+    ...rest,
+    role,
+    email: email || undefined,
+    password: hashedPass,
+    contactDetails: {
+      ...rest?.contactDetails,
+      mobile: rest?.contactDetails?.mobile || undefined,
+    },
+  })
+
   await user.save()
 
   return c.json({ message: 'User saved successfully' })
@@ -28,8 +54,12 @@ export const register = async (c: Context) => {
 export const login = async (c: Context) => {
   const { email, password, role = "user" } = await c.req.json()
 
+  if (!email || !password) return c.json({ message: "Email or password is missing" }, 400)
+
   const Model = role === "user" ? User : Admin
-  const user = await (Model as any).findOne({ email })
+  const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
+
+  const user = await (Model as any).findOne(findBy)
   if (!user) return c.json({ message: 'Cannot find user in db' }, 401)
 
   const result = await comparePasswords(password, user.password)
@@ -100,7 +130,9 @@ export async function forgetPass(c: Context) {
   const { email, role = "user" } = await c.req.json()
 
   const Model = role === "user" ? User : Admin
-  const user = await (Model as any).findOne({ email })
+  const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
+  const user = await (Model as any).findOne(findBy)
+
   if (!user) return c.json({ message: 'User not found' }, 400)
 
   const verifiyOtp = generateOtp()
@@ -123,7 +155,8 @@ export async function resetPass(c: Context) {
   const { email, password, otp, role = "user" } = await c.req.json()
 
   const Model = role === "user" ? User : Admin
-  const user = await (Model as any).findOne({ email })
+  const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
+  const user = await (Model as any).findOne(findBy)
   if (!user) return c.json({ message: 'User not found' }, 400)
 
   if (!password) return c.json({ message: "Password shouldn't be empty" }, 400)

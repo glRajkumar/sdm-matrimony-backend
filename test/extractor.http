@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/extractor
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUyMjgzMzAsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q3ZWYyMjBiMzhlZDFiOWY5Mjk3YTYiLCJyb2xlIjoiYWRtaW4ifQ.akD4gwdr1wGqFpqvz034RVviRP-70UnvpOcmegGP3WE
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMjczMzQsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q3ZWYyMjBiMzhlZDFiOWY5Mjk3YTYiLCJyb2xlIjoiYWRtaW4ifQ.ftPUU6aChdTpwxXEnpbvR6eCpTz5wFpxmP_23SalYqs
 
 ### extract image
 POST {{host}}
@@ -7,8 +7,8 @@ Authorization: {{token}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
 ------WebKitFormBoundary
-Content-Disposition: form-data; name="image"; filename="sample1.jpg"
-Content-Type: image/jpg
+Content-Disposition: form-data; name="images"; filename="sample1.png"
+Content-Type: image/png
 
-< ./sample1.jpg
+< ./sample1.png
 ------WebKitFormBoundary--

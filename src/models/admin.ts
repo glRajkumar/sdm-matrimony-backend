@@ -15,8 +15,9 @@ const adminSchema = new Schema({
 
   email: {
     type: String,
-    required: [true, 'Email is required'],
     unique: true,
+    sparse: true,
+    trim: true,
     match: [/\S+@\S+\.\S+/, 'Email is not valid'],
   },
 
@@ -41,7 +42,25 @@ const adminSchema = new Schema({
     type: Number
   },
 
+  contactDetails: {
+    mobile: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+    },
+    address: String,
+  },
+
 }, { timestamps: true })
+
+adminSchema.pre('validate', function (next) {
+  if (!this.email && !this.contactDetails?.mobile) {
+    this.invalidate('email', 'Either email or mobile number is required');
+    this.invalidate('contactDetails.mobile', 'Either email or mobile number is required');
+  }
+  next()
+})
 
 const Admin = model('Admin', adminSchema)
 

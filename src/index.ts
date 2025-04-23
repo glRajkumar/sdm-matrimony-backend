@@ -18,7 +18,7 @@ const app = new Hono().basePath("api")
 
 app.use(logger())
 app.use(cors({ origin: env.FRONTEND_URL, credentials: true }))
-app.use(csrf({ origin: env.FRONTEND_URL }))
+// app.use(csrf({ origin: env.FRONTEND_URL }))
 
 await connectDb()
 

@@ -41,8 +41,9 @@ const userSchema = new Schema({
 
   email: {
     type: String,
-    required: [true, 'Email is required'],
     unique: true,
+    sparse: true,
+    trim: true,
     match: [/\S+@\S+\.\S+/, 'Email is not valid'],
   },
 
@@ -89,7 +90,12 @@ const userSchema = new Schema({
   },
 
   contactDetails: {
-    mobile: String,
+    mobile: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+    },
     address: String,
   },
 
@@ -189,6 +195,14 @@ const userSchema = new Schema({
   }],
 
 }, { timestamps: true })
+
+userSchema.pre('validate', function (next) {
+  if (!this.email && !this.contactDetails?.mobile) {
+    this.invalidate('email', 'Either email or mobile number is required');
+    this.invalidate('contactDetails.mobile', 'Either email or mobile number is required');
+  }
+  next()
+})
 
 const User = model('User', userSchema)
 

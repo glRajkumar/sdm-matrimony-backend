@@ -11,3 +11,8 @@ export function generateOtp() {
   console.log(otp)
   return otp
 }
+
+export function isEmail(email: string) {
+  const emailRegex = /^\S+@\S+\.\S+$/
+  return emailRegex.test(email)
+}
