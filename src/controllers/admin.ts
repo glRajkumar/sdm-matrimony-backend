@@ -85,14 +85,29 @@ export async function createUsers(c: Context) {
         ...user,
         password: hashedPass,
         approvalStatus: "approved",
+        email: user.email || undefined,
+        contactDetails: {
+          ...user?.contactDetails,
+          mobile: user?.contactDetails?.mobile || undefined,
+        },
       })
 
       const savedUser = await newUser.save()
 
-      results.push({ _id: savedUser._id, email: savedUser.email, error: null })
+      results.push({
+        _id: savedUser._id,
+        email: savedUser.email || undefined,
+        mobile: savedUser.contactDetails?.mobile || undefined,
+        error: null
+      })
 
     } catch (error: any) {
-      results.push({ _id: null, email: user.email, error: error.message })
+      results.push({
+        _id: null,
+        email: user.email || undefined,
+        mobile: user?.contactDetails?.mobile || undefined,
+        error: error.message
+      })
     }
   }
 
