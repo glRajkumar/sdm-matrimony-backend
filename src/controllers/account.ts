@@ -19,14 +19,14 @@ export const register = async (c: Context) => {
   const Model = role === "user" ? User : Admin
 
   const findBy: Record<string, any> = {}
-  if (email && rest.contactDetails.mobile) {
+  if (email && rest?.contactDetails?.mobile) {
     findBy.$or = [{ email }, { "contactDetails.mobile": rest.contactDetails.mobile }]
   }
   else if (email) {
     findBy.email = email
   }
   else {
-    findBy["contactDetails.mobile"] = rest.contactDetails.mobile
+    findBy["contactDetails.mobile"] = rest?.contactDetails?.mobile
   }
 
   const userExist = await (Model as any).findOne(findBy).select('_id email contactDetails').lean()

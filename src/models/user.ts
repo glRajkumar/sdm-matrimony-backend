@@ -104,6 +104,7 @@ const userSchema = new Schema({
     qualifications: String,
     companyName: String,
     profession: String,
+    sector: String,
     salary: Number,
   },
 
@@ -150,6 +151,7 @@ const userSchema = new Schema({
     caste: String,
     minSalary: Number,
     minQualification: String,
+    sector: String,
     profession: String,
     motherTongue: String,
     location: String,

@@ -14,7 +14,7 @@ function strOrArr(by: string, possibleLen: number) {
 export function getFilterObj(obj: Record<string, any>) {
   const {
     gender, isMarried, salaryRange, ageRange, approvalStatus,
-    minQualification, profession, minSalary, motherTongue,
+    minQualification, sector, profession, minSalary, motherTongue,
     rasi, lagna, maritalStatus, isBlocked, isDeleted,
     caste, religion, minAge, maxAge,
   } = obj
@@ -88,6 +88,10 @@ export function getFilterObj(obj: Record<string, any>) {
     filter["proffessionalDetails.highestQualification"] = {
       $in: applicableQualification
     }
+  }
+
+  if (sector) {
+    filter["proffessionalDetails.sector"] = sector
   }
 
   if (profession) {

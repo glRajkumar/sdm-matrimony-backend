@@ -9,6 +9,7 @@ import {
   approvalStatuses, maritalStatuses, genders,
   nakshatra, planets, raasi, castes, religions,
   professions, educationLevels, languages,
+  proffessionalSectors,
 } from '../utils/index.js';
 
 const generatePlanetData = () => {
@@ -36,6 +37,9 @@ const generateRandomUser = () => {
   const maxAge = randNumber({ min: minAge, max: 45 })
 
   const profileImg = `https://randomuser.me/api/portraits/med/${gender === "Male" ? "men" : "women"}/${randNumber({ min: 1, max: 99 })}.jpg`
+  const sector = rand(proffessionalSectors)
+  const profession = sector === "Unemployed" ? "Unemployed" : rand(professions)
+  const salary = sector === "Unemployed" ? 0 : randNumber({ min: 10000, max: 150000 })
 
   return {
     fullName: randFullName({ gender: gender.toLowerCase() as "male" | "female" }),
@@ -53,9 +57,10 @@ const generateRandomUser = () => {
     proffessionalDetails: {
       highestQualification: rand(educationLevels),
       qualifications: randWord({ length: 10 }).join(' '),
-      companyName: randCompanyName(),
-      profession: rand(professions),
-      salary: randNumber({ min: 10000, max: 150000 }),
+      companyName: sector === "Unemployed" ? "" : randCompanyName(),
+      profession,
+      sector,
+      salary,
     },
     familyDetails: {
       fatherName: randFullName({ gender: 'male' }),
@@ -102,4 +107,4 @@ const generateRandomUser = () => {
   };
 };
 
-export const randomUsers = () => toCollection(() => generateRandomUser(), { length: 100 })
+export const randomUsers = () => toCollection(() => generateRandomUser(), { length: 200 })
