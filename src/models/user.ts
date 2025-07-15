@@ -79,6 +79,10 @@ const userSchema = new Schema({
     ref: 'User',
   },
 
+  marriedOn: {
+    type: Date,
+  },
+
   gender: {
     type: String,
     enum: ['Male', 'Female'], // 'Other'

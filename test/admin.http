@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/admin
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI4OTA4MTgsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q3ZWYyMjBiMzhlZDFiOWY5Mjk3YTYiLCJyb2xlIjoiYWRtaW4ifQ.mkjlslt5QVbSGbYO6MNaFUDRv1ICdGgEBk8FedVt1tk
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTI1ODMxNjQsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODc1ZGZmMGE5YzBjNDJiMDEwMGQ0YzYiLCJyb2xlIjoiYWRtaW4ifQ.OdD30FUAjA2CT_L4dsOHNcBbP8eCoswSCjKN_2NmWIk
 
 
 ### users list ---- skip=6&limit=8&approvalStatus=["pending","rejected"]&ageRange=below_25&salaryRange=20000_30000
@@ -140,8 +140,9 @@ Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "_id": "67df9a43fea06db4108cff07",
-  "marriedTo": "67df9a43fea06db4108d012d"
+  "_id": "6875f8af7052b0df15981cb6",
+  "marriedTo": "6875f8af7052b0df15981cbd",
+  "marriedOn": "2025-07-16T12:22:00.000Z"
 }
 
 
@@ -151,6 +152,6 @@ Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "_id": "67df9b53f94b40ab3bae5cfa",
+  "_id": "6875f8c17052b0df15981d7a",
   "approvalStatus": "approved"
 }

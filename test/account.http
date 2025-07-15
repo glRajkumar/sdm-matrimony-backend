@@ -1,6 +1,5 @@
 @host = http://localhost:5000/api/account
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI4MzA3OTAsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2Q3ZWYyMjBiMzhlZDFiOWY5Mjk3YTYiLCJyb2xlIjoiYWRtaW4ifQ.B8ht5ALmY5c7Vs2-btvKc-nDOYpk5eUx2LZ98HTvYRI
-
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTI1NTc1MjcsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODc1ZTBiNmE5YzBjNDJiMDEwMGQ0Y2QiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyJ9.hpb-drIaQ3dcj-MBCkUwinIO3LTm-KaUSGqhAdk-YMg
 
 ### register - user
 POST {{host}}/register
@@ -19,6 +18,7 @@ Content-Type: application/json
     "qualifications": "B.Com, M.Com",
     "companyName": "TCS",
     "profession": "Software Engineer",
+    "sector": "IT / Software",
     "salary": 80030
   },
   "contactDetails":{
@@ -68,10 +68,13 @@ Content-Type: application/json
 
 {
   "fullName": "WhitneyPeterson",
-  "email": "adminmy@gmail.com",
+  "email": "admin@gmail.com",
   "role": "admin",
   "password": "12345678",
-  "address": "680 Nguyen Cliffs\nNew Amy, IL 82099"
+  "contactDetails": {
+    "mobile": "1234567890",
+    "address": "680 Nguyen Cliffs\nNew Amy, IL 82099"
+  }
 }
 
 
@@ -80,7 +83,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "adminmy@gmail.com",
+  "email": "admin@gmail.com",
   "password": "12345678",
   "role": "admin"
 }

@@ -25,14 +25,14 @@ export async function getMarriedUsers(c: Context) {
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
 
-  const select = "_id fullName email profileImg dob proffessionalDetails.salary marriedTo"
+  const select = "_id fullName email profileImg dob proffessionalDetails.salary marriedTo marriedOn"
   const marriedUsers = await User.find({
     marriedTo: { $exists: true },
     isMarried: true,
     gender: "Male"
   })
     .select(select)
-    .populate("marriedTo", select.replace(" marriedTo", ""))
+    .populate("marriedTo", select.replace(" marriedTo marriedOn", ""))
     .limit(numLimit)
     .skip(numSkip)
     .lean()
@@ -115,19 +115,19 @@ export async function createUsers(c: Context) {
 }
 
 export async function userMarriedTo(c: Context) {
-  const { _id, marriedTo } = await c.req.json()
+  const { _id, marriedTo, marriedOn } = await c.req.json()
 
   await User.bulkWrite([
     {
       updateOne: {
         filter: { _id },
-        update: { $set: { marriedTo, isMarried: true } }
+        update: { $set: { marriedTo, isMarried: true, marriedOn } }
       }
     },
     {
       updateOne: {
         filter: { _id: marriedTo },
-        update: { $set: { marriedTo: _id, isMarried: true } }
+        update: { $set: { marriedTo: _id, isMarried: true, marriedOn } }
       }
     }
   ])
