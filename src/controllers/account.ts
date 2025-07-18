@@ -91,8 +91,8 @@ export const login = async (c: Context) => {
 
   setCookie(c, tokenEnums.refreshToken, refresh_token, {
     httpOnly: true,
-    sameSite: "Lax",
-    secure: env.NODE_ENV === 'production',
+    sameSite: "None", // Lax
+    secure: true, // env.NODE_ENV === 'production',
     maxAge: tokenValidity.refreshToken,
   })
 
@@ -226,8 +226,8 @@ export const approvalStatusRefresh = async (c: Context) => {
 
   setCookie(c, tokenEnums.refreshToken, refresh_token, {
     httpOnly: true,
-    sameSite: "Lax",
-    secure: env.NODE_ENV === 'production',
+    sameSite: "None",
+    secure: true, // env.NODE_ENV === 'production',
     maxAge: tokenValidity.refreshToken,
   })
 
