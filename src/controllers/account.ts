@@ -1,29 +1,15 @@
 import type { Context } from 'hono';
-import { getCookie, setCookie, deleteCookie } from 'hono/cookie';
+import { getCookie } from 'hono/cookie';
 
 import {
-  env, generateOtp, getImgUrl, getToken, verifyToken,
-  comparePasswords, hashPassword, tokenEnums, tokenValidity,
+  setRefreshTokenCookie, deleteRefreshTokenCookie,
+  generateOtp, getImgUrl, getToken, verifyToken,
+  comparePasswords, hashPassword, tokenEnums,
   isEmail,
 } from '../utils/index.js';
 
 import Admin from '../models/admin.js';
 import User from '../models/user.js';
-
-function setRefreshTokenCookie(c: Context, refresh_token: string) {
-  const host = c.req.header("host") || ""
-  const baseDomain = host.split('.').slice(-2).join('.')
-
-  const isProduction = env.NODE_ENV === 'production'
-
-  setCookie(c, tokenEnums.refreshToken, refresh_token, {
-    httpOnly: true,
-    sameSite: isProduction ? "None" : "Lax",
-    domain: isProduction ? baseDomain : undefined,
-    secure: isProduction,
-    maxAge: tokenValidity.refreshToken,
-  })
-}
 
 export const register = async (c: Context) => {
   const { email, password, role = "user", ...rest } = await c.req.json()
@@ -255,6 +241,6 @@ export const logout = async (c: Context) => {
     $pull: { refreshTokens: refresh_token }
   })
 
-  deleteCookie(c, tokenEnums.refreshToken)
+  deleteRefreshTokenCookie(c)
   return c.json({ message: 'User logged out successfully' })
 }
