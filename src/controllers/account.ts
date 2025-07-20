@@ -19,7 +19,7 @@ function setRefreshTokenCookie(c: Context, refresh_token: string) {
   setCookie(c, tokenEnums.refreshToken, refresh_token, {
     httpOnly: true,
     sameSite: isProduction ? "None" : "Lax",
-    domain: isProduction ? `.${baseDomain}` : undefined,
+    domain: isProduction ? baseDomain : undefined,
     secure: isProduction,
     maxAge: tokenValidity.refreshToken,
   })
