@@ -10,6 +10,21 @@ import {
 import Admin from '../models/admin.js';
 import User from '../models/user.js';
 
+function setRefreshTokenCookie(c: Context, refresh_token: string) {
+  const host = c.req.header("host") || ""
+  const baseDomain = host.split('.').slice(-2).join('.')
+
+  const isProduction = env.NODE_ENV === 'production'
+
+  setCookie(c, tokenEnums.refreshToken, refresh_token, {
+    httpOnly: true,
+    sameSite: isProduction ? "None" : "Lax",
+    domain: isProduction ? `.${baseDomain}` : undefined,
+    secure: isProduction,
+    maxAge: tokenValidity.refreshToken,
+  })
+}
+
 export const register = async (c: Context) => {
   const { email, password, role = "user", ...rest } = await c.req.json()
 
@@ -89,12 +104,7 @@ export const login = async (c: Context) => {
     output.gender = user?.gender
   }
 
-  setCookie(c, tokenEnums.refreshToken, refresh_token, {
-    httpOnly: true,
-    sameSite: "None", // Lax
-    secure: true, // env.NODE_ENV === 'production',
-    maxAge: tokenValidity.refreshToken,
-  })
+  setRefreshTokenCookie(c, refresh_token)
 
   return c.json(output)
 }
@@ -224,12 +234,7 @@ export const approvalStatusRefresh = async (c: Context) => {
     output.gender = user?.gender
   }
 
-  setCookie(c, tokenEnums.refreshToken, refresh_token, {
-    httpOnly: true,
-    sameSite: "None",
-    secure: true, // env.NODE_ENV === 'production',
-    maxAge: tokenValidity.refreshToken,
-  })
+  setRefreshTokenCookie(c, refresh_token)
 
   return c.json(output)
 }
