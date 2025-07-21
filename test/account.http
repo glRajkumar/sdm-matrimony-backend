@@ -62,7 +62,7 @@ Content-Type: application/json
 }
 
 
-### register - broker | admin
+### register - admin
 POST {{host}}/register
 Content-Type: application/json
 

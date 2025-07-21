@@ -9,8 +9,8 @@ const adminSchema = new Schema({
 
   role: {
     type: String,
-    enum: ['broker', 'admin'],
-    default: 'broker',
+    enum: ['admin'],
+    default: 'admin',
   },
 
   email: {

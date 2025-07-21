@@ -1,6 +1,6 @@
 import type { Context, Next } from "hono";
 
-type rolesT = "user" | "broker" | "admin"
+type rolesT = "user" | "admin"
 export function roleCheck(roles: rolesT[]) {
   return async (c: Context, next: Next) => {
     const user = c.get('user')
