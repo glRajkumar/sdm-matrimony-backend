@@ -22,9 +22,9 @@ export function getFilterObj(obj: Record<string, any>) {
   const filter: any = {
     role: 'user',
     approvalStatus: 'approved',
-    isBlocked: false,
-    isDeleted: false,
-    isMarried: false,
+    isBlocked: isBlocked ?? false,
+    isDeleted: isDeleted ?? false,
+    isMarried: isMarried ?? false,
   }
 
   if (approvalStatus) {
@@ -38,23 +38,13 @@ export function getFilterObj(obj: Record<string, any>) {
   }
 
   if (gender) {
-    const genderFilter = strOrArr(gender, 3)
+    const genderFilter = strOrArr(gender, 2)
     if (genderFilter) {
       filter.gender = genderFilter
     }
   }
 
-  if (isMarried) {
-    filter.isMarried = isMarried
-  }
-
-  if (isBlocked) {
-    filter.isBlocked = isBlocked
-    delete filter.approvalStatus
-  }
-
-  if (isDeleted) {
-    filter.isDeleted = isDeleted
+  if (isBlocked || isDeleted) {
     delete filter.approvalStatus
   }
 
@@ -83,18 +73,18 @@ export function getFilterObj(obj: Record<string, any>) {
     filter["proffessionalDetails.salary"] = { $gte: Number(minSalary) }
   }
 
-  if (minQualification && minQualification !== educationLevels[0]) {
+  if (minQualification && minQualification !== "Any" && minQualification !== educationLevels[0]) {
     const applicableQualification = educationLevels.slice(educationLevels.indexOf(minQualification))
     filter["proffessionalDetails.highestQualification"] = {
       $in: applicableQualification
     }
   }
 
-  if (sector) {
+  if (sector && sector !== "Any") {
     filter["proffessionalDetails.sector"] = sector
   }
 
-  if (profession) {
+  if (profession && profession !== "Any") {
     filter["proffessionalDetails.profession"] = profession
   }
 
@@ -126,35 +116,35 @@ export function getFilterObj(obj: Record<string, any>) {
     }
   }
 
-  if (rasi) {
+  if (rasi && rasi !== "Any") {
     const rasiFilter = strOrArr(rasi, 12)
     if (rasiFilter) {
       filter["vedicHoroscope.rasi"] = rasiFilter
     }
   }
 
-  if (lagna) {
+  if (lagna && lagna !== "Any") {
     const lagnaFilter = strOrArr(lagna, 12)
     if (lagnaFilter) {
       filter["vedicHoroscope.lagna"] = lagnaFilter
     }
   }
 
-  if (caste) {
-    const casteFilter = strOrArr(caste, 100)
+  if (caste && caste !== "Any") {
+    const casteFilter = strOrArr(caste, 1000)
     if (casteFilter) {
       filter["otherDetails.caste"] = casteFilter
     }
   }
 
-  if (religion) {
+  if (religion && religion !== "Any") {
     const religionFilter = strOrArr(religion, 100)
     if (religionFilter) {
       filter["otherDetails.religion"] = religionFilter
     }
   }
 
-  if (motherTongue) {
+  if (motherTongue && motherTongue !== "Any") {
     const motherTongueFilter = strOrArr(motherTongue, 100)
     if (motherTongueFilter) {
       filter["otherDetails.motherTongue"] = motherTongueFilter
