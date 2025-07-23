@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/user
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI3MjUxNTcsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2N2RmOWI1M2Y5NGI0MGFiM2JhZTVjZmEiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.5QVDDiJImPozy32AL3iN8Ki02fT32iDmLTNuXXOKbt4
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTMyNDYwMDYsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODc1ZjhjMTcwNTJiMGRmMTU5ODFkN2EiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.VZ_JqNzeoFu1d2yGOH7b8iIEbmz12RYIVjgW4AdfqOg
 
 
 ### user details
@@ -84,3 +84,6 @@ Content-Type: image/jpg
 ------WebKitFormBoundary--
 
 
+### delete image
+DELETE {{host}}/image/ayz0slcjmfsmt60ihvz1
+Authorization: {{token}}

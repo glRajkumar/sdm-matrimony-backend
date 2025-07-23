@@ -146,6 +146,7 @@ const userSchema = new Schema({
     raasiChart: houseDetailSchema,
     navamsaChart: houseDetailSchema,
     vedicHoroscopePic: String,
+    dosham: String,
   },
 
   partnerPreferences: {

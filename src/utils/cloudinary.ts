@@ -34,3 +34,8 @@ export async function getImgUrl(file: any): Promise<string> {
 
   return result.url
 }
+
+export async function deleteImg(public_id: string) {
+  const cloudinary = getCloudinary()
+  await cloudinary.uploader.destroy(`my_uploads/${public_id}`, { invalidate: true })
+}

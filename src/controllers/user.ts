@@ -1,6 +1,6 @@
 import type { Context } from 'hono';
 
-import { getImgUrl, getFilterObj } from '../utils/index.js';
+import { getImgUrl, getFilterObj, deleteImg } from '../utils/index.js';
 import User from '../models/user.js';
 
 const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails otherDetails"
@@ -149,4 +149,10 @@ export const imgUpload = async (c: Context) => {
   await User.updateOne({ _id }, updateQuery)
 
   return c.json({ message: 'User image uploaded successfully' })
+}
+
+export const imgDelete = async (c: Context) => {
+  const { _id } = c.req.param()
+  await deleteImg(_id)
+  return c.json({ message: 'Image deleted successfully' })
 }
