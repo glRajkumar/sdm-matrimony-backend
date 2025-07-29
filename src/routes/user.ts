@@ -2,7 +2,8 @@ import { Hono } from 'hono';
 
 import {
   imgUpload, getUserDetails, getMatches, getLikesList,
-  addLiked, removeLiked, updateProfile, imgDelete
+  addLiked, removeLiked, updateProfile, imgDelete,
+  getPartnerPreferences,
 } from '../controllers/user.js';
 import authMiddleware from '../middlewares/auth.js';
 
@@ -14,6 +15,7 @@ userRoutes
   .get('/matches', getMatches)
   .get('/likes-list', getLikesList)
   .get('/profile/:_id', getUserDetails)
+  .get('/partner-preferences', getPartnerPreferences)
   .post('/addliked', addLiked)
   .post('/removeliked', removeLiked)
   .put('/profile', updateProfile)

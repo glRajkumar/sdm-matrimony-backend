@@ -1,9 +1,14 @@
 @host = http://localhost:5000/api/user
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTMyNDYwMDYsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODc1ZjhjMTcwNTJiMGRmMTU5ODFkN2EiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.VZ_JqNzeoFu1d2yGOH7b8iIEbmz12RYIVjgW4AdfqOg
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM3NjYyNjAsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODg3Nzg2OTAzNDA3MzllNjhkNTczNDAiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyJ9.sQf8GuB8xjpqcOX7xLtvrVgwbOf9EgoEVqVrXV7lI8s
 
 
 ### user details
 GET {{host}}/profile/67cec22e3fce9250355851e9
+Authorization: {{token}}
+
+
+### getPartnerPreferences
+GET {{host}}/partner-preferences
 Authorization: {{token}}
 
 
@@ -45,7 +50,19 @@ Authorization: {{token}}
 Content-Type: application/json`
 
 {
-  "fullName": "Raj kumar"
+  "fullName": "Raj kumar",
+  "partnerPreferences": {
+    "minAge": 20,
+    "maxAge": 30,
+    "minSalary": 10000,
+    "minQualification": "Bachelor's",
+    "profession": "Software Engineer",
+    "motherTongue": "Tamil",
+    "caste": ""
+  },
+  "otherDetails": {
+    "caste": "Mudaliar"
+  }
 }
 
 

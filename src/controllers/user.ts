@@ -18,6 +18,16 @@ export const getUserDetails = async (c: Context) => {
   return c.json(userDetails)
 }
 
+export const getPartnerPreferences = async (c: Context) => {
+  const { _id } = c.get("user")
+  const user = await User.findById(_id).select("partnerPreferences otherDetails.caste").lean()
+  const payload = {
+    ...user?.partnerPreferences,
+    caste: user?.partnerPreferences?.caste || (user?.otherDetails?.caste === "Don't wish to specify" ? "Any" : user?.otherDetails?.caste)
+  }
+  return c.json(payload)
+}
+
 export const getMatches = async (c: Context) => {
   const { limit, skip, ...rest } = c.req.query()
   const { _id } = c.get("user")
