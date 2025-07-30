@@ -15,6 +15,9 @@ export const env = {
 
   GMAIL_PASS: process.env.GMAIL_PASS || "",
   GMAIL_ID: process.env.GMAIL_ID || "",
+
+  RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID || "",
+  RAZORPAY_SECRET: process.env.RAZORPAY_SECRET || "",
 } as const
 
 export const tokenEnums = {

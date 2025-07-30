@@ -2,11 +2,12 @@ import { serve } from '@hono/node-server';
 
 import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
-import { csrf } from 'hono/csrf';
+// import { csrf } from 'hono/csrf';
 import { Hono } from 'hono';
 
 import extractorRoutes from './routes/extractor.js';
 import accountRoutes from './routes/account.js';
+import paymentRoutes from './routes/payment.js';
 import adminRoutes from './routes/admin.js';
 import fakerRoutes from './routes/faker.js';
 import userRoutes from './routes/user.js';
@@ -29,6 +30,7 @@ app.route("/user", userRoutes)
 app.route("/admin", adminRoutes)
 app.route("/extractor", extractorRoutes)
 app.route("/faker", fakerRoutes)
+app.route("/payment", paymentRoutes)
 
 app.notFound(c => c.json({ message: 'Route not found' }, 404))
 

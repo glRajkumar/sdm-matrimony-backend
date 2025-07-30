@@ -14,7 +14,8 @@
     "hono": "^4.8.5",
     "mongoose": "^8.16.4",
     "nodemailer": "^6.10.1",
-    "ollama": "^0.5.16"
+    "ollama": "^0.5.16",
+    "razorpay": "^2.9.6"
   },
   "devDependencies": {
     "@ngneat/falso": "^7.4.0",
