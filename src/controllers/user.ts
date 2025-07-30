@@ -3,16 +3,17 @@ import type { Context } from 'hono';
 import { getImgUrl, getFilterObj, deleteImg } from '../utils/index.js';
 import User from '../models/user.js';
 
-const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails otherDetails"
+const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails otherDetails currentPlan"
 
 export const getUserDetails = async (c: Context) => {
   const { _id } = c.req.param()
   const user = c.get("user")
 
   const isAuthorised = user._id.toString() === _id
-  const select = `-refreshTokens -password -liked -disliked -verifiyOtp -role -brokerAppointed -approvalStatus ${isAuthorised ? "" : "-contactDetails -email -payment"}`.trim()
+  const select = `-refreshTokens -password -liked -verifiyOtp -role -brokerAppointed -approvalStatus ${isAuthorised ? "" : "-contactDetails -email -currentPlan"}`.trim()
   const userDetails = await User.findOne({ _id })
     .select(select)
+    .populate("currentPlan", "-_id subscribedTo")
     .lean()
 
   return c.json(userDetails)
@@ -47,20 +48,6 @@ export const getMatches = async (c: Context) => {
   const filters = getFilterObj({ ...rest, ...payload, })
 
   const liked = user?.liked || []
-  // const disliked = user?.disliked || []
-
-  // const getMatches = await User.find({ ...filters, _id: { $ne: _id } })
-  //   .select(userSelectFields)
-  //   .limit(numLimit)
-  //   .skip(numSkip)
-  //   .lean()
-
-  // const final = getMatches.map(us => ({
-  //   ...us,
-  //   isLiked: liked.includes(us._id),
-  //   isDisliked: disliked.includes(us._id)
-  // }))
-
 
   const baseFilters = { ...filters, _id: { $ne: _id } }
   const select = userSelectFields.split(" ").reduce((acc, field) => ({ ...acc, [field]: 1 }), {})
@@ -70,13 +57,30 @@ export const getMatches = async (c: Context) => {
     { $limit: numLimit },
     { $project: select },
     {
+      $lookup: {
+        from: "payments",
+        localField: "currentPlan",
+        foreignField: "_id",
+        as: "currentPlan",
+        pipeline: [{
+          $project: {
+            _id: 0,
+            subscribedTo: 1,
+          }
+        }],
+      }
+    },
+    {
+      $unwind: {
+        path: "$currentPlan",
+        preserveNullAndEmptyArrays: true,
+      }
+    },
+    {
       $addFields: {
         isLiked: {
           $in: ["$_id", liked]
         },
-        // isDisliked: {
-        //   $in: ["$_id", disliked]
-        // }
       }
     }
   ])
@@ -100,6 +104,10 @@ export const getLikesList = async (c: Context) => {
         limit: numLimit,
         skip: numSkip,
       },
+      populate: {
+        path: "currentPlan",
+        select: "-_id subscribedTo",
+      },
     })
     .lean()
 
@@ -111,8 +119,8 @@ export const addLiked = async (c: Context) => {
   const { _id } = c.get("user")
   const { userId, type = "liked" } = await c.req.json()
   const updateObj: any = { $push: { [type]: userId } }
-  const otherType = type === "liked" ? "disliked" : "liked"
-  updateObj.$pull = { [otherType]: userId }
+  // const otherType = type === "liked" ? "disliked" : "liked"
+  // updateObj.$pull = { [otherType]: userId }
   await User.updateOne({ _id }, updateObj)
   return c.json({ message: `User added to ${type} list successfully` })
 }

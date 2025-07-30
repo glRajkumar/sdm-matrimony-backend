@@ -1,9 +1,9 @@
 @host = http://localhost:5000/api/user
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM3NjYyNjAsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODg3Nzg2OTAzNDA3MzllNjhkNTczNDAiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoicGVuZGluZyJ9.sQf8GuB8xjpqcOX7xLtvrVgwbOf9EgoEVqVrXV7lI8s
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM4ODExNDgsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODhhMGJiOTJjZjAwYzI0NWVlNmExZGYiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.VzZv39FoVORLPE5KOoMsYkfjbmC2AHShX4ZGOu-zgU8
 
 
 ### user details
-GET {{host}}/profile/67cec22e3fce9250355851e9
+GET {{host}}/profile/688a1171e775c818c4d99d15
 Authorization: {{token}}
 
 
@@ -13,7 +13,7 @@ Authorization: {{token}}
 
 
 ### getMathces ?limit=4&skip=0&ageRange=above_40&rasi=Aries&lagna=Aries&maritalStatus=Married&isBlocked=false&isDeleted=false&minSalary=10000&minQualification=Bachelor&profession=Software Engineer&motherTongue=["Hindi","English"]
-GET {{host}}/matches?minQualification=Bachelor's
+GET {{host}}/matches?limit=400
 Authorization: {{token}}
 
 
@@ -28,8 +28,8 @@ Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "userId": "67ce9f504ae2647f21bde5c0",
-  "type": "disliked"
+  "userId": "688a1171e775c818c4d99d15",
+  "type": "liked"
 }
 
 

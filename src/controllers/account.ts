@@ -57,10 +57,15 @@ export const login = async (c: Context) => {
 
   if (!email || !password) return c.json({ message: "Email or password is missing" }, 400)
 
-  const Model = role === "user" ? User : Admin
   const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
 
-  const user = await (Model as any).findOne(findBy)
+  let user: any = null
+  if (role === "user") {
+    user = await User.findOne(findBy).populate("currentPlan", "-_id subscribedTo expiryDate")
+  } else {
+    user = await Admin.findOne(findBy)
+  }
+
   if (!user) return c.json({ message: 'Cannot find user in db' }, 401)
 
   const result = await comparePasswords(password, user.password)
@@ -88,6 +93,7 @@ export const login = async (c: Context) => {
 
   if (role === "user") {
     output.gender = user?.gender
+    output.currentPlan = user?.currentPlan
   }
 
   setRefreshTokenCookie(c, refresh_token)
@@ -184,8 +190,14 @@ export const imgUpload = async (c: Context) => {
 export const approvalStatusRefresh = async (c: Context) => {
   const { role, _id } = c.get('user')
 
-  const Model = role === "user" ? User : Admin
-  const user = await (Model as any).findOne({ _id })
+  let user: any = null
+
+  if (role === "user") {
+    user = await User.findOne({ _id }).populate("currentPlan", "-_id subscribedTo expiryDate")
+  } else {
+    user = await Admin.findOne({ _id })
+  }
+
   if (!user) return c.json({ message: 'Cannot find user in db' }, 401)
 
   if (user.approvalStatus === "pending") {
@@ -218,6 +230,7 @@ export const approvalStatusRefresh = async (c: Context) => {
 
   if (role === "user") {
     output.gender = user?.gender
+    output.currentPlan = user?.currentPlan
   }
 
   setRefreshTokenCookie(c, refresh_token)
