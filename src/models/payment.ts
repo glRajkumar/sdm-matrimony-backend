@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { plans } from '../utils/enums.js';
 
 const paymentSchema = new Schema({
   user: {
@@ -11,20 +12,24 @@ const paymentSchema = new Schema({
     required: true,
   },
 
+  subscribedTo: {
+    type: String,
+    enum: plans,
+    default: 'basic',
+  },
+
   paymentId: {
     type: String,
     required: true,
   },
 
-  paymentStatus: {
+  orderId: {
     type: String,
-    enum: ['success', 'failed'],
     required: true,
   },
 
-  paymentType: {
+  razorpayPaymentSignature: {
     type: String,
-    enum: ['subscription', 'one-time'],
     required: true,
   },
 

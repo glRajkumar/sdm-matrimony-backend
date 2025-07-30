@@ -76,3 +76,18 @@ export const professions = [
 export const nakshatra = ['Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashira', 'Ardra', 'Punarvasu', 'Pushya', 'Ashlesha', 'Magha', 'Purva Phalguni', 'Uttara Phalguni', 'Hasta', 'Chitra', 'Swati', 'Vishakha', 'Anuradha', 'Jyeshtha', 'Mula', 'Purva Ashadha', 'Uttara Ashadha', 'Shravana', 'Dhanishta', 'Shatabhisha', 'Purva Bhadrapada', 'Uttara Bhadrapada', 'Revati'] as const
 export const planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'] as const
 export const raasi = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'] as const
+
+export const plans = ['basic', 'premium', 'gold'] as const
+export type plansT = typeof plans[number]
+
+export const planValidityMonths: Record<plansT, number> = {
+  basic: 3,
+  premium: 6,
+  gold: 12,
+} as const
+
+export const planPrices: Record<plansT, number> = {
+  basic: 3_000,
+  premium: 5_000,
+  gold: 10_000,
+} as const

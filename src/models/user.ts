@@ -196,10 +196,10 @@ const userSchema = new Schema({
     ref: 'User'
   }],
 
-  payment: [{
+  currentPlan: {
     type: Schema.Types.ObjectId,
     ref: 'Payment'
-  }],
+  },
 
 }, { timestamps: true })
 
