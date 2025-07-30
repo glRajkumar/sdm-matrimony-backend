@@ -77,17 +77,19 @@ export const nakshatra = ['Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashir
 export const planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'] as const
 export const raasi = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'] as const
 
-export const plans = ['basic', 'premium', 'gold'] as const
+export const plans = ['basic', 'gold', 'diamond', 'platinum'] as const
 export type plansT = typeof plans[number]
 
 export const planValidityMonths: Record<plansT, number> = {
   basic: 3,
-  premium: 6,
-  gold: 12,
+  gold: 6,
+  diamond: 9,
+  platinum: 12,
 } as const
 
 export const planPrices: Record<plansT, number> = {
   basic: 3_000,
-  premium: 5_000,
-  gold: 10_000,
+  gold: 5_500,
+  diamond: 8_500,
+  platinum: 11_000,
 } as const

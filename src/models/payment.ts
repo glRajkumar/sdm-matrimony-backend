@@ -18,6 +18,21 @@ const paymentSchema = new Schema({
     default: 'basic',
   },
 
+  noOfProfilesCanView: {
+    type: Number,
+    default: 50,
+  },
+
+  isAssisted: {
+    type: Boolean,
+    default: false,
+  },
+
+  assistedMonths: {
+    type: Number,
+    default: 0,
+  },
+
   paymentId: {
     type: String,
     required: true,

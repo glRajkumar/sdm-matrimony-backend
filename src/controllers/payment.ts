@@ -12,15 +12,40 @@ const razorpay = new Razorpay({
 
 export const createOrder = async (c: Context) => {
   const { _id } = c.get("user")
-  const { subscribedTo } = await c.req.json()
+  const {
+    subscribedTo = "basic",
+    noOfProfilesCanView = 50,
+    isAssisted = false,
+    assistedMonths = 0
+  } = await c.req.json()
+
+  let amount = planPrices[subscribedTo as plansT]
+
+  const notes: any = {
+    user_id: _id,
+    subscribedTo,
+    noOfProfilesCanView,
+    isAssisted,
+    assistedMonths,
+  }
+
+  if (noOfProfilesCanView > 50) {
+    if (noOfProfilesCanView === 999) {
+      // Unlimited
+      amount += 20_000
+    } else {
+      amount += ((noOfProfilesCanView - 50) / 50) * 1_000
+    }
+  }
+
+  if (isAssisted) {
+    amount += assistedMonths * 10_000
+  }
 
   const options = {
-    amount: planPrices[subscribedTo as plansT] * 100,
+    amount: amount * 100,
     currency: "INR",
-    notes: {
-      user_id: _id,
-      subscribedTo: subscribedTo || "basic",
-    }
+    notes,
   }
 
   const order = await razorpay.orders.create(options)
@@ -35,7 +60,6 @@ export const verifyPayment = async (c: Context) => {
   const payment = await Payment.create({
     ...body,
     user: _id,
-    amount: planPrices[body.subscribedTo as plansT],
     expiryDate,
   })
 
