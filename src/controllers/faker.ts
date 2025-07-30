@@ -7,26 +7,10 @@ import {
 
 import {
   approvalStatuses, maritalStatuses, genders,
-  nakshatra, planets, raasi, castes, religions,
+  nakshatra, raasi, castes, religions,
   professions, educationLevels, languages,
   proffessionalSectors,
 } from '../utils/index.js';
-
-const generatePlanetData = () => {
-  return {
-    planet: rand(planets),
-    degree: randNumber({ min: 0, max: 30 }),
-    sign: rand(raasi),
-  };
-};
-
-const generateHouseDetails = () => {
-  const houses: any = {}
-  for (let i = 1; i <= 12; i++) {
-    houses[`house${i}`] = [generatePlanetData()];
-  }
-  return houses;
-};
 
 const generateRandomUser = () => {
   const gender = rand(genders)
@@ -76,12 +60,10 @@ const generateRandomUser = () => {
       nakshatra: rand(nakshatra),
       rasi: rand(raasi),
       lagna: rand(raasi),
-      dashaPeriod: randWord(),
+      // dashaPeriod: randWord(),
       // placeOfBirth: randStreetAddress(),
       // timeOfBirth: `${randNumber({ min: 1, max: 12 })}:${randNumber({ min: 0, max: 59 })} ${randWord({ length: 1, dictionary: ['AM', 'PM'] })[0]}`,
-      // raasiChart: generateHouseDetails(),
-      // navamsaChart: generateHouseDetails(),
-      vedicHoroscopePic: "",
+      // vedicHoroscopePic: "",
     },
     partnerPreferences: {
       minAge,

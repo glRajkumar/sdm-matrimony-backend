@@ -1,30 +1,5 @@
 import { Schema, model } from 'mongoose';
-
-const maritalStatus = ['Single', 'Divorced', 'Widowed']
-
-const planetSchema = {
-  type: [{
-    planet: String,
-    degree: Number,
-    sign: String,
-  }],
-  default: [],
-}
-
-const houseDetailSchema = {
-  house1: planetSchema,
-  house2: planetSchema,
-  house3: planetSchema,
-  house4: planetSchema,
-  house5: planetSchema,
-  house6: planetSchema,
-  house7: planetSchema,
-  house8: planetSchema,
-  house9: planetSchema,
-  house10: planetSchema,
-  house11: planetSchema,
-  house12: planetSchema,
-}
+import { approvalStatuses, genders, maritalStatuses } from '../utils/enums.js';
 
 const userSchema = new Schema({
   fullName: {
@@ -65,7 +40,7 @@ const userSchema = new Schema({
 
   maritalStatus: {
     type: String,
-    enum: maritalStatus,
+    enum: maritalStatuses,
     required: true
   },
 
@@ -85,7 +60,8 @@ const userSchema = new Schema({
 
   gender: {
     type: String,
-    enum: ['Male', 'Female'], // 'Other'
+    enum: genders,
+    required: true,
   },
 
   dob: {
@@ -130,8 +106,8 @@ const userSchema = new Schema({
 
   approvalStatus: {
     type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending',
+    enum: approvalStatuses,
+    default: 'approved',
   },
 
   verifiyOtp: Number,
@@ -143,8 +119,6 @@ const userSchema = new Schema({
     dashaPeriod: String,
     placeOfBirth: String,
     timeOfBirth: String,
-    raasiChart: houseDetailSchema,
-    navamsaChart: houseDetailSchema,
     vedicHoroscopePic: String,
     dosham: String,
   },
@@ -163,7 +137,7 @@ const userSchema = new Schema({
     expectation: String,
     maritalStatus: {
       type: String,
-      enum: maritalStatus,
+      enum: maritalStatuses,
     },
   },
 
@@ -187,11 +161,6 @@ const userSchema = new Schema({
   },
 
   liked: [{
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-
-  disliked: [{
     type: Schema.Types.ObjectId,
     ref: 'User'
   }],
