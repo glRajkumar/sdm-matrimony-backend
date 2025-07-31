@@ -12,7 +12,7 @@ const authMiddleware = createMiddleware(async (c, next) => {
 
     const { _id, role, type } = await verifyToken(token, tokenEnums.accessToken)
 
-    if (type !== "access") return c.json({ message: 'Invalid token' }, 400)
+    if (type !== tokenEnums.accessToken) return c.json({ message: 'Invalid token' }, 400)
 
     let user = null
     if (role === "user") {

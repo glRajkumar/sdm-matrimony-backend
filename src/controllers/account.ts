@@ -55,7 +55,7 @@ export const register = async (c: Context) => {
       role: user.role,
     }
     const verifyToken = await getToken(payload, tokenEnums.verifyToken)
-    const verificationUrl = `${env.FRONTEND_URL}/verify?token=${verifyToken}`
+    const verificationUrl = `${env.FRONTEND_URL}/auth/verify?token=${verifyToken}`
     transporter.sendMail({
       to: email,
       from: env.EMAIL_ID,
@@ -127,7 +127,7 @@ export async function accessToken(c: Context) {
 
   const { _id, role, type } = await verifyToken(refresh_token, tokenEnums.refreshToken)
 
-  if (type !== "refresh") return c.json({ message: 'Invalid token' }, 400)
+  if (type !== tokenEnums.refreshToken) return c.json({ message: 'Invalid token' }, 400)
 
   const Model = role === "user" ? User : Admin
 
@@ -210,7 +210,7 @@ export async function verifyAccount(c: Context) {
 
   await user.save()
 
-  return c.json({ message: "Account verified successfully" })
+  return c.json({ role })
 }
 
 export async function resendVerifyEmail(c: Context) {
@@ -225,7 +225,7 @@ export async function resendVerifyEmail(c: Context) {
     role: user.role,
   }
   const verifyToken = await getToken(payload, tokenEnums.verifyToken)
-  const verificationUrl = `${env.FRONTEND_URL}/verify?token=${verifyToken}`
+  const verificationUrl = `${env.FRONTEND_URL}/auth/verify?token=${verifyToken}`
   await transporter.sendMail({
     to: email,
     from: env.EMAIL_ID,

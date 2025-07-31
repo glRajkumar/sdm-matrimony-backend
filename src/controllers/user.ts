@@ -4,7 +4,7 @@ import { getImgUrl, getFilterObj, deleteImg } from '../utils/index.js';
 import UserAccess from '../models/user-access.js';
 import User from '../models/user.js';
 
-const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails otherDetails currentPlan"
+const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails otherDetails currentPlan isVerified"
 const currentPlanSelectFields = "-_id subscribedTo expiryDate"
 
 async function checkUserAccess(user: any, _id: string) {
