@@ -49,6 +49,25 @@ export const register = async (c: Context) => {
 
   await user.save()
 
+  if (email) {
+    const payload = {
+      _id: user._id.toString(),
+      role: user.role,
+    }
+    const verifyToken = await getToken(payload, tokenEnums.verifyToken)
+    const verificationUrl = `${env.FRONTEND_URL}/verify?token=${verifyToken}`
+    transporter.sendMail({
+      to: email,
+      from: env.EMAIL_ID,
+      subject: "Your verification email",
+      html: `
+      <h1>Verify your email</h1>
+      <p>Click the link below to verify your email:</p>
+      <a href="${verificationUrl}" target="_blank">Verify Email</a>
+      `,
+    })
+  }
+
   return c.json({ message: 'User saved successfully' })
 }
 
@@ -173,6 +192,52 @@ export async function resetPass(c: Context) {
   await user.save()
 
   return c.json({ message: "Password reseted successfully" })
+}
+
+export async function verifyAccount(c: Context) {
+  const { token } = await c.req.json()
+
+  const { _id, role, type } = await verifyToken(token, tokenEnums.verifyToken)
+
+  if (type !== tokenEnums.verifyToken) return c.json({ message: 'Invalid token' }, 400)
+
+  const Model = role === "user" ? User : Admin
+
+  const user = await (Model as any).findOne({ _id }).select("_id email")
+  if (!user) return c.json({ message: 'User not found' }, 400)
+
+  user.isVerified = true
+
+  await user.save()
+
+  return c.json({ message: "Account verified successfully" })
+}
+
+export async function resendVerifyEmail(c: Context) {
+  const { email, role = "user" } = await c.req.json()
+
+  const Model = role === "user" ? User : Admin
+  const user = await (Model as any).findOne({ email }).select("_id role").lean()
+  if (!user) return c.json({ message: 'User not found' }, 400)
+
+  const payload = {
+    _id: user._id.toString(),
+    role: user.role,
+  }
+  const verifyToken = await getToken(payload, tokenEnums.verifyToken)
+  const verificationUrl = `${env.FRONTEND_URL}/verify?token=${verifyToken}`
+  await transporter.sendMail({
+    to: email,
+    from: env.EMAIL_ID,
+    subject: "Verify your email",
+    html: `
+    <h1>Verify your email</h1>
+    <p>Click the link below to verify your email:</p>
+    <a href="${verificationUrl}" target="_blank">Verify Email</a>
+    `
+  })
+
+  return c.json({ message: "Verification email sent successfully" })
 }
 
 export const imgUpload = async (c: Context) => {

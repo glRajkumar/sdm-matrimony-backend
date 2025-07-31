@@ -160,6 +160,11 @@ const userSchema = new Schema({
     default: false,
   },
 
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+
   liked: [{
     type: Schema.Types.ObjectId,
     ref: 'User'

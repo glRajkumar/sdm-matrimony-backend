@@ -38,6 +38,11 @@ const adminSchema = new Schema({
     default: 'pending',
   },
 
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+
   verifiyOtp: {
     type: Number
   },

@@ -21,12 +21,15 @@ export const env = {
   RAZORPAY_SECRET: process.env.RAZORPAY_SECRET || "",
 } as const
 
+export type token_types = "accessToken" | "verifyToken" | "refreshToken"
 export const tokenEnums = {
-  accessToken: "access_token",
-  refreshToken: "refresh_token",
+  verifyToken: "verifyToken",
+  accessToken: "accessToken",
+  refreshToken: "refreshToken",
 } as const
 
 export const tokenValidity = {
+  verifyToken: 60 * 15, // 15 min
   accessToken: 60 * 30, // 30 min
   refreshToken: 60 * 60 * 24 * 7, // 7 days
 } as const

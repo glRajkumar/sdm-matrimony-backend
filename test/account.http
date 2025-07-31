@@ -7,7 +7,7 @@ Content-Type: application/json
 
 {
   "fullName": "Raj kumar",
-  "email": "raj@gmail.com",
+  "email": "foniy64530@0tires.com",
   "password": "12345678",
   "role": "user",
   "gender": "Male",
@@ -21,8 +21,7 @@ Content-Type: application/json
     "sector": "IT / Software",
     "salary": 80030
   },
-  "contactDetails":{
-    "mobile": "1234567890",
+  "contactDetails": {
     "address": "680 Nguyen Cliffs\nNew Amy, IL 82099"
   },
   "familyDetails": {
@@ -113,6 +112,25 @@ Content-Type: application/json
   "email": "kent11@gmail.com",
   "password": "12345678",
   "otp": 863776,
+  "role": "user"
+}
+
+
+### verify account
+POST {{host}}/verify
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM5NjkxMzYsInR5cGUiOiJ2ZXJpZnlUb2tlbiIsIl9pZCI6IjY4OGI2ZTAwZDIyOGE5NTlhNTc5ZmE3NiIsInJvbGUiOiJ1c2VyIn0.uIjWWSO8nrAY5VIYOL51mm5jZX793NHcwy0Rw1wuIIE"
+}
+
+
+### resend verify email
+POST {{host}}/resend-verify-email
+Content-Type: application/json
+
+{
+  "email": "foniy64530@0tires.com",
   "role": "user"
 }
 
