@@ -13,7 +13,7 @@ export const getUserDetails = async (c: Context) => {
   const select = `-refreshTokens -password -liked -verifiyOtp -role -brokerAppointed -approvalStatus ${isAuthorised ? "" : "-contactDetails -email -currentPlan"}`.trim()
   const userDetails = await User.findOne({ _id })
     .select(select)
-    .populate("currentPlan", "-_id subscribedTo")
+    .populate("currentPlan", "-_id subscribedTo expiryDate")
     .lean()
 
   return c.json(userDetails)
@@ -66,6 +66,7 @@ export const getMatches = async (c: Context) => {
           $project: {
             _id: 0,
             subscribedTo: 1,
+            expiryDate: 1,
           }
         }],
       }
@@ -106,7 +107,7 @@ export const getLikesList = async (c: Context) => {
       },
       populate: {
         path: "currentPlan",
-        select: "-_id subscribedTo",
+        select: "-_id subscribedTo expiryDate",
       },
     })
     .lean()
