@@ -1,10 +1,20 @@
 import nodemailer from 'nodemailer';
 import { env } from './enums.js';
 
+// export const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: env.GMAIL_ID,
+//     pass: env.GMAIL_PASS
+//   }
+// })
+
 export const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: env.EMAIL_HOST,
+  secure: true,
+  port: 465,
   auth: {
-    user: env.GMAIL_ID,
-    pass: env.GMAIL_PASS
-  }
+    user: env.EMAIL_ID,
+    pass: env.EMAIL_PASS,
+  },
 })

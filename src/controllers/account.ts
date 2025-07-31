@@ -5,7 +5,7 @@ import {
   setRefreshTokenCookie, deleteRefreshTokenCookie,
   generateOtp, getImgUrl, getToken, verifyToken,
   comparePasswords, hashPassword, tokenEnums,
-  isEmail,
+  isEmail, transporter, env,
 } from '../utils/index.js';
 
 import Admin from '../models/admin.js';
@@ -141,12 +141,12 @@ export async function forgetPass(c: Context) {
 
   user.verifiyOtp = verifiyOtp
 
-  // await transporter.sendMail({
-  //   to: email,
-  //   from: process.env.GMAIL_ID,
-  //   subject: "Reset password key",
-  //   html: `${verifiyOtp}`
-  // })
+  await transporter.sendMail({
+    to: email,
+    from: env.EMAIL_ID,
+    subject: "Reset password key",
+    html: `${verifiyOtp}`
+  })
 
   await user.save()
 

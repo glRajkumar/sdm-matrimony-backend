@@ -1,6 +1,6 @@
 # sdm-backend
 
-A backend service built using **Hono.js** for routing, **MongoDB + Mongoose** for database interactions, **Cloudinary** for image uploads, **Razorpay** as the payment gateway.
+A backend service built using **Hono.js** for routing, **MongoDB + Mongoose** for database interactions, **Cloudinary** for image uploads, **Razorpay** as the payment gateway and **Nodemailer** for sending emails.
 
 ## 🛠 Tech Stack
 
@@ -8,6 +8,7 @@ A backend service built using **Hono.js** for routing, **MongoDB + Mongoose** fo
 * [MongoDB](https://www.mongodb.com/) + [Mongoose](https://mongoosejs.com/) – NoSQL database with a flexible schema layer
 * [Cloudinary](https://cloudinary.com/) – Image hosting and transformation
 * [Razorpay](https://razorpay.com/) – Payment gateway integration
+* [Nodemailer](https://nodemailer.com/) – Email sending
 
 ## 📦 Getting Started
 
@@ -17,6 +18,7 @@ A backend service built using **Hono.js** for routing, **MongoDB + Mongoose** fo
 * MongoDB URI
 * Cloudinary credentials
 * Razorpay API keys
+* Email keys
 
 ### Installation
 
@@ -50,7 +52,11 @@ CLOUDINARY_API_SECRET=
 RAZORPAY_KEY_ID=
 RAZORPAY_SECRET=
 
-FRONTEND_URL
+FRONTEND_URL=
+
+EMAIL_ID=
+EMAIL_PASS=
+EMAIL_HOST=
 ```
 
 ### Running the server

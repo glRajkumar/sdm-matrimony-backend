@@ -1,9 +1,9 @@
 @host = http://localhost:5000/api/user
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM5NDgxMDcsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODhhMGJiOTJjZjAwYzI0NWVlNmExZGYiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.4ns3ttGqNNp8WUIYaqJiNCoWOtVyCN4yiwcsVostYfE
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM5NTY1MDUsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODhhMGJiOTJjZjAwYzI0NWVlNmExZGYiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.h-bCZUQGwHU9cc7qNJEdxphUCT0TOJOjkdlQzbgqx4A
 
 
 ### user details
-GET {{host}}/profile/688a1171e775c818c4d99d15
+GET {{host}}/profile/688a0b802cf00c245ee6a12b
 Authorization: {{token}}
 
 
@@ -117,6 +117,6 @@ Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "_id": "688a0b6c2cf00c245ee6a04d"
+  "_id": "688a0b802cf00c245ee6a12b"
 }
 

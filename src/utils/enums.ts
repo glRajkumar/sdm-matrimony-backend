@@ -13,8 +13,9 @@ export const env = {
   FRONTEND_URL: process.env.FRONTEND_URL || "",
   NODE_ENV: process.env.NODE_ENV || "",
 
-  GMAIL_PASS: process.env.GMAIL_PASS || "",
-  GMAIL_ID: process.env.GMAIL_ID || "",
+  EMAIL_ID: process.env.EMAIL_ID || "",
+  EMAIL_PASS: process.env.EMAIL_PASS || "",
+  EMAIL_HOST: process.env.EMAIL_HOST || "",
 
   RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID || "",
   RAZORPAY_SECRET: process.env.RAZORPAY_SECRET || "",
