@@ -1,19 +1,44 @@
 import type { Context } from 'hono';
 
 import { getImgUrl, getFilterObj, deleteImg } from '../utils/index.js';
+import UserAccess from '../models/user-access.js';
 import User from '../models/user.js';
 
 const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails otherDetails currentPlan"
+const currentPlanSelectFields = "-_id subscribedTo expiryDate"
+
+async function checkUserAccess(user: any, _id: string) {
+  const isOwner = user._id.toString() === _id
+  if (isOwner || user.role === "admin") return true
+
+  const hasAccess = user.role === "user" && user.currentPlan &&
+    new Date(user.currentPlan.expiryDate).getTime() > new Date().getTime()
+  if (!hasAccess) return false
+
+  const hasUnlockedAccess = await UserAccess.findOne({
+    viewer: user._id,
+    viewed: _id,
+    paymentRefId: user.currentPlan._id,
+  }).select("_id").lean()
+
+  return !!hasUnlockedAccess
+}
 
 export const getUserDetails = async (c: Context) => {
   const { _id } = c.req.param()
   const user = c.get("user")
 
-  const isAuthorised = user._id.toString() === _id
-  const select = `-refreshTokens -password -liked -verifiyOtp -role -brokerAppointed -approvalStatus ${isAuthorised ? "" : "-contactDetails -email -currentPlan"}`.trim()
+  const hasFullAccess = await checkUserAccess(user, _id)
+
+  let select = "-refreshTokens -password -liked -verifiyOtp -role -brokerAppointed -approvalStatus -email"
+
+  if (hasFullAccess) {
+    select += " contactDetails"
+  }
+
   const userDetails = await User.findOne({ _id })
     .select(select)
-    .populate("currentPlan", "-_id subscribedTo expiryDate")
+    .populate("currentPlan", currentPlanSelectFields)
     .lean()
 
   return c.json(userDetails)
@@ -107,13 +132,33 @@ export const getLikesList = async (c: Context) => {
       },
       populate: {
         path: "currentPlan",
-        select: "-_id subscribedTo expiryDate",
+        select: currentPlanSelectFields,
       },
     })
     .lean()
 
   // @ts-ignore
   return c.json(list?.[type] || [])
+}
+
+export const getUnlockedProfiles = async (c: Context) => {
+  const { _id, currentPlan } = c.get("user")
+
+  const list = await UserAccess.find({ viewer: _id, paymentRefId: currentPlan._id })
+    .select("viewed")
+    .populate({
+      path: "viewed",
+      select: userSelectFields,
+      populate: {
+        path: "currentPlan",
+        select: currentPlanSelectFields,
+      },
+    })
+    .lean()
+
+  const payload = list.map((item) => item.viewed)
+
+  return c.json(payload)
 }
 
 export const addLiked = async (c: Context) => {
@@ -174,4 +219,28 @@ export const imgDelete = async (c: Context) => {
   const { _id } = c.req.param()
   await deleteImg(_id)
   return c.json({ message: 'Image deleted successfully' })
+}
+
+export const unlockProfile = async (c: Context) => {
+  const { _id } = await c.req.json()
+  const user = c.get("user")
+
+  const hasFullAccess = await checkUserAccess(user, _id)
+  if (hasFullAccess) return c.json({ message: "You have full access to this profile already" })
+
+  const unlockedCount = await UserAccess.countDocuments({
+    viewer: user._id,
+    paymentRefId: user.currentPlan._id
+  })
+
+  if (unlockedCount >= user.currentPlan.noOfProfilesCanView) return c.json({ message: "You have reached the limit of unlocked profiles" }, 400)
+
+  await UserAccess.create({
+    viewer: user._id,
+    viewed: _id,
+    paymentRefId: user.currentPlan._id,
+    expiresAt: new Date(user.currentPlan.expiryDate),
+  })
+
+  return c.json({ message: "Profile unlocked successfully" })
 }

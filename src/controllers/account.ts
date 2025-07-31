@@ -240,8 +240,20 @@ export const approvalStatusRefresh = async (c: Context) => {
 
 export const me = async (c: Context) => {
   const user = c.get('user')
-  const Model = user?.role === "user" ? User : Admin
-  const userDetail = await (Model as any).findById(user._id).select("-password -refreshTokens -__v").lean()
+
+  let userDetail = null
+
+  if (user?.role === "user") {
+    userDetail = await User.findById(user._id)
+      .select("-password -refreshTokens -__v")
+      .populate("currentPlan")
+      .lean()
+  } else {
+    userDetail = await Admin.findById(user._id)
+      .select("-password -refreshTokens -__v")
+      .lean()
+  }
+
   return c.json(userDetail)
 }
 

@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/user
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM5MzU4MjksInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODhhMGJiOTJjZjAwYzI0NWVlNmExZGYiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.sBYGtcCJaeXuChCcVN7FdpYC_6H7bKv095bfixMAxuk
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM5NDgxMDcsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODhhMGJiOTJjZjAwYzI0NWVlNmExZGYiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.4ns3ttGqNNp8WUIYaqJiNCoWOtVyCN4yiwcsVostYfE
 
 
 ### user details
@@ -19,6 +19,11 @@ Authorization: {{token}}
 
 ### get Like/disLikes List ?limit=4&skip=0&type=disliked
 GET {{host}}/likes-list
+Authorization: {{token}}
+
+
+### get unlocked profiles
+GET {{host}}/unlocked
 Authorization: {{token}}
 
 
@@ -104,3 +109,14 @@ Content-Type: image/jpg
 ### delete image
 DELETE {{host}}/image/ayz0slcjmfsmt60ihvz1
 Authorization: {{token}}
+
+
+### unlock profile
+POST {{host}}/unlock
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "_id": "688a0b6c2cf00c245ee6a04d"
+}
+

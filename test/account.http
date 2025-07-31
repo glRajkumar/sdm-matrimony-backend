@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/account
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM4ODExNDgsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODhhMGJiOTJjZjAwYzI0NWVlNmExZGYiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.VzZv39FoVORLPE5KOoMsYkfjbmC2AHShX4ZGOu-zgU8
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM5NDgxMDcsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODhhMGJiOTJjZjAwYzI0NWVlNmExZGYiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.4ns3ttGqNNp8WUIYaqJiNCoWOtVyCN4yiwcsVostYfE
 
 ### register - user
 POST {{host}}/register

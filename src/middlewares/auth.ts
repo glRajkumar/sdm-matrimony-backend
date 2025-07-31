@@ -14,13 +14,21 @@ const authMiddleware = createMiddleware(async (c, next) => {
 
     if (type !== "access") return c.json({ message: 'Invalid token' }, 400)
 
-    const Model = role === "user" ? User : Admin
-    const user = await (Model as any).findById(_id).select("_id role isBlocked isDeleted").lean()
+    let user = null
+    if (role === "user") {
+      user = await User.findById(_id)
+        .select("_id role isBlocked isDeleted currentPlan")
+        .populate("currentPlan", "_id subscribedTo expiryDate noOfProfilesCanView")
+        .lean()
+    } else {
+      user = await Admin.findById(_id).select("_id role").lean()
+    }
+
     if (!user) return c.json({ message: 'User not found' }, 400)
 
     if (user.role === "user" && (user.isDeleted || user.isBlocked)) return c.json({ message: 'Access denied' }, 400)
 
-    c.set("user", { _id, role })
+    c.set("user", user)
 
     await next()
 
