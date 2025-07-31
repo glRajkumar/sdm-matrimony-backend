@@ -32,8 +32,8 @@ export const getUserDetails = async (c: Context) => {
 
   let select = "-refreshTokens -password -liked -verifiyOtp -role -brokerAppointed -approvalStatus -email"
 
-  if (hasFullAccess) {
-    select += " contactDetails"
+  if (!hasFullAccess) {
+    select += " -contactDetails -vedicHoroscope.vedicHoroscopePic"
   }
 
   const userDetails = await User.findOne({ _id })
