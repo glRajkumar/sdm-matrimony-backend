@@ -108,11 +108,13 @@ export const login = async (c: Context) => {
     email: user?.email,
     fullName: user?.fullName,
     approvalStatus: user?.approvalStatus,
+    mobile: user?.contactDetails?.mobile,
   }
 
   if (role === "user") {
     output.gender = user?.gender
     output.currentPlan = user?.currentPlan
+    output.isVerified = user?.isVerified
   }
 
   setRefreshTokenCookie(c, refresh_token)
@@ -292,11 +294,13 @@ export const approvalStatusRefresh = async (c: Context) => {
     email: user?.email,
     fullName: user?.fullName,
     approvalStatus: user?.approvalStatus,
+    mobile: user?.contactDetails?.mobile,
   }
 
   if (role === "user") {
     output.gender = user?.gender
     output.currentPlan = user?.currentPlan
+    output.isVerified = user?.isVerified
   }
 
   setRefreshTokenCookie(c, refresh_token)
