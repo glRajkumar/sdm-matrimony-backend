@@ -327,6 +327,25 @@ export const me = async (c: Context) => {
   return c.json(userDetail)
 }
 
+export const updatePassword = async (c: Context) => {
+  const { _id } = c.get('user')
+  const { oldPassword, newPassword } = await c.req.json()
+
+  if (oldPassword === newPassword) return c.json({ message: 'New password should be different from old password' }, 400)
+
+  const user = await User.findById(_id).select("password").lean()
+  if (!user) return c.json({ message: 'User not found' }, 400)
+
+  const result = await comparePasswords(oldPassword, user.password)
+  if (!result) return c.json({ message: 'Password not matched' }, 400)
+
+  const password = await hashPassword(newPassword)
+
+  await User.updateOne({ _id }, { password })
+
+  return c.json({ message: 'Password updated successfully' })
+}
+
 export const logout = async (c: Context) => {
   const user = c.get('user')
   const refresh_token = getCookie(c, tokenEnums.refreshToken)

@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/account
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM5NDgxMDcsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODhhMGJiOTJjZjAwYzI0NWVlNmExZGYiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.4ns3ttGqNNp8WUIYaqJiNCoWOtVyCN4yiwcsVostYfE
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTQwNDA0NzUsIl9pZCI6IjY4OGEwYmI5MmNmMDBjMjQ1ZWU2YTFkZiIsInJvbGUiOiJ1c2VyIiwiYXBwcm92YWxTdGF0dXMiOiJhcHByb3ZlZCJ9.ibQNTjrVT0-bi79oL4-BH0iLqqtyozisVD3EKinLRwg
 
 ### register - user
 POST {{host}}/register
@@ -155,6 +155,17 @@ Authorization: {{token}}
 ### user details
 GET {{host}}/me
 Authorization: {{token}}
+
+
+### update password
+POST {{host}}/update-password
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "oldPassword": "87654321",
+  "newPassword": "12345678"
+}
 
 
 ### logout
