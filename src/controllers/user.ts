@@ -44,6 +44,27 @@ export const getUserDetails = async (c: Context) => {
   return c.json(userDetails)
 }
 
+export const getAccountInfo = async (c: Context) => {
+  const { _id } = c.get("user")
+
+  const user = await User.findById(_id)
+    .select("email isVerified currentPlan")
+    .populate("currentPlan", "amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths")
+    .lean()
+
+  const unlockedCount = await UserAccess.countDocuments({
+    viewer: user?._id,
+    paymentRefId: user?.currentPlan?._id
+  })
+
+  const payload = {
+    ...user,
+    unlockedCount,
+  }
+
+  return c.json(payload)
+}
+
 export const getPartnerPreferences = async (c: Context) => {
   const { _id } = c.get("user")
   const user = await User.findById(_id).select("partnerPreferences otherDetails.caste").lean()

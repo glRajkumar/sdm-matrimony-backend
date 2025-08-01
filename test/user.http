@@ -1,9 +1,14 @@
 @host = http://localhost:5000/api/user
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM5NTY1MDUsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODhhMGJiOTJjZjAwYzI0NWVlNmExZGYiLCJyb2xlIjoidXNlciIsImFwcHJvdmFsU3RhdHVzIjoiYXBwcm92ZWQifQ.h-bCZUQGwHU9cc7qNJEdxphUCT0TOJOjkdlQzbgqx4A
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTQwMzA0ODcsIl9pZCI6IjY4OGEwYmI5MmNmMDBjMjQ1ZWU2YTFkZiIsInJvbGUiOiJ1c2VyIiwiYXBwcm92YWxTdGF0dXMiOiJhcHByb3ZlZCJ9.34ylgLM2GKgnalptbx4o6Rd1f3DzN6d6uaf1K_3_BfA
 
 
 ### user details
 GET {{host}}/profile/688a0b802cf00c245ee6a12b
+Authorization: {{token}}
+
+
+### getAccountInfo
+GET {{host}}/account-info
 Authorization: {{token}}
 
 

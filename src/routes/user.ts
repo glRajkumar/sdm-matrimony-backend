@@ -4,6 +4,7 @@ import {
   imgUpload, getUserDetails, getMatches, getLikesList,
   addLiked, removeLiked, updateProfile, imgDelete,
   getPartnerPreferences, getUnlockedProfiles, unlockProfile,
+  getAccountInfo,
 } from '../controllers/user.js';
 import authMiddleware from '../middlewares/auth.js';
 
@@ -13,6 +14,7 @@ userRoutes.use(authMiddleware)
 
 userRoutes
   .get('/matches', getMatches)
+  .get('/account-info', getAccountInfo)
   .get('/likes-list', getLikesList)
   .get('/profile/:_id', getUserDetails)
   .get('/partner-preferences', getPartnerPreferences)

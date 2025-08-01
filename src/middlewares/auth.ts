@@ -5,6 +5,7 @@ import { tokenEnums, verifyToken } from '../utils/index.js';
 import Admin from '../models/admin.js';
 import User from '../models/user.js';
 
+// need to implement redis for faster response
 const authMiddleware = createMiddleware(async (c, next) => {
   try {
     const token = c.req.header("Authorization")?.replace('Bearer ', '')
