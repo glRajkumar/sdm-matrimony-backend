@@ -214,7 +214,8 @@ export async function verifyAccount(c: Context) {
 }
 
 export async function resendVerifyEmail(c: Context) {
-  const { email, role = "user" } = await c.req.json()
+  const { role = "user" } = c.get("user")
+  const { email } = await c.req.json()
 
   const Model = role === "user" ? User : Admin
   const user = await (Model as any).findOne({ email }).select("_id role").lean()

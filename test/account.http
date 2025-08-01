@@ -128,10 +128,10 @@ Content-Type: application/json
 ### resend verify email
 POST {{host}}/resend-verify-email
 Content-Type: application/json
+Authorization: {{token}}
 
 {
-  "email": "foniy64530@0tires.com",
-  "role": "user"
+  "email": "foniy64530@0tires.com"
 }
 
 

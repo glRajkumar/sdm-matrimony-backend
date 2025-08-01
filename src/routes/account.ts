@@ -17,13 +17,13 @@ accountRoutes
   .post("/reset-pass", resetPass)
   .post("/register-image", imgUpload)
   .post("/verify", verifyAccount)
-  .post("/resend-verify-email", resendVerifyEmail)
 
 accountRoutes.use(authMiddleware)
 
 accountRoutes
   .get('/me', me)
   .get('/check-approval-status', approvalStatusRefresh)
+  .post("/resend-verify-email", resendVerifyEmail)
   .post('/logout', logout)
 
 export default accountRoutes
