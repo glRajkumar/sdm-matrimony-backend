@@ -66,11 +66,16 @@ export const getAccountInfo = async (c: Context) => {
 
 export const getPartnerPreferences = async (c: Context) => {
   const { _id } = c.get("user")
-  const user = await User.findById(_id).select("partnerPreferences otherDetails.caste").lean()
+
+  const user = await User.findById(_id)
+    .select("partnerPreferences otherDetails.caste")
+    .lean()
+
   const payload = {
     ...user?.partnerPreferences,
     caste: user?.partnerPreferences?.caste || (user?.otherDetails?.caste === "Don't wish to specify" ? "Any" : user?.otherDetails?.caste)
   }
+
   return c.json(payload)
 }
 
@@ -80,7 +85,9 @@ export const getMatches = async (c: Context) => {
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
 
-  const user = await User.findById(_id).select("-refreshTokens -images -verifiyOtp -role -brokerAppointed").lean()
+  const user = await User.findById(_id)
+    .select("-refreshTokens -images -verifiyOtp -role -brokerAppointed")
+    .lean()
   const payload: any = {}
 
   if (user?.gender === "Male") {

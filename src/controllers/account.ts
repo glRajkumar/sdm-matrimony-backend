@@ -79,9 +79,15 @@ export const login = async (c: Context) => {
 
   let user: any = null
   if (role === "user") {
-    user = await User.findOne(findBy).populate("currentPlan", "-_id subscribedTo expiryDate")
+    user = await User.findOne(findBy)
+      .select("_id role email password fullName contactDetails.mobile approvalStatus gender currentPlan isVerified")
+      .populate("currentPlan", "-_id subscribedTo expiryDate")
+      .lean()
+
   } else {
     user = await Admin.findOne(findBy)
+      .select("_id role email password fullName contactDetails.mobile")
+      .lean()
   }
 
   if (!user) return c.json({ message: 'Cannot find user in db' }, 401)
@@ -97,23 +103,25 @@ export const login = async (c: Context) => {
   const refresh_token = await getToken(payload, tokenEnums.refreshToken)
   const access_token = await getToken(payload, tokenEnums.accessToken)
 
-  user.refreshTokens = user.refreshTokens.concat(refresh_token)
-  await user.save()
+  const Model = getModel(role)
+  await Model.updateOne({ _id: user._id }, {
+    $push: { refreshTokens: refresh_token }
+  })
 
   const output: any = {
     access_token,
-    _id: user?._id,
-    role: user?.role,
-    email: user?.email,
-    fullName: user?.fullName,
-    approvalStatus: user?.approvalStatus,
-    mobile: user?.contactDetails?.mobile,
+    _id: user._id,
+    role: user.role,
+    email: user.email,
+    fullName: user.fullName,
+    approvalStatus: user.approvalStatus,
+    mobile: user.contactDetails.mobile,
   }
 
   if (role === "user") {
-    output.gender = user?.gender
-    output.currentPlan = user?.currentPlan
-    output.isVerified = user?.isVerified
+    output.gender = user.gender
+    output.currentPlan = user.currentPlan
+    output.isVerified = user.isVerified
   }
 
   setRefreshTokenCookie(c, refresh_token)
@@ -153,13 +161,13 @@ export async function forgetPass(c: Context) {
 
   const Model = getModel(role)
   const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
-  const user = await Model.findOne(findBy)
+  const user = await Model.findOne(findBy).select("_id").lean()
 
   if (!user) return c.json({ message: 'User not found' }, 400)
 
   const verifiyOtp = generateOtp()
 
-  user.verifiyOtp = verifiyOtp
+  await Model.updateOne({ _id: user._id }, { verifiyOtp })
 
   await transporter.sendMail({
     to: email,
@@ -167,8 +175,6 @@ export async function forgetPass(c: Context) {
     subject: "Reset password key",
     html: `${verifiyOtp}`
   })
-
-  await user.save()
 
   return c.json({ message: "Passkey sent to email successfully" })
 }
@@ -178,7 +184,7 @@ export async function resetPass(c: Context) {
 
   const Model = getModel(role)
   const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
-  const user = await Model.findOne(findBy)
+  const user = await Model.findOne(findBy).select("_id verifiyOtp").lean()
   if (!user) return c.json({ message: 'User not found' }, 400)
 
   if (!password) return c.json({ message: "Password shouldn't be empty" }, 400)
@@ -187,10 +193,10 @@ export async function resetPass(c: Context) {
 
   const hashedPass = await hashPassword(password)
 
-  user.password = hashedPass
-  user.verifiyOtp = undefined
-
-  await user.save()
+  await Model.updateOne({ _id: user._id }, {
+    password: hashedPass,
+    verifiyOtp: undefined
+  })
 
   return c.json({ message: "Password reseted successfully" })
 }
@@ -204,12 +210,10 @@ export async function verifyAccount(c: Context) {
 
   const Model = getModel(role as string)
 
-  const user = await Model.findOne({ _id }).select("_id email")
+  const user = await Model.findOne({ _id }).select("_id email").lean()
   if (!user) return c.json({ message: 'User not found' }, 400)
 
-  user.isVerified = true
-
-  await user.save()
+  await Model.updateOne({ _id }, { isVerified: true })
 
   return c.json({ role })
 }
@@ -260,9 +264,14 @@ export const approvalStatusRefresh = async (c: Context) => {
   let user: any = null
 
   if (role === "user") {
-    user = await User.findOne({ _id }).populate("currentPlan", "-_id subscribedTo expiryDate")
+    user = await User.findOne({ _id })
+      .populate("currentPlan", "-_id subscribedTo expiryDate")
+      .select("_id role approvalStatus")
+      .lean()
   } else {
     user = await Admin.findOne({ _id })
+      .select("_id role approvalStatus")
+      .lean()
   }
 
   if (!user) return c.json({ message: 'Cannot find user in db' }, 401)
@@ -283,23 +292,22 @@ export const approvalStatusRefresh = async (c: Context) => {
   const refresh_token = await getToken(payload, tokenEnums.refreshToken)
   const access_token = await getToken(payload, tokenEnums.accessToken)
 
-  user.refreshTokens = [refresh_token]
-  await user.save()
+  await User.updateOne({ _id }, { refreshTokens: [refresh_token] })
 
   const output: any = {
     access_token,
-    _id: user?._id,
-    role: user?.role,
-    email: user?.email,
-    fullName: user?.fullName,
-    approvalStatus: user?.approvalStatus,
-    mobile: user?.contactDetails?.mobile,
+    _id: user._id,
+    role: user.role,
+    email: user.email,
+    fullName: user.fullName,
+    approvalStatus: user.approvalStatus,
+    mobile: user.contactDetails.mobile,
   }
 
   if (role === "user") {
-    output.gender = user?.gender
-    output.currentPlan = user?.currentPlan
-    output.isVerified = user?.isVerified
+    output.gender = user.gender
+    output.currentPlan = user.currentPlan
+    output.isVerified = user.isVerified
   }
 
   setRefreshTokenCookie(c, refresh_token)
