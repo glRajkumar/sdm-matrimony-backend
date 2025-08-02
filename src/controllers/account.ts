@@ -8,8 +8,7 @@ import {
   isEmail, transporter, env,
 } from '../utils/index.js';
 
-import Admin from '../models/admin.js';
-import User from '../models/user.js';
+import { Admin, User, getModel } from '../models/index.js';
 
 export const register = async (c: Context) => {
   const { email, password, role = "user", ...rest } = await c.req.json()
@@ -17,7 +16,7 @@ export const register = async (c: Context) => {
   if (!email && !rest?.contactDetails?.mobile) return c.json({ message: "Email or Mobile is required" }, 400)
   if (!password) return c.json({ message: "Password shouldn't be empty" }, 400)
 
-  const Model = role === "user" ? User : Admin
+  const Model = getModel(role)
 
   const findBy: Record<string, any> = {}
   if (email && rest?.contactDetails?.mobile) {
@@ -30,7 +29,7 @@ export const register = async (c: Context) => {
     findBy["contactDetails.mobile"] = rest?.contactDetails?.mobile
   }
 
-  const userExist = await (Model as any).findOne(findBy).select('_id email contactDetails').lean()
+  const userExist = await Model.findOne(findBy).select('_id email contactDetails').lean()
 
   if (userExist) return c.json({ message: 'Email or Moboile number already exists' }, 400)
 
@@ -131,9 +130,9 @@ export async function accessToken(c: Context) {
 
   if (type !== tokenEnums.refreshToken) return c.json({ message: 'Invalid token' }, 400)
 
-  const Model = role === "user" ? User : Admin
+  const Model = getModel(role as string)
 
-  const user = await (Model as any).findOne({ _id, refreshTokens: refresh_token })
+  const user = await Model.findOne({ _id, refreshTokens: refresh_token })
     .select("_id role approvalStatus")
     .lean()
 
@@ -152,9 +151,9 @@ export async function accessToken(c: Context) {
 export async function forgetPass(c: Context) {
   const { email, role = "user" } = await c.req.json()
 
-  const Model = role === "user" ? User : Admin
+  const Model = getModel(role)
   const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
-  const user = await (Model as any).findOne(findBy)
+  const user = await Model.findOne(findBy)
 
   if (!user) return c.json({ message: 'User not found' }, 400)
 
@@ -177,9 +176,9 @@ export async function forgetPass(c: Context) {
 export async function resetPass(c: Context) {
   const { email, password, otp, role = "user" } = await c.req.json()
 
-  const Model = role === "user" ? User : Admin
+  const Model = getModel(role)
   const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
-  const user = await (Model as any).findOne(findBy)
+  const user = await Model.findOne(findBy)
   if (!user) return c.json({ message: 'User not found' }, 400)
 
   if (!password) return c.json({ message: "Password shouldn't be empty" }, 400)
@@ -203,9 +202,9 @@ export async function verifyAccount(c: Context) {
 
   if (type !== tokenEnums.verifyToken) return c.json({ message: 'Invalid token' }, 400)
 
-  const Model = role === "user" ? User : Admin
+  const Model = getModel(role as string)
 
-  const user = await (Model as any).findOne({ _id }).select("_id email")
+  const user = await Model.findOne({ _id }).select("_id email")
   if (!user) return c.json({ message: 'User not found' }, 400)
 
   user.isVerified = true
@@ -219,8 +218,8 @@ export async function resendVerifyEmail(c: Context) {
   const { role = "user" } = c.get("user")
   const { email } = await c.req.json()
 
-  const Model = role === "user" ? User : Admin
-  const user = await (Model as any).findOne({ email }).select("_id role").lean()
+  const Model = getModel(role)
+  const user = await Model.findOne({ email }).select("_id role").lean()
   if (!user) return c.json({ message: 'User not found' }, 400)
 
   const payload = {
@@ -350,8 +349,8 @@ export const logout = async (c: Context) => {
   const user = c.get('user')
   const refresh_token = getCookie(c, tokenEnums.refreshToken)
 
-  const Model = user?.role === "user" ? User : Admin
-  await (Model as any).updateOne({ _id: user._id }, {
+  const Model = user.getModel(user.role)
+  await Model.updateOne({ _id: user._id }, {
     $pull: { refreshTokens: refresh_token }
   })
 

@@ -2,8 +2,7 @@ import type { Context } from 'hono';
 import Razorpay from 'razorpay';
 
 import { env, planPrices, planValidityMonths, type plansT } from '../utils/enums.js';
-import Payment from '../models/payment.js';
-import User from '../models/user.js';
+import { Payment, User } from '../models/index.js';
 
 const razorpay = new Razorpay({
   key_id: env.RAZORPAY_KEY_ID,

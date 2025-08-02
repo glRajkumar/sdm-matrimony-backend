@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { env } from '../utils/index.js';
 import { randomUsers } from '../controllers/faker.js';
-import User from '../models/user.js';
+import { User } from '../models/index.js';
 
 const fakerRoutes = new Hono()
 

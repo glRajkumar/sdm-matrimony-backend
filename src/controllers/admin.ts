@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 
 import { hashPassword, getFilterObj } from "../utils/index.js";
-import User from "../models/user.js";
+import { User } from "../models/index.js";
 
 export async function getUsers(c: Context) {
   const { limit, skip, ...rest } = c.req.query()

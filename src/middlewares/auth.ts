@@ -2,8 +2,7 @@ import { JwtTokenExpired } from 'hono/utils/jwt/types';
 import { createMiddleware } from 'hono/factory';
 
 import { tokenEnums, verifyToken } from '../utils/index.js';
-import Admin from '../models/admin.js';
-import User from '../models/user.js';
+import { Admin, User } from '../models/index.js';
 
 // need to implement redis for faster response
 const authMiddleware = createMiddleware(async (c, next) => {

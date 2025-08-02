@@ -28,10 +28,6 @@ const adminSchema = new Schema({
 
   refreshTokens: [{ type: String }],
 
-  address: {
-    type: String,
-  },
-
   approvalStatus: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],
@@ -67,6 +63,4 @@ adminSchema.pre('validate', function (next) {
   next()
 })
 
-const Admin = model('Admin', adminSchema)
-
-export default Admin
+export const Admin = model('Admin', adminSchema)

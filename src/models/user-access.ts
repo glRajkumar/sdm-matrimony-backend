@@ -29,6 +29,4 @@ const userAccessSchema = new Schema({
 
 userAccessSchema.index({ viewer: 1, viewed: 1, paymentRefId: 1 }, { unique: true })
 
-const UserAccess = model('UserAccess', userAccessSchema)
-
-export default UserAccess
+export const UserAccess = model('UserAccess', userAccessSchema)
