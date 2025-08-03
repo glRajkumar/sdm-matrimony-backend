@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/admin
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTI1ODMxNjQsInR5cGUiOiJhY2Nlc3MiLCJfaWQiOiI2ODc1ZGZmMGE5YzBjNDJiMDEwMGQ0YzYiLCJyb2xlIjoiYWRtaW4ifQ.OdD30FUAjA2CT_L4dsOHNcBbP8eCoswSCjKN_2NmWIk
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTQyMDIzNjYsIl9pZCI6IjY4NzVkZmYwYTljMGM0MmIwMTAwZDRjNiIsInJvbGUiOiJhZG1pbiJ9.Uk31qPTzt6E4SFG5CGCQ7UCEJ-eZQxdxcGoL5Wt7Vf8
 
 
 ### users list ---- skip=6&limit=8&approvalStatus=["pending","rejected"]&ageRange=below_25&salaryRange=20000_30000
@@ -14,6 +14,21 @@ Authorization: {{token}}
 
 ### find user --- _id,email,mobile,fullName
 GET {{host}}/user/find?email=
+Authorization: {{token}}
+
+
+### paid users --- limit=4&skip=20
+GET {{host}}/users/paid
+Authorization: {{token}}
+
+
+### assisted subscribed users --- limit=4&skip=20
+GET {{host}}/users/assisted-subscribed
+Authorization: {{token}}
+
+
+### users all payments --- limit=4&skip=20
+GET {{host}}/users/all-payments
 Authorization: {{token}}
 
 

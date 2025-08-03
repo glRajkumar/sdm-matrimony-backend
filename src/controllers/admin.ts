@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 
 import { hashPassword, getFilterObj } from "../utils/index.js";
-import { User } from "../models/index.js";
+import { Payment, User } from "../models/index.js";
 
 export async function getUsers(c: Context) {
   const { limit, skip, ...rest } = c.req.query()
@@ -57,6 +57,100 @@ export async function findUser(c: Context) {
     .lean()
 
   return c.json(user)
+}
+
+export async function getPaidUsers(c: Context) {
+  const { limit, skip } = c.req.query()
+
+  const numLimit = Number(limit || 10)
+  const numSkip = Number(skip || 0)
+
+  const paidUsers = await Payment.find({
+    expiryDate: { $gte: new Date() },
+  })
+    .select("_id subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths")
+    .populate("user", "_id fullName email profileImg dob proffessionalDetails.salary")
+    .limit(numLimit)
+    .skip(numSkip)
+    .lean()
+
+  return c.json(paidUsers)
+}
+
+export async function getAssistedSubscribedUsers(c: Context) {
+  const { limit, skip } = c.req.query()
+
+  const numLimit = Number(limit || 10)
+  const numSkip = Number(skip || 0)
+
+  const paidUsers = await Payment.find({
+    expiryDate: { $gte: new Date() },
+    isAssisted: true,
+  })
+    .select("_id subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths")
+    .populate("user", "_id fullName email profileImg dob proffessionalDetails.salary")
+    .limit(numLimit)
+    .skip(numSkip)
+    .lean()
+
+  return c.json(paidUsers)
+}
+
+export async function getUsersAllPayments(c: Context) {
+  const { limit, skip } = c.req.query()
+
+  const numLimit = Number(limit || 10)
+  const numSkip = Number(skip || 0)
+
+  const paidUsers = await Payment.aggregate([
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user',
+      },
+    },
+    {
+      $unwind: '$user',
+    },
+    {
+      $match: {
+        'user.currentPlan': { $ne: null },
+      },
+    },
+    {
+      $group: {
+        _id: '$user._id',
+        user: {
+          $first: {
+            _id: '$user._id',
+            dob: '$user.dob',
+            email: '$user.email',
+            gender: '$user.gender',
+            fullName: '$user.fullName',
+            profileImg: '$user.profileImg',
+            currentPlan: '$user.currentPlan',
+            maritalStatus: '$user.maritalStatus',
+          },
+        },
+        payments: {
+          $push: {
+            _id: '$_id',
+            amount: '$amount',
+            expiryDate: '$expiryDate',
+            isAssisted: '$isAssisted',
+            subscribedTo: '$subscribedTo',
+            assistedMonths: '$assistedMonths',
+          },
+        },
+      },
+    },
+    { $skip: numSkip },
+    { $limit: numLimit },
+  ])
+
+  return c.json(paidUsers)
 }
 
 export async function createUsers(c: Context) {
