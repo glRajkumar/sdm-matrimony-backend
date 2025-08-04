@@ -8,6 +8,5 @@ export async function connectMongo() {
 
   } catch (error) {
     console.log("Can't connect to MongoDB")
-    process.exit(1)
   }
 }
