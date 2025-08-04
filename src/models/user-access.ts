@@ -13,7 +13,7 @@ const userAccessSchema = new Schema({
     required: true,
   },
 
-  paymentRefId: {
+  payment: {
     type: Schema.Types.ObjectId,
     ref: 'Payment',
     required: true,
@@ -27,6 +27,6 @@ const userAccessSchema = new Schema({
 
 }, { timestamps: true })
 
-userAccessSchema.index({ viewer: 1, viewed: 1, paymentRefId: 1 }, { unique: true })
+userAccessSchema.index({ viewer: 1, viewed: 1, payment: 1 }, { unique: true })
 
 export const UserAccess = model('UserAccess', userAccessSchema)

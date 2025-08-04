@@ -17,7 +17,7 @@ async function checkUserAccess(user: any, _id: string) {
   const hasUnlockedAccess = await UserAccess.findOne({
     viewer: user._id,
     viewed: _id,
-    paymentRefId: user.currentPlan._id,
+    payment: user.currentPlan._id,
   }).select("_id").lean()
 
   return !!hasUnlockedAccess
@@ -53,7 +53,7 @@ export const getAccountInfo = async (c: Context) => {
 
   const unlockedCount = await UserAccess.countDocuments({
     viewer: user?._id,
-    paymentRefId: user?.currentPlan?._id
+    payment: user?.currentPlan?._id
   })
 
   const payload = {
@@ -171,7 +171,7 @@ export const getLikesList = async (c: Context) => {
 export const getUnlockedProfiles = async (c: Context) => {
   const { _id, currentPlan } = c.get("user")
 
-  const list = await UserAccess.find({ viewer: _id, paymentRefId: currentPlan._id })
+  const list = await UserAccess.find({ viewer: _id, payment: currentPlan._id })
     .select("viewed")
     .populate({
       path: "viewed",
@@ -257,7 +257,7 @@ export const unlockProfile = async (c: Context) => {
 
   const unlockedCount = await UserAccess.countDocuments({
     viewer: user._id,
-    paymentRefId: user.currentPlan._id
+    payment: user.currentPlan._id
   })
 
   if (unlockedCount >= user.currentPlan.noOfProfilesCanView) return c.json({ message: "You have reached the limit of unlocked profiles" }, 400)
@@ -265,7 +265,7 @@ export const unlockProfile = async (c: Context) => {
   await UserAccess.create({
     viewer: user._id,
     viewed: _id,
-    paymentRefId: user.currentPlan._id,
+    payment: user.currentPlan._id,
     expiresAt: new Date(user.currentPlan.expiryDate),
   })
 
