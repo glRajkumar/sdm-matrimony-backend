@@ -1,7 +1,6 @@
 export * from "./enums.js";
 export * from "./password.js";
 export * from "./token.js";
-export * from "./transporter.js";
 export * from "./user-filter-obj.js";
 export * from "./image-extractor.js";
 export * from "./cookie.js";

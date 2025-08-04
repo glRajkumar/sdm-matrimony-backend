@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { env } from './enums.js';
+import { env } from '../utils/enums.js';
 
 // export const transporter = nodemailer.createTransport({
 //   service: 'gmail',

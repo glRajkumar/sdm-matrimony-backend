@@ -5,11 +5,13 @@ import {
   setRefreshTokenCookie, deleteRefreshTokenCookie,
   generateOtp, getToken, verifyToken,
   comparePasswords, hashPassword, tokenEnums,
-  isEmail, transporter, env,
+  isEmail, env,
 } from '../utils/index.js';
 
+import { welcome, resendVerifyEmail as resendVerifyEmailTemp, forgotPass } from '../mail-templates/index.js';
+
+import { getImgUrl, transporter } from '../services/index.js';
 import { Admin, User, getModel } from '../models/index.js';
-import { getImgUrl } from '../services/cloudinary.js';
 
 export const register = async (c: Context) => {
   const { email, password, role = "user", ...rest } = await c.req.json()
@@ -50,21 +52,12 @@ export const register = async (c: Context) => {
   await user.save()
 
   if (email) {
-    const payload = {
-      _id: user._id.toString(),
-      role: user.role,
-    }
-    const verifyToken = await getToken(payload, tokenEnums.verifyToken)
-    const verificationUrl = `${env.FRONTEND_URL}/auth/verify?token=${verifyToken}`
+    const { subject, html } = await welcome(user._id.toString(), user.role)
     transporter.sendMail({
       to: email,
       from: env.EMAIL_ID,
-      subject: "Your verification email",
-      html: `
-      <h1>Verify your email</h1>
-      <p>Click the link below to verify your email:</p>
-      <a href="${verificationUrl}" target="_blank">Verify Email</a>
-      `,
+      subject,
+      html,
     })
   }
 
@@ -175,11 +168,12 @@ export async function forgetPass(c: Context) {
 
   await Model.updateOne({ _id: user._id }, { verifiyOtp })
 
+  const { subject, html } = forgotPass(verifiyOtp)
   await transporter.sendMail({
     to: email,
     from: env.EMAIL_ID,
-    subject: "Reset password key",
-    html: `${verifiyOtp}`
+    subject,
+    html
   })
 
   return c.json({ message: "Passkey sent to email successfully" })
@@ -232,21 +226,12 @@ export async function resendVerifyEmail(c: Context) {
   const user = await Model.findOne({ email }).select("_id role").lean()
   if (!user) return c.json({ message: 'User not found' }, 400)
 
-  const payload = {
-    _id: user._id.toString(),
-    role: user.role,
-  }
-  const verifyToken = await getToken(payload, tokenEnums.verifyToken)
-  const verificationUrl = `${env.FRONTEND_URL}/auth/verify?token=${verifyToken}`
+  const { subject, html } = await resendVerifyEmailTemp(user._id.toString(), user.role)
   await transporter.sendMail({
     to: email,
     from: env.EMAIL_ID,
-    subject: "Verify your email",
-    html: `
-    <h1>Verify your email</h1>
-    <p>Click the link below to verify your email:</p>
-    <a href="${verificationUrl}" target="_blank">Verify Email</a>
-    `
+    subject,
+    html
   })
 
   return c.json({ message: "Verification email sent successfully" })
