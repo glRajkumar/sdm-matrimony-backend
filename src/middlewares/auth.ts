@@ -2,9 +2,41 @@ import { JwtTokenExpired } from 'hono/utils/jwt/types';
 import { createMiddleware } from 'hono/factory';
 
 import { tokenEnums, verifyToken } from '../utils/index.js';
+import { redisClient } from '../services/index.js';
 import { Admin, User } from '../models/index.js';
 
-// need to implement redis for faster response
+async function getUser(_id: string, role: string) {
+  const redisKey = `${role}:${_id}`
+
+  let user: any = await redisClient.get(redisKey)
+  if (user) return JSON.parse(user)
+
+  if (role === "user") {
+    user = await User.findById(_id)
+      .select("_id role isBlocked isDeleted currentPlan")
+      .populate("currentPlan", "_id subscribedTo expiryDate noOfProfilesCanView")
+      .lean()
+
+  } else {
+    user = await Admin.findById(_id)
+      .select("_id role")
+      .lean()
+  }
+
+  if (user) {
+    await redisClient.set(redisKey, JSON.stringify(user), {
+      expiration: {
+        type: "EX",
+        value: 60 * 60 * 24, // 1 day
+      }
+    })
+
+    return user
+  }
+
+  return null
+}
+
 const authMiddleware = createMiddleware(async (c, next) => {
   try {
     const token = c.req.header("Authorization")?.replace('Bearer ', '')
@@ -14,16 +46,7 @@ const authMiddleware = createMiddleware(async (c, next) => {
 
     if (type !== tokenEnums.accessToken) return c.json({ message: 'Invalid token' }, 400)
 
-    let user = null
-    if (role === "user") {
-      user = await User.findById(_id)
-        .select("_id role isBlocked isDeleted currentPlan")
-        .populate("currentPlan", "_id subscribedTo expiryDate noOfProfilesCanView")
-        .lean()
-    } else {
-      user = await Admin.findById(_id).select("_id role").lean()
-    }
-
+    let user = await getUser(_id as string, role as string)
     if (!user) return c.json({ message: 'User not found' }, 400)
 
     if (user.role === "user" && (user.isDeleted || user.isBlocked)) return c.json({ message: 'Access denied' }, 400)
