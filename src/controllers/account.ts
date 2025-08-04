@@ -105,7 +105,12 @@ export const login = async (c: Context) => {
 
   const Model = getModel(role)
   await Model.updateOne({ _id: user._id }, {
-    $push: { refreshTokens: refresh_token }
+    $push: {
+      refreshTokens: {
+        $each: [refresh_token],
+        $slice: -5,
+      }
+    }
   })
 
   const output: any = {
