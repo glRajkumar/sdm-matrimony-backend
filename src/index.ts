@@ -14,7 +14,7 @@ import paymentRoutes from './routes/payment.js';
 import adminRoutes from './routes/admin.js';
 import userRoutes from './routes/user.js';
 
-import connectDb from './lib/connect-db.js';
+import { connectMongo } from './services/index.js';
 import { env } from './utils/enums.js';
 
 const app = new Hono().basePath("api")
@@ -23,7 +23,7 @@ app.use(logger())
 app.use(cors({ origin: env.FRONTEND_URL, credentials: true }))
 // app.use(csrf({ origin: env.FRONTEND_URL }))
 
-await connectDb()
+await connectMongo()
 
 app.get("/health", c => c.json({ status: "ok" }))
 

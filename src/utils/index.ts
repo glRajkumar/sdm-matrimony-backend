@@ -1,5 +1,4 @@
 export * from "./enums.js";
-export * from "./cloudinary.js";
 export * from "./password.js";
 export * from "./token.js";
 export * from "./transporter.js";

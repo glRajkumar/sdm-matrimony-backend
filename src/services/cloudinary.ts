@@ -1,6 +1,6 @@
 import type { ConfigOptions } from 'cloudinary';
 import { v2 as cloudinary } from 'cloudinary';
-import { env } from './enums.js';
+import { env } from '../utils/enums.js';
 
 export function getCloudinary() {
   const config: ConfigOptions = {

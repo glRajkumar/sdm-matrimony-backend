@@ -1,7 +1,8 @@
 import type { Context } from "hono";
 // import ollama from 'ollama';
 
-import { getImgUrl, saveImageLocally } from "../utils/index.js";
+// import { saveImageLocally } from "../utils/index.js";
+import { getImgUrl } from "../services/cloudinary.js";
 
 export async function extractImg(c: Context) {
   const formData = await c.req.formData()

@@ -1,15 +1,13 @@
 import { connect } from 'mongoose';
 import { env } from '../utils/index.js';
 
-async function connectDb() {
+export async function connectMongo() {
   try {
     await connect(env.MONGODB_URL)
     console.log("MongoDB is connected now")
 
   } catch (error) {
-    console.log("cant connect to db")
+    console.log("Can't connect to MongoDB")
     process.exit(1)
   }
 }
-
-export default connectDb

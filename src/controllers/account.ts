@@ -3,12 +3,13 @@ import { getCookie } from 'hono/cookie';
 
 import {
   setRefreshTokenCookie, deleteRefreshTokenCookie,
-  generateOtp, getImgUrl, getToken, verifyToken,
+  generateOtp, getToken, verifyToken,
   comparePasswords, hashPassword, tokenEnums,
   isEmail, transporter, env,
 } from '../utils/index.js';
 
 import { Admin, User, getModel } from '../models/index.js';
+import { getImgUrl } from '../services/cloudinary.js';
 
 export const register = async (c: Context) => {
   const { email, password, role = "user", ...rest } = await c.req.json()
