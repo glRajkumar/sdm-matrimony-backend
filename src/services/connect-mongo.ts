@@ -7,6 +7,6 @@ export async function connectMongo() {
     console.log("MongoDB is connected now")
 
   } catch (error) {
-    console.log("Can't connect to MongoDB")
+    console.log("Can't connect to MongoDB", error)
   }
 }

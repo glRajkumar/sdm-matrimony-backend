@@ -11,7 +11,7 @@ export async function connectRedis() {
     console.log("Redis is connected now")
 
   } catch (error) {
-    console.log("Can't connect to Redis")
+    console.log("Can't connect to Redis", error)
   }
 }
 
