@@ -16,7 +16,7 @@ export function getFilterObj(obj: Record<string, any>) {
     gender, isMarried, salaryRange, ageRange, approvalStatus,
     minQualification, sector, profession, minSalary, motherTongue,
     rasi, lagna, maritalStatus, isBlocked, isDeleted,
-    caste, religion, minAge, maxAge,
+    caste, religion, minAge, maxAge, createdBy,
   } = obj
 
   const filter: any = {
@@ -173,6 +173,10 @@ export function getFilterObj(obj: Record<string, any>) {
       ...filter.dob,
       $gte: new Date(currYear - maxAge, currMonth, currDate)
     }
+  }
+
+  if (createdBy) {
+    filter.createdBy = createdBy
   }
 
   return filter
