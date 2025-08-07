@@ -53,6 +53,11 @@ const adminSchema = new Schema({
     address: String,
   },
 
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+
 }, { timestamps: true })
 
 adminSchema.pre('validate', function (next) {

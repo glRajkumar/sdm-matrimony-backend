@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 
-import { Payment, User } from "../models/index.js";
+import { Payment, User, Admin } from "../models/index.js";
+import { hashPassword } from "../utils/password.js";
 
 export async function getPaidUsers(c: Context) {
   const { limit, skip } = c.req.query()
@@ -207,4 +208,45 @@ export async function getUserCreationStatsToday(c: Context) {
   ])
 
   return c.json(result)
+}
+
+export async function getAdmins(c: Context) {
+  const admins = await Admin.find()
+    .select("_id fullName email isDeleted")
+    .lean()
+
+  return c.json(admins)
+}
+
+export async function createAdmin(c: Context) {
+  const { fullName, email, password } = await c.req.json()
+
+  const adminExist = await Admin.findOne({ email })
+    .select("_id")
+    .lean()
+
+  if (adminExist) return c.json({ message: "Admin already exists" }, 400)
+
+  const hashedPass = await hashPassword(password)
+
+  const admin = new Admin({
+    email,
+    fullName,
+    password: hashedPass,
+    approvalStatus: "approved",
+    isVerified: true,
+  })
+
+  await admin.save()
+
+  return c.json({ message: "Admin created successfully" })
+}
+
+export async function updateAdmin(c: Context) {
+  const { _id } = c.req.param()
+  const rest = await c.req.json()
+
+  await Admin.updateOne({ _id }, rest)
+
+  return c.json({ message: "Admin details updated successfully" })
 }

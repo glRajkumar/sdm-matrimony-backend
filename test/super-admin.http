@@ -31,3 +31,30 @@ Authorization: {{token}}
 GET {{host}}/users-stats/created-today
 Authorization: {{token}}
 
+
+### admins
+GET {{host}}/admins
+Authorization: {{token}}
+
+
+### create admin
+POST {{host}}/admin
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "fullName": "Vasan",
+  "email": "vasan@admin.com",
+  "password": "12345678"
+}
+
+
+### update admin
+PUT {{host}}/admin/68942a49660c9ca1bf10293c
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "fullName": "Vasan",
+  "isDeleted": false
+}
