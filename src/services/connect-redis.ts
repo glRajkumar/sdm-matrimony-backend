@@ -12,6 +12,7 @@ export async function connectRedis() {
 
   } catch (error) {
     console.log("Can't connect to Redis", error)
+    throw error
   }
 }
 
