@@ -219,9 +219,23 @@ export async function getAdmins(c: Context) {
 }
 
 export async function createAdmin(c: Context) {
-  const { fullName, email, password } = await c.req.json()
+  const { email, password, ...rest } = await c.req.json()
 
-  const adminExist = await Admin.findOne({ email })
+  if (!email && !rest?.contactDetails?.mobile) return c.json({ message: "Email or Mobile is required" }, 400)
+  if (!password) return c.json({ message: "Password shouldn't be empty" }, 400)
+
+  const findBy: Record<string, any> = {}
+  if (email && rest?.contactDetails?.mobile) {
+    findBy.$or = [{ email }, { "contactDetails.mobile": rest.contactDetails.mobile }]
+  }
+  else if (email) {
+    findBy.email = email
+  }
+  else {
+    findBy["contactDetails.mobile"] = rest?.contactDetails?.mobile
+  }
+
+  const adminExist = await Admin.findOne(findBy)
     .select("_id")
     .lean()
 
@@ -230,11 +244,15 @@ export async function createAdmin(c: Context) {
   const hashedPass = await hashPassword(password)
 
   const admin = new Admin({
-    email,
-    fullName,
+    ...rest,
+    email: email || undefined,
     password: hashedPass,
     approvalStatus: "approved",
     isVerified: true,
+    contactDetails: {
+      ...rest?.contactDetails,
+      mobile: rest?.contactDetails?.mobile || undefined,
+    },
   })
 
   await admin.save()
