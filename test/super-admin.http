@@ -1,5 +1,6 @@
 @host = http://localhost:5000/api/super-admin
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTQ1NDUyMTIsIl9pZCI6IjY4OTQyZWRhYjRkYzlmYWIxZjRjMDI1OSIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.JffvVIN_aY5hLPMIgnJYvgRSNjpMx0AT2TOL-7L-YZs
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTQ1NDcxNDIsIl9pZCI6IjY4OTQyZWRhYjRkYzlmYWIxZjRjMDI1OSIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.bNflhnhqLf4JPeNzwEmCP5ekh3Fol0TwrbOcQo3SGxw
+
 
 ### paid users --- limit=4&skip=20
 GET {{host}}/users/paid
@@ -17,7 +18,7 @@ Authorization: {{token}}
 
 
 ### users created by --- limit=4&skip=20
-GET {{host}}/users/created-by
+GET {{host}}/users/created-by?createdBy=68942a49660c9ca1bf10293c
 Authorization: {{token}}
 
 

@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 
 import {
-  createUsers, getUsers, getMarriedUsers, updateUser,
-  userMarriedTo, findUser,
+  createUsers, getUsers, getMarriedUsers,
+  updateUser, userMarriedTo, findUser,
 } from '../controllers/admin.js';
 
 import authMiddleware from '../middlewares/auth.js';

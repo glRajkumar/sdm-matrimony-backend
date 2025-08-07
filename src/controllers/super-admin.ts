@@ -15,6 +15,7 @@ export async function getPaidUsers(c: Context) {
     .populate("user", "_id fullName email profileImg dob proffessionalDetails.salary")
     .limit(numLimit)
     .skip(numSkip)
+    .sort({ createdAt: -1 })
     .lean()
 
   return c.json(paidUsers)
@@ -34,6 +35,7 @@ export async function getAssistedSubscribedUsers(c: Context) {
     .populate("user", "_id fullName email profileImg dob proffessionalDetails.salary")
     .limit(numLimit)
     .skip(numSkip)
+    .sort({ createdAt: -1 })
     .lean()
 
   return c.json(paidUsers)
@@ -91,6 +93,7 @@ export async function getUsersAllPayments(c: Context) {
     },
     { $skip: numSkip },
     { $limit: numLimit },
+    { $sort: { createdAt: -1 } },
   ])
 
   return c.json(paidUsers)
@@ -98,7 +101,7 @@ export async function getUsersAllPayments(c: Context) {
 
 export async function getUsersByCreatedBy(c: Context) {
   const { _id } = c.get("user")
-  const { limit, skip, createdAtToday } = c.req.query()
+  const { limit, skip, createdAtToday, createdBy } = c.req.query()
 
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
@@ -106,7 +109,7 @@ export async function getUsersByCreatedBy(c: Context) {
   const select = "_id fullName email profileImg dob proffessionalDetails.salary"
 
   const payload: any = {
-    createdBy: _id
+    createdBy: createdBy || _id
   }
 
   if (createdAtToday) {
@@ -122,13 +125,14 @@ export async function getUsersByCreatedBy(c: Context) {
     }
   }
 
-  const unmarriedUsers = await User.find(payload)
+  const users = await User.find(payload)
     .select(select)
     .limit(numLimit)
     .skip(numSkip)
+    .sort({ createdAt: -1 })
     .lean()
 
-  return c.json(unmarriedUsers)
+  return c.json(users)
 }
 
 export async function getUserCreationStatsPerAdmin(c: Context) {
