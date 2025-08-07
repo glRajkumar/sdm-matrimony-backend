@@ -1,0 +1,32 @@
+@host = http://localhost:5000/api/super-admin
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTQ1NDUyMTIsIl9pZCI6IjY4OTQyZWRhYjRkYzlmYWIxZjRjMDI1OSIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.JffvVIN_aY5hLPMIgnJYvgRSNjpMx0AT2TOL-7L-YZs
+
+### paid users --- limit=4&skip=20
+GET {{host}}/users/paid
+Authorization: {{token}}
+
+
+### assisted subscribed users --- limit=4&skip=20
+GET {{host}}/users/assisted-subscribed
+Authorization: {{token}}
+
+
+### users all payments --- limit=4&skip=20
+GET {{host}}/users/all-payments
+Authorization: {{token}}
+
+
+### users created by --- limit=4&skip=20
+GET {{host}}/users/created-by
+Authorization: {{token}}
+
+
+### users created per admin
+GET {{host}}/users-stats/created-per-admin
+Authorization: {{token}}
+
+
+### users created today
+GET {{host}}/users-stats/created-today
+Authorization: {{token}}
+

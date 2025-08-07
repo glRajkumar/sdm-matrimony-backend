@@ -8,6 +8,7 @@ import { Hono } from 'hono';
 import migrationRoutes from './routes/migration.js';
 import fakerRoutes from './routes/faker.js';
 
+import superAdminRoutes from './routes/super-admin.js';
 import extractorRoutes from './routes/extractor.js';
 import accountRoutes from './routes/account.js';
 import paymentRoutes from './routes/payment.js';
@@ -34,6 +35,7 @@ app.get("/health", c => c.json({ status: "ok" }))
 app.route("/account", accountRoutes)
 app.route("/user", userRoutes)
 app.route("/admin", adminRoutes)
+app.route("/super-admin", superAdminRoutes)
 app.route("/extractor", extractorRoutes)
 app.route("/payment", paymentRoutes)
 

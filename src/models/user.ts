@@ -33,11 +33,6 @@ const userSchema = new Schema({
 
   profileImg: String,
 
-  brokerAppointed: {
-    type: Schema.Types.ObjectId,
-    ref: 'Admin',
-  },
-
   maritalStatus: {
     type: String,
     enum: maritalStatuses,
@@ -169,6 +164,11 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   }],
+
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'Admin',
+  },
 
   currentPlan: {
     type: Schema.Types.ObjectId,

@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/admin
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTQyMDIzNjYsIl9pZCI6IjY4NzVkZmYwYTljMGM0MmIwMTAwZDRjNiIsInJvbGUiOiJhZG1pbiJ9.Uk31qPTzt6E4SFG5CGCQ7UCEJ-eZQxdxcGoL5Wt7Vf8
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTQ1NDM1OTYsIl9pZCI6IjY4OTQyZWRhYjRkYzlmYWIxZjRjMDI1OSIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.se-fdrobCpW47nyGuQpwOAAGjdY4x5UDliScW5DV6ws
 
 
 ### users list ---- skip=6&limit=8&approvalStatus=["pending","rejected"]&ageRange=below_25&salaryRange=20000_30000
@@ -17,21 +17,6 @@ GET {{host}}/user/find?email=
 Authorization: {{token}}
 
 
-### paid users --- limit=4&skip=20
-GET {{host}}/users/paid
-Authorization: {{token}}
-
-
-### assisted subscribed users --- limit=4&skip=20
-GET {{host}}/users/assisted-subscribed
-Authorization: {{token}}
-
-
-### users all payments --- limit=4&skip=20
-GET {{host}}/users/all-payments
-Authorization: {{token}}
-
-
 ### create users
 POST {{host}}/users
 Authorization: {{token}}
@@ -40,7 +25,7 @@ Content-Type: application/json
 [
   {
     "fullName": "WhitneyPeterson",
-    "email": "raj4@gmail.com",
+    "email": "raj118@gmail.com",
     "password": "12345678",
     "role": "user",
     "gender": "Male",
@@ -54,7 +39,6 @@ Content-Type: application/json
       "salary": 80030
     },
     "contactDetails":{
-      "mobile": "1234567890",
       "address": "680 Nguyen Cliffs\nNew Amy, IL 82099"
     },
     "familyDetails": {
@@ -71,71 +55,7 @@ Content-Type: application/json
       "dashaPeriod": "14 months",
       "placeofBirth": "Port Elizabethview",
       "timeOfBirth": "8:30 AM",
-      "expectation": "nothing else",
-      "raasiChart": {
-        "house1": [{ "planet": "mars", "degree": 10 }],
-        "house2": [{ "planet": "mercury", "degree": 20 }],
-        "house3": [{ "planet": "venus", "degree": 30 }]
-      },
-      "navamsaChart": {
-        "house1": [{ "planet": "mars", "degree": 10 }],
-        "house2": [{ "planet": "mercury", "degree": 20 }],
-        "house3": [{ "planet": "venus", "degree": 30 }]
-      }
-    },
-    "partnerExpectation": {
-      "maritalStatus": "Single"
-    },
-    "otherDetails": {
-      "houseType": "own",
-      "height": 180,
-      "color": "brown"
-    }
-  },
-  {
-    "fullName": "WhitneyPeterson",
-    "email": "raj@gmail.com",
-    "password": "12345678",
-    "role": "user",
-    "gender": "Male",
-    "dob": "1950-07-16T12:22:00.000Z",
-    "maritalStatus": "Single",
-    "proffessionalDetails":{
-      "highestQualification": "Bachelor's",
-      "qualifications": "bcom",
-      "companyName": "company",
-      "profession": "Doctor",
-      "salary": 80030
-    },
-    "contactDetails":{
-      "mobile": "1234567890",
-      "address": "680 Nguyen Cliffs\nNew Amy, IL 82099"
-    },
-    "familyDetails": {
-      "fatherName": "Aaron",
-      "motherName": "Marissa",
-      "noOfBrothers": 2,
-      "noOfSisters": 2,
-      "birthOrder": 1
-    },
-    "vedicHoroscope": {
-      "rasi": "kanni",
-      "lagna": "dhanusu",
-      "nakshatra": "bharani",
-      "dashaPeriod": "14 months",
-      "placeofBirth": "Port Elizabethview",
-      "timeOfBirth": "8:30 AM",
-      "expectation": "nothing else",
-      "raasiChart": {
-        "house1": [{ "planet": "mars", "degree": 10 }],
-        "house2": [{ "planet": "mercury", "degree": 20 }],
-        "house3": [{ "planet": "venus", "degree": 30 }]
-      },
-      "navamsaChart": {
-        "house1": [{ "planet": "mars", "degree": 10 }],
-        "house2": [{ "planet": "mercury", "degree": 20 }],
-        "house3": [{ "planet": "venus", "degree": 30 }]
-      }
+      "expectation": "nothing else"
     },
     "partnerExpectation": {
       "maritalStatus": "Single"
