@@ -12,7 +12,7 @@ export async function getPaidUsers(c: Context) {
   const paidUsers = await Payment.find({
     expiryDate: { $gte: new Date() },
   })
-    .select("_id subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths")
+    .select("_id amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths")
     .populate("user", "_id fullName email profileImg dob proffessionalDetails.salary")
     .limit(numLimit)
     .skip(numSkip)
@@ -32,7 +32,7 @@ export async function getAssistedSubscribedUsers(c: Context) {
     expiryDate: { $gte: new Date() },
     isAssisted: true,
   })
-    .select("_id subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths")
+    .select("_id amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths")
     .populate("user", "_id fullName email profileImg dob proffessionalDetails.salary")
     .limit(numLimit)
     .skip(numSkip)
@@ -164,20 +164,27 @@ export async function getUserCreationStatsPerAdmin(c: Context) {
       }
     },
     {
-      $project: {
-        _id: 0,
-        result: {
-          k: { $toString: "$_id" },
-          v: { $arrayToObject: "$dailyCounts" }
-        }
+      $lookup: {
+        from: "admins",
+        localField: "_id",
+        foreignField: "_id",
+        as: "adminDetails"
       }
     },
     {
-      $replaceRoot: { newRoot: "$result" }
+      $unwind: "$adminDetails"
+    },
+    {
+      $project: {
+        _id: "$_id",
+        fullName: "$adminDetails.fullName",
+        email: "$adminDetails.email",
+        dates: { $arrayToObject: "$dailyCounts" }
+      }
     }
-  ])
+  ]);
 
-  return c.json(result)
+  return c.json(result);
 }
 
 export async function getUserCreationStatsToday(c: Context) {
@@ -200,8 +207,21 @@ export async function getUserCreationStatsToday(c: Context) {
       }
     },
     {
+      $lookup: {
+        from: "admins",
+        localField: "_id.createdBy",
+        foreignField: "_id",
+        as: "adminDetails"
+      }
+    },
+    {
+      $unwind: "$adminDetails"
+    },
+    {
       $project: {
         _id: "$_id.createdBy",
+        fullName: "$adminDetails.fullName",
+        email: "$adminDetails.email",
         created: "$count"
       }
     }
