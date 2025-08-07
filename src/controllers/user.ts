@@ -10,7 +10,7 @@ const currentPlanSelectFields = "-_id subscribedTo expiryDate"
 
 async function checkUserAccess(user: any, _id: string) {
   const isOwner = user._id.toString() === _id
-  if (isOwner || user.role === "admin") return true
+  if (isOwner || user.role.includes("admin")) return true
 
   const hasAccess = user.role === "user" && user.currentPlan &&
     new Date(user.currentPlan.expiryDate).getTime() > new Date().getTime()
@@ -211,7 +211,7 @@ export const updateProfile = async (c: Context) => {
   const user = c.get("user")
   const payload = await c.req.json()
 
-  const _id = user.role === "admin" ? payload._id : user._id
+  const _id = user.role === "user" ? user._id : payload._id
   await User.updateOne({ _id }, payload)
 
   return c.json({ message: "User details updated successfully" })
@@ -238,7 +238,7 @@ export const imgUpload = async (c: Context) => {
     updateQuery.profileImg = uploadedImages[0]
   }
 
-  const _id = user.role === "admin" ? formData.get("_id") : user._id
+  const _id = user.role === "user" ? user._id : formData.get("_id")
   await User.updateOne({ _id }, updateQuery)
 
   return c.json({ message: 'User image uploaded successfully' })
