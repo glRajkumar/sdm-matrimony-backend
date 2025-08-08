@@ -241,7 +241,7 @@ export async function getUserCreationStatsToday(c: Context) {
 
 export async function getAdmins(c: Context) {
   const admins = await Admin.find()
-    .select("_id fullName email isDeleted")
+    .select("_id fullName email isDeleted contactDetails")
     .lean()
 
   return c.json(admins)
@@ -292,6 +292,10 @@ export async function createAdmin(c: Context) {
 export async function updateAdmin(c: Context) {
   const { _id } = c.req.param()
   const rest = await c.req.json()
+
+  if (rest.password) {
+    rest.password = await hashPassword(rest.password)
+  }
 
   await Admin.updateOne({ _id }, rest)
 
