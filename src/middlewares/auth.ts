@@ -19,7 +19,7 @@ async function getUser(_id: string, role: string) {
 
   } else {
     user = await Admin.findById(_id)
-      .select("_id role")
+      .select("_id role isDeleted")
       .lean()
   }
 
@@ -49,7 +49,7 @@ const authMiddleware = createMiddleware(async (c, next) => {
     let user = await getUser(_id as string, role as string)
     if (!user) return c.json({ message: 'User not found' }, 400)
 
-    if (user.role === "user" && (user.isDeleted || user.isBlocked)) return c.json({ message: 'Access denied' }, 400)
+    if (user.isDeleted || user.isBlocked) return c.json({ message: 'Access denied' }, 400)
 
     c.set("user", user)
 
