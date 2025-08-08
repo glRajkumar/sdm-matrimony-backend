@@ -3,23 +3,29 @@ import type { Context } from "hono";
 import { Payment, User, Admin } from "../models/index.js";
 import { hashPassword } from "../utils/password.js";
 
+const planSelectFields = "_id amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths createdAt"
+const userSelectFields = "_id fullName email profileImg dob proffessionalDetails.salary"
+
 export async function getPaidUsers(c: Context) {
   const { limit, skip } = c.req.query()
 
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
 
-  const paidUsers = await Payment.find({
-    expiryDate: { $gte: new Date() },
-  })
-    .select("_id amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths")
-    .populate("user", "_id fullName email profileImg dob proffessionalDetails.salary")
+  const users = await Payment.find({ expiryDate: { $gte: new Date() } })
+    .select(planSelectFields)
+    .populate("user", userSelectFields)
     .limit(numLimit)
     .skip(numSkip)
     .sort({ createdAt: -1 })
     .lean()
 
-  return c.json(paidUsers)
+  const final = users.map(({ createdAt, ...user }) => ({
+    ...user,
+    assistedExpire: new Date(new Date(createdAt).setMonth(createdAt.getMonth() + user.assistedMonths)).toISOString()
+  }))
+
+  return c.json(final)
 }
 
 export async function getAssistedSubscribedUsers(c: Context) {
@@ -28,18 +34,23 @@ export async function getAssistedSubscribedUsers(c: Context) {
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
 
-  const paidUsers = await Payment.find({
+  const users = await Payment.find({
     expiryDate: { $gte: new Date() },
     isAssisted: true,
   })
-    .select("_id amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths")
-    .populate("user", "_id fullName email profileImg dob proffessionalDetails.salary")
+    .select(planSelectFields)
+    .populate("user", userSelectFields)
     .limit(numLimit)
     .skip(numSkip)
     .sort({ createdAt: -1 })
     .lean()
 
-  return c.json(paidUsers)
+  const final = users.map(({ createdAt, ...user }) => ({
+    ...user,
+    assistedExpire: new Date(new Date(createdAt).setMonth(createdAt.getMonth() + user.assistedMonths)).toISOString()
+  }))
+
+  return c.json(final)
 }
 
 export async function getUsersAllPayments(c: Context) {
@@ -107,8 +118,6 @@ export async function getUsersByCreatedBy(c: Context) {
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
 
-  const select = "_id fullName email profileImg dob proffessionalDetails.salary"
-
   const payload: any = {
     createdBy: createdBy || _id
   }
@@ -127,7 +136,7 @@ export async function getUsersByCreatedBy(c: Context) {
   }
 
   const users = await User.find(payload)
-    .select(select)
+    .select(userSelectFields)
     .limit(numLimit)
     .skip(numSkip)
     .sort({ createdAt: -1 })
