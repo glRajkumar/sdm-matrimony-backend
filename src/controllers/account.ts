@@ -348,7 +348,7 @@ export const logout = async (c: Context) => {
   const user = c.get('user')
   const refresh_token = getCookie(c, tokenEnums.refreshToken)
 
-  const Model = user.getModel(user.role)
+  const Model = getModel(user.role)
   await Model.updateOne({ _id: user._id }, {
     $pull: { refreshTokens: refresh_token }
   })

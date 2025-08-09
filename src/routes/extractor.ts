@@ -7,7 +7,7 @@ import roleCheck from '../middlewares/role-check.js';
 const extractorRoutes = new Hono()
 
 extractorRoutes.use(authMiddleware)
-extractorRoutes.use(roleCheck(["admin"]))
+extractorRoutes.use(roleCheck(["admin", "super-admin"]))
 
 extractorRoutes
   .post('/', extractImg)

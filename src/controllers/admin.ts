@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 
 import { hashPassword, getFilterObj } from "../utils/index.js";
+import { redisClient } from "../services/connect-redis.js";
 import { User } from "../models/index.js";
 
 export async function getUsers(c: Context) {
@@ -142,7 +143,11 @@ export async function userMarriedTo(c: Context) {
 export async function updateUser(c: Context) {
   const { _id, ...rest } = await c.req.json()
 
-  await User.updateOne({ _id }, rest)
+  const user = await User.findOneAndUpdate({ _id }, rest, { new: true })
+    .select("role")
+    .lean()
+
+  if (user) await redisClient.del(`${user.role}:${_id}`)
 
   return c.json({ message: "User details updated successfully" })
 }

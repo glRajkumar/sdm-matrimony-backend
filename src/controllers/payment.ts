@@ -3,6 +3,7 @@ import Razorpay from 'razorpay';
 
 import { env, planPrices, planValidityMonths, type plansT } from '../utils/enums.js';
 import { Payment, User } from '../models/index.js';
+import { redisClient } from '../services/connect-redis.js';
 
 const razorpay = new Razorpay({
   key_id: env.RAZORPAY_KEY_ID,
@@ -52,8 +53,12 @@ export const createOrder = async (c: Context) => {
 }
 
 export const verifyPayment = async (c: Context) => {
-  const { _id } = c.get("user")
+  const { _id, role } = c.get("user")
   const body = await c.req.json()
+
+  if (!body.isAssisted) {
+    body.assistedMonths = 0
+  }
 
   const expiryDate = new Date(Date.now() + planValidityMonths[body.subscribedTo as plansT] * 24 * 60 * 60 * 1000)
   const payment = await Payment.create({
@@ -62,7 +67,21 @@ export const verifyPayment = async (c: Context) => {
     expiryDate,
   })
 
-  await User.updateOne({ _id }, { currentPlan: payment._id })
+  const updatedUser = await User.findOneAndUpdate({ _id }, { currentPlan: payment._id }, { new: true })
+    .select("_id role isBlocked isDeleted currentPlan")
+    .populate("currentPlan", "_id subscribedTo expiryDate noOfProfilesCanView")
+    .lean()
 
-  return c.json({ message: "Payment verified successfully" })
+  const redisKey = `${role}:${_id}`
+  await redisClient.set(redisKey, JSON.stringify(updatedUser), {
+    expiration: {
+      type: "EX",
+      value: 60 * 60 * 24, // 1 day
+    }
+  })
+
+  return c.json({
+    subscribedTo: payment.subscribedTo,
+    expiryDate: payment.expiryDate
+  })
 }
