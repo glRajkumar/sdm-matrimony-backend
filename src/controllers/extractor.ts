@@ -1,15 +1,13 @@
-import type { Context } from "hono";
 // import ollama from 'ollama';
+
+import type { extractImageSchema } from "../validations/extractor.js";
+import type { zContext } from "../types/index.js";
 
 // import { saveImageLocally } from "../utils/index.js";
 import { getImgUrl } from "../services/cloudinary.js";
 
-export async function extractImg(c: Context) {
-  const formData = await c.req.formData()
-
-  const images = formData.getAll("images")
-
-  if (!images || (Array.isArray(images) && images.length === 0)) return c.json({ message: 'No images found' }, 400)
+export async function extractImg(c: zContext<{ form: typeof extractImageSchema }>) {
+  const { images } = c.req.valid("form")
 
   // const [detailImg, ...rest] = images
   // const imagePath = await saveImageLocally(detailImg)

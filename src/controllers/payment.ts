@@ -1,5 +1,7 @@
-import type { Context } from 'hono';
 import Razorpay from 'razorpay';
+
+import type { createOrderSchema, verifyPaymentSchema } from '../validations/payment.js';
+import type { zContext } from '../types/index.js';
 
 import { env, planPrices, planValidityMonths, type plansT } from '../utils/enums.js';
 import { Payment, User } from '../models/index.js';
@@ -10,14 +12,14 @@ const razorpay = new Razorpay({
   key_secret: env.RAZORPAY_SECRET,
 })
 
-export const createOrder = async (c: Context) => {
+export const createOrder = async (c: zContext<{ json: typeof createOrderSchema }>) => {
   const { _id } = c.get("user")
   const {
     subscribedTo = "basic",
     noOfProfilesCanView = 50,
     isAssisted = false,
     assistedMonths = 0
-  } = await c.req.json()
+  } = c.req.valid("json")
 
   let amount = planPrices[subscribedTo as plansT]
 
@@ -52,9 +54,9 @@ export const createOrder = async (c: Context) => {
   return c.json(order)
 }
 
-export const verifyPayment = async (c: Context) => {
+export const verifyPayment = async (c: zContext<{ json: typeof verifyPaymentSchema }>) => {
   const { _id, role } = c.get("user")
-  const body = await c.req.json()
+  const body = c.req.valid("json")
 
   if (!body.isAssisted) {
     body.assistedMonths = 0

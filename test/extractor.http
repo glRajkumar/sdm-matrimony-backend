@@ -11,4 +11,9 @@ Content-Disposition: form-data; name="images"; filename="sample1.png"
 Content-Type: image/png
 
 < ./sample1.png
+------WebKitFormBoundary
+Content-Disposition: form-data; name="images"; filename="1.jpg"
+Content-Type: image/jpg
+
+< ./male.jpg
 ------WebKitFormBoundary--
