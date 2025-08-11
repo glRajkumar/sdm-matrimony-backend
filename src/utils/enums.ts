@@ -38,6 +38,7 @@ export const tokenValidity = {
 export const approvalStatuses = ["pending", "approved", "rejected"] as const
 export const maritalStatuses = ["Single", "Divorced", "Widowed"] as const
 export const genders = ["Male", "Female"] as const // "Other"
+export const roles = ["user", "admin", "super-admin"] as const // "Other"
 
 export const religions = ["Hindu", "Muslim", "Christian", "Sikh", "Buddhist", "Jain", "Parsi", "Jewish"] as const
 

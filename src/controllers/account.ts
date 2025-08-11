@@ -1,27 +1,27 @@
 import type { Context } from 'hono';
-import { getCookie } from 'hono/cookie';
 
 import type { zContext } from '../types/index.js';
 
 import {
   setRefreshTokenCookie, deleteRefreshTokenCookie,
-  generateOtp, getToken, verifyToken,
   comparePasswords, hashPassword, tokenEnums,
+  generateOtp, getToken, verifyToken,
   isEmail, env,
 } from '../utils/index.js';
 
-import { loginSchema } from '../validations/account.js'
+import {
+  registerSchema, loginSchema, refreshTokenSchema,
+  forgotPassSchema, resetPassSchema, updatePasswordSchema,
+  resendVerifyEmailSchema, verifyAccountSchema, registerImageSchema,
+} from '../validations/index.js';
 
 import { welcome, resendVerifyEmail as resendVerifyEmailTemp, forgotPass } from '../mail-templates/index.js';
 
 import { getImgUrl, transporter } from '../services/index.js';
 import { Admin, User, getModel } from '../models/index.js';
 
-export const register = async (c: Context) => {
-  const { email, password, role = "user", ...rest } = await c.req.json()
-
-  if (!email && !rest?.contactDetails?.mobile) return c.json({ message: "Email or Mobile is required" }, 400)
-  if (!password) return c.json({ message: "Password shouldn't be empty" }, 400)
+export const register = async (c: zContext<{ json: typeof registerSchema }>) => {
+  const { email, password, role = "user", ...rest } = c.req.valid("json")
 
   const Model = getModel(role)
 
@@ -55,7 +55,7 @@ export const register = async (c: Context) => {
 
   await user.save()
 
-  if (email) {
+  if (email && isEmail(email)) {
     const { subject, html } = await welcome(user._id.toString(), user.role)
     transporter.sendMail({
       to: email,
@@ -70,8 +70,6 @@ export const register = async (c: Context) => {
 
 export const login = async (c: zContext<{ json: typeof loginSchema }>) => {
   const { email, password, role = "user" } = c.req.valid("json")
-
-  if (!email || !password) return c.json({ message: "Email or password is missing" }, 400)
 
   const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
 
@@ -132,10 +130,8 @@ export const login = async (c: zContext<{ json: typeof loginSchema }>) => {
   return c.json(output)
 }
 
-export async function accessToken(c: Context) {
-  const refresh_token = getCookie(c, tokenEnums.refreshToken)
-
-  if (!refresh_token) return c.json({ message: 'Refresh token is required' }, 400)
+export async function accessToken(c: zContext<{ cookie: typeof refreshTokenSchema }>) {
+  const refresh_token = c.req.valid("cookie")[tokenEnums.refreshToken]
 
   const { _id, role, type } = await verifyToken(refresh_token, tokenEnums.refreshToken)
 
@@ -159,8 +155,8 @@ export async function accessToken(c: Context) {
   return c.json({ access_token })
 }
 
-export async function forgetPass(c: Context) {
-  const { email, role = "user" } = await c.req.json()
+export async function forgetPass(c: zContext<{ json: typeof forgotPassSchema }>) {
+  const { email, role = "user" } = c.req.valid("json")
 
   const Model = getModel(role)
   const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
@@ -172,19 +168,21 @@ export async function forgetPass(c: Context) {
 
   await Model.updateOne({ _id: user._id }, { verifiyOtp })
 
-  const { subject, html } = forgotPass(verifiyOtp)
-  await transporter.sendMail({
-    to: email,
-    from: env.EMAIL_ID,
-    subject,
-    html
-  })
+  if (isEmail(email)) {
+    const { subject, html } = forgotPass(verifiyOtp)
+    await transporter.sendMail({
+      to: email,
+      from: env.EMAIL_ID,
+      subject,
+      html
+    })
+  }
 
   return c.json({ message: "Passkey sent to email successfully" })
 }
 
-export async function resetPass(c: Context) {
-  const { email, password, otp, role = "user" } = await c.req.json()
+export async function resetPass(c: zContext<{ json: typeof resetPassSchema }>) {
+  const { email, password, otp, role = "user" } = c.req.valid("json")
 
   const Model = getModel(role)
   const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
@@ -205,8 +203,8 @@ export async function resetPass(c: Context) {
   return c.json({ message: "Password reseted successfully" })
 }
 
-export async function verifyAccount(c: Context) {
-  const { token } = await c.req.json()
+export async function verifyAccount(c: zContext<{ json: typeof verifyAccountSchema }>) {
+  const { token } = c.req.valid("json")
 
   const { _id, role, type } = await verifyToken(token, tokenEnums.verifyToken)
 
@@ -222,9 +220,9 @@ export async function verifyAccount(c: Context) {
   return c.json({ role })
 }
 
-export async function resendVerifyEmail(c: Context) {
+export async function resendVerifyEmail(c: zContext<{ json: typeof resendVerifyEmailSchema }>) {
   const { role = "user" } = c.get("user")
-  const { email } = await c.req.json()
+  const { email } = c.req.valid("json")
 
   const Model = getModel(role)
   const user = await Model.findOne({ email }).select("_id role").lean()
@@ -241,7 +239,7 @@ export async function resendVerifyEmail(c: Context) {
   return c.json({ message: "Verification email sent successfully" })
 }
 
-export const imgUpload = async (c: Context) => {
+export const imgUpload = async (c: zContext<{ form: typeof registerImageSchema }>) => {
   const formData = await c.req.formData()
 
   const image = formData.get("image")
@@ -329,9 +327,9 @@ export const me = async (c: Context) => {
   return c.json(userDetail)
 }
 
-export const updatePassword = async (c: Context) => {
+export const updatePassword = async (c: zContext<{ json: typeof updatePasswordSchema }>) => {
+  const { oldPassword, newPassword } = c.req.valid("json")
   const { _id } = c.get('user')
-  const { oldPassword, newPassword } = await c.req.json()
 
   if (oldPassword === newPassword) return c.json({ message: 'New password should be different from old password' }, 400)
 
@@ -348,9 +346,9 @@ export const updatePassword = async (c: Context) => {
   return c.json({ message: 'Password updated successfully' })
 }
 
-export const logout = async (c: Context) => {
+export const logout = async (c: zContext<{ cookie: typeof refreshTokenSchema }>) => {
+  const refresh_token = c.req.valid("cookie")[tokenEnums.refreshToken]
   const user = c.get('user')
-  const refresh_token = getCookie(c, tokenEnums.refreshToken)
 
   const Model = getModel(user.role)
   await Model.updateOne({ _id: user._id }, {

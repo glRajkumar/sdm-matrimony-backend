@@ -140,7 +140,7 @@ const userSchema = new Schema({
     motherTongue: String,
     houseType: String,
     religion: String,
-    height: String,
+    height: Number,
     color: String,
     caste: String,
   },

@@ -1,9 +1,55 @@
 import { z } from 'zod';
+import { adminSchema, emailOrMobileSchema, passwordSchema, roleEnum, userSchema } from './general.js';
+import { tokenEnums } from '../utils/enums.js';
 
 export const loginSchema = z.object({
-  email: z.email("Invalid email address"),
-  password: z.string("Password is required")
-    .min(6, "Password must be at least 6 characters")
-    .max(18, "Password must be at most 18 characters"),
-  role: z.enum(["user", "admin"]).optional(),
+  email: emailOrMobileSchema,
+  password: passwordSchema,
+  role: roleEnum.optional(),
+})
+
+export const registerSchema = z.discriminatedUnion("role", [
+  userSchema,
+  adminSchema
+])
+
+export const refreshTokenSchema = z.object({
+  [tokenEnums.refreshToken]: z.string("Refresh token is required"),
+})
+
+export const forgotPassSchema = z.object({
+  email: emailOrMobileSchema,
+  role: roleEnum.optional(),
+})
+
+export const resetPassSchema = z.object({
+  email: emailOrMobileSchema,
+  password: passwordSchema,
+  otp: z.number("OTP is required")
+    .min(6, "OTP must be at least 6 digits")
+    .max(6, "OTP must be at most 6 digits"),
+  role: roleEnum.optional(),
+})
+
+export const registerImageSchema = z.object({
+  image: z.string("Image is required"),
+})
+
+export const verifyAccountSchema = z.object({
+  token: z.string("Token is required"),
+})
+
+export const updatePasswordSchema = z.object({
+  oldPassword: passwordSchema,
+  newPassword: passwordSchema,
+}).refine(
+  (data) => data.oldPassword !== data.newPassword,
+  {
+    message: "New password should be different from old password",
+    path: ["newPassword"],
+  }
+)
+
+export const resendVerifyEmailSchema = z.object({
+  email: emailOrMobileSchema,
 })
