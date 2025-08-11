@@ -240,11 +240,7 @@ export async function resendVerifyEmail(c: zContext<{ json: typeof resendVerifyE
 }
 
 export const imgUpload = async (c: zContext<{ form: typeof registerImageSchema }>) => {
-  const formData = await c.req.formData()
-
-  const image = formData.get("image")
-
-  if (!image) return c.json({ message: 'No images found' }, 400)
+  const { image } = c.req.valid("form")
 
   const url = await getImgUrl(image)
 
@@ -285,7 +281,8 @@ export const approvalStatusRefresh = async (c: Context) => {
   const refresh_token = await getToken(payload, tokenEnums.refreshToken)
   const access_token = await getToken(payload, tokenEnums.accessToken)
 
-  await User.updateOne({ _id }, { refreshTokens: [refresh_token] })
+  const Model = getModel(role)
+  await Model.updateOne({ _id }, { refreshTokens: [refresh_token] })
 
   const output: any = {
     access_token,
@@ -329,11 +326,12 @@ export const me = async (c: Context) => {
 
 export const updatePassword = async (c: zContext<{ json: typeof updatePasswordSchema }>) => {
   const { oldPassword, newPassword } = c.req.valid("json")
-  const { _id } = c.get('user')
+  const { _id, role } = c.get('user')
 
   if (oldPassword === newPassword) return c.json({ message: 'New password should be different from old password' }, 400)
 
-  const user = await User.findById(_id).select("password").lean()
+  const Model = getModel(role)
+  const user = await Model.findById(_id).select("password").lean()
   if (!user) return c.json({ message: 'User not found' }, 400)
 
   const result = await comparePasswords(oldPassword, user.password)
@@ -341,7 +339,7 @@ export const updatePassword = async (c: zContext<{ json: typeof updatePasswordSc
 
   const password = await hashPassword(newPassword)
 
-  await User.updateOne({ _id }, { password })
+  await Model.updateOne({ _id }, { password })
 
   return c.json({ message: 'Password updated successfully' })
 }

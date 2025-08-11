@@ -26,13 +26,14 @@ export const resetPassSchema = z.object({
   email: emailOrMobileSchema,
   password: passwordSchema,
   otp: z.number("OTP is required")
-    .min(6, "OTP must be at least 6 digits")
-    .max(6, "OTP must be at most 6 digits"),
+    .refine((val) => val.toString().length === 6, {
+      error: "OTP must be exactly 6 digits",
+    }),
   role: roleEnum.optional(),
 })
 
 export const registerImageSchema = z.object({
-  image: z.string("Image is required"),
+  image: z.instanceof(File, { message: "Image file is required" }),
 })
 
 export const verifyAccountSchema = z.object({
