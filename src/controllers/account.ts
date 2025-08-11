@@ -1,12 +1,16 @@
 import type { Context } from 'hono';
 import { getCookie } from 'hono/cookie';
 
+import type { zContext } from '../types/index.js';
+
 import {
   setRefreshTokenCookie, deleteRefreshTokenCookie,
   generateOtp, getToken, verifyToken,
   comparePasswords, hashPassword, tokenEnums,
   isEmail, env,
 } from '../utils/index.js';
+
+import { loginSchema } from '../validations/account.js'
 
 import { welcome, resendVerifyEmail as resendVerifyEmailTemp, forgotPass } from '../mail-templates/index.js';
 
@@ -64,8 +68,8 @@ export const register = async (c: Context) => {
   return c.json({ message: 'User saved successfully' })
 }
 
-export const login = async (c: Context) => {
-  const { email, password, role = "user" } = await c.req.json()
+export const login = async (c: zContext<{ json: typeof loginSchema }>) => {
+  const { email, password, role = "user" } = c.req.valid("json")
 
   if (!email || !password) return c.json({ message: "Email or password is missing" }, 400)
 

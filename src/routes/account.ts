@@ -5,13 +5,15 @@ import {
   imgUpload, approvalStatusRefresh, accessToken,
   verifyAccount, resendVerifyEmail, updatePassword,
 } from '../controllers/account.js';
+import { loginSchema, zValidate } from '../validations/index.js';
+
 import authMiddleware from '../middlewares/auth.js';
 
 const accountRoutes = new Hono()
 
 accountRoutes
   .post('/register', register)
-  .post('/login', login)
+  .post('/login', zValidate("json", loginSchema), login)
   .post('/access-token', accessToken)
   .post("/forgot-pass", forgetPass)
   .post("/reset-pass", resetPass)
