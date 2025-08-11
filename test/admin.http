@@ -36,6 +36,7 @@ Content-Type: application/json
       "qualifications": "bcom",
       "companyName": "TCS",
       "profession": "Doctor",
+      "sector": "IT",
       "salary": 80030
     },
     "contactDetails":{
@@ -49,9 +50,9 @@ Content-Type: application/json
       "birthOrder": 1
     },
     "vedicHoroscope": {
-      "rasi": "kanni",
-      "lagna": "dhanusu",
-      "nakshatra": "bharani",
+      "rasi": "Gemini",
+      "lagna": "Gemini",
+      "nakshatra": "Ashwini",
       "dashaPeriod": "14 months",
       "placeofBirth": "Port Elizabethview",
       "timeOfBirth": "8:30 AM",

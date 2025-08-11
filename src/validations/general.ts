@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { approvalStatuses, educationLevels, genders, maritalStatuses, nakshatra, plans, raasi, roles } from '../utils/enums.js';
 
-export const approvalStatusEnum = z.enum(approvalStatuses, { error: "Invalid Approval Status" }).default("pending")
-export const maritalStatusEnum = z.enum(maritalStatuses, { error: "Invalid Marital Status" }).default("Single")
+export const approvalStatusEnum = z.enum(approvalStatuses, { error: "Invalid Approval Status" })
+export const maritalStatusEnum = z.enum(maritalStatuses, { error: "Invalid Marital Status" })
 export const educationEnum = z.enum(educationLevels, { error: "Invalid Education" })
 export const genderEnum = z.enum(genders, { error: "Invalid Gender" })
 export const roleEnum = z.enum(roles, { error: "Invalid Role" })
@@ -128,7 +128,7 @@ export const userSchema = z.object({
   images: z.array(z.url()).optional(),
   password: passwordSchema,
   fullName: z.string("Name is required").min(3, "Name must be at least 3 characters"),
-  profileImg: z.array(z.url()).optional(),
+  profileImg: z.url().optional(),
   otherDetails: otherDetailsSchema,
   maritalStatus: maritalStatusEnum,
   familyDetails: familyDetailsSchema,

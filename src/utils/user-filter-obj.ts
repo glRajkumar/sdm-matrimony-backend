@@ -1,10 +1,17 @@
 import { educationLevels } from "./enums.js";
 
-function strOrArr(by: string, possibleLen: number) {
-  const conBy = by?.includes("[") ? JSON.parse(by) : by.includes(",") ? by.split(",") : by
+function strOrArr(by: string | string[], possibleLen: number) {
+  const conBy = typeof by === "string" ?
+    by?.includes("[")
+      ? JSON.parse(by)
+      : by.includes(",")
+        ? by.split(",")
+        : by
+    : by
+
   if (typeof conBy === "string") return conBy
 
-  if (Array.isArray(conBy) && conBy?.length < possibleLen) {
+  if (Array.isArray(conBy) && conBy.length > 0 && conBy.length < possibleLen) {
     return { $in: conBy }
   }
 
@@ -81,11 +88,11 @@ export function getFilterObj(obj: Record<string, any>) {
   }
 
   if (sector && sector !== "Any") {
-    filter["proffessionalDetails.sector"] = sector
+    filter["proffessionalDetails.sector"] = strOrArr(sector, Infinity)
   }
 
   if (profession && profession !== "Any") {
-    filter["proffessionalDetails.profession"] = profession
+    filter["proffessionalDetails.profession"] = strOrArr(profession, Infinity)
   }
 
   if (ageRange) {
@@ -131,21 +138,21 @@ export function getFilterObj(obj: Record<string, any>) {
   }
 
   if (caste && caste !== "Any") {
-    const casteFilter = strOrArr(caste, 1000)
+    const casteFilter = strOrArr(caste, Infinity)
     if (casteFilter) {
       filter["otherDetails.caste"] = casteFilter
     }
   }
 
   if (religion && religion !== "Any") {
-    const religionFilter = strOrArr(religion, 100)
+    const religionFilter = strOrArr(religion, Infinity)
     if (religionFilter) {
       filter["otherDetails.religion"] = religionFilter
     }
   }
 
   if (motherTongue && motherTongue !== "Any") {
-    const motherTongueFilter = strOrArr(motherTongue, 100)
+    const motherTongueFilter = strOrArr(motherTongue, Infinity)
     if (motherTongueFilter) {
       filter["otherDetails.motherTongue"] = motherTongueFilter
     }

@@ -1,8 +1,8 @@
 import { zValidator as zv } from "@hono/zod-validator";
 import type { ValidationTargets } from "hono";
-import type { ZodError, ZodType } from "zod";
+import { z } from "zod";
 
-function formatErrors(error: ZodError) {
+function formatErrors(error: z.ZodError) {
   const messages: Record<string, string> = {}
   error.issues.forEach(issue => {
     const key = issue.path[0] as string
@@ -17,7 +17,7 @@ function formatErrors(error: ZodError) {
   return messages
 }
 
-export const zValidate = <T extends ZodType, Target extends keyof ValidationTargets>(
+export const zValidate = <T extends z.ZodType, Target extends keyof ValidationTargets>(
   target: Target,
   schema: T
 ) =>
@@ -29,3 +29,24 @@ export const zValidate = <T extends ZodType, Target extends keyof ValidationTarg
       return c.json({ message }, 400)
     }
   })
+
+export function enumQuery<T extends z.ZodType>(values: T) {
+  return z.preprocess((val) => {
+    if (typeof val === "string") {
+      try {
+        if (val === "Any") return undefined
+        if (val.includes("[")) return JSON.parse(val)
+        if (val.includes(",")) return val.split(",")
+        return val
+
+      } catch {
+        return undefined
+      }
+    }
+
+    if (Array.isArray(val)) return val
+    return val
+  },
+    z.union([values, z.array(values)]).optional()
+  )
+}

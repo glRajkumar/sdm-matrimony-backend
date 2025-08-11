@@ -1,15 +1,20 @@
-import type { Context } from "hono";
+import type { zContext } from "../types/index.js";
+
+import {
+  findUsersSchema, findUserSchema, skipLimitSchema,
+  createUsersSchema, userMarriedToSchema, updateUserSchema,
+} from "../validations/index.js";
 
 import { hashPassword, getFilterObj } from "../utils/index.js";
 import { redisClient } from "../services/connect-redis.js";
 import { User } from "../models/index.js";
 
-export async function getUsers(c: Context) {
-  const { limit, skip, ...rest } = c.req.query()
-  const filters = getFilterObj(rest)
+export async function getUsers(c: zContext<{ query: typeof findUsersSchema }>) {
+  const queries = c.req.valid("query") || { limit: 10, skip: 0 }
+  const filters = getFilterObj(queries)
 
-  const numLimit = Number(limit || 10)
-  const numSkip = Number(skip || 0)
+  const numLimit = Number(queries?.limit || 10)
+  const numSkip = Number(queries?.skip || 0)
 
   const fullList = await User.find(filters)
     .select("_id fullName email contactDetails.mobile profileImg gender dob maritalStatus proffessionalDetails.salary approvalStatus")
@@ -21,11 +26,11 @@ export async function getUsers(c: Context) {
   return c.json(fullList)
 }
 
-export async function getMarriedUsers(c: Context) {
-  const { limit, skip } = c.req.query()
+export async function getMarriedUsers(c: zContext<{ query: typeof skipLimitSchema }>) {
+  const queries = c.req.valid("query") || { limit: 10, skip: 0 }
 
-  const numLimit = Number(limit || 10)
-  const numSkip = Number(skip || 0)
+  const numLimit = Number(queries?.limit || 10)
+  const numSkip = Number(queries?.skip || 0)
 
   const select = "_id fullName email profileImg dob proffessionalDetails.salary marriedTo marriedOn"
   const marriedUsers = await User.find({
@@ -42,14 +47,22 @@ export async function getMarriedUsers(c: Context) {
   return c.json(marriedUsers)
 }
 
-export async function findUser(c: Context) {
-  const query = c.req.query()
-  const filters = Object.keys(query).reduce((acc: any, key) => {
+export async function findUser(c: zContext<{ query: typeof findUserSchema }>) {
+  const queries: Record<string, any> = c.req.valid("query") || {}
+
+  if (Object.keys(queries).length === 0) {
+    return c.json({ message: "No query parameters provided" }, 400)
+  }
+
+  const filters = Object.keys(queries).reduce((acc: Record<string, any>, key) => {
     if (key === "fullName") {
-      acc[key] = { $regex: query[key], $options: "i" }
+      acc[key] = { $regex: queries[key], $options: "i" }
+    }
+    else if (key === "mobile") {
+      acc["contactDetails.mobile"] = queries[key]
     }
     else {
-      acc[key] = query[key]
+      acc[key] = queries[key]
     }
     return acc
   }, {})
@@ -61,10 +74,9 @@ export async function findUser(c: Context) {
   return c.json(user)
 }
 
-export async function createUsers(c: Context) {
+export async function createUsers(c: zContext<{ json: typeof createUsersSchema }>) {
   const { _id } = c.get("user")
-
-  // const users = await c.req.json()
+  const users = c.req.valid("json")
 
   // const payload = await Promise.all(users.map(async (user: any) => {
   //   const hashedPass = await hashPassword(user.password)
@@ -79,7 +91,6 @@ export async function createUsers(c: Context) {
 
   // return c.json({ message: "Status updated successfully" })
 
-  const users = await c.req.json()
   const results = []
 
   for (const user of users) {
@@ -119,8 +130,8 @@ export async function createUsers(c: Context) {
   return c.json({ results })
 }
 
-export async function userMarriedTo(c: Context) {
-  const { _id, marriedTo, marriedOn } = await c.req.json()
+export async function userMarriedTo(c: zContext<{ json: typeof userMarriedToSchema }>) {
+  const { _id, marriedTo, marriedOn } = c.req.valid("json")
 
   await User.bulkWrite([
     {
@@ -140,8 +151,12 @@ export async function userMarriedTo(c: Context) {
   return c.json({ message: "User married to updated successfully" })
 }
 
-export async function updateUser(c: Context) {
-  const { _id, ...rest } = await c.req.json()
+export async function updateUser(c: zContext<{ json: typeof updateUserSchema }>) {
+  const { _id, ...rest } = c.req.valid("json")
+
+  if (Object.keys(rest).length === 0) {
+    return c.json({ message: "No parameters to update" }, 400)
+  }
 
   const user = await User.findOneAndUpdate({ _id }, rest, { new: true })
     .select("role")
