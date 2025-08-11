@@ -7,11 +7,6 @@ import {
 } from "./general.js";
 import { enumQuery } from "./custom-validate.js";
 
-export const skipLimitSchema = z.object({
-  skip: z.coerce.number().optional().default(0),
-  limit: z.coerce.number().optional().default(10),
-}).optional()
-
 export const findUsersSchema = z.object({
   skip: z.coerce.number().optional().default(0),
   limit: z.coerce.number().optional().default(10),

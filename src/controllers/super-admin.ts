@@ -1,13 +1,19 @@
 import type { Context } from "hono";
 
+import type {
+  skipLimitSchema, adminCreateSchema, adminUpdateSchema,
+  usersCreatedBySchema, _idParamSchema,
+} from "../validations/index.js";
+import type { zContext } from "../types/index.js";
+
 import { Payment, User, Admin } from "../models/index.js";
 import { hashPassword } from "../utils/password.js";
 
 const planSelectFields = "_id amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths createdAt"
 const userSelectFields = "_id fullName email profileImg dob proffessionalDetails.salary"
 
-export async function getPaidUsers(c: Context) {
-  const { limit, skip } = c.req.query()
+export async function getPaidUsers(c: zContext<{ query: typeof skipLimitSchema }>) {
+  const { limit, skip } = c.req.valid("query") || { limit: 10, skip: 0 }
 
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
@@ -28,8 +34,8 @@ export async function getPaidUsers(c: Context) {
   return c.json(final)
 }
 
-export async function getAssistedSubscribedUsers(c: Context) {
-  const { limit, skip } = c.req.query()
+export async function getAssistedSubscribedUsers(c: zContext<{ query: typeof skipLimitSchema }>) {
+  const { limit, skip } = c.req.valid("query") || { limit: 10, skip: 0 }
 
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
@@ -53,8 +59,8 @@ export async function getAssistedSubscribedUsers(c: Context) {
   return c.json(final)
 }
 
-export async function getUsersAllPayments(c: Context) {
-  const { limit, skip } = c.req.query()
+export async function getUsersAllPayments(c: zContext<{ query: typeof skipLimitSchema }>) {
+  const { limit, skip } = c.req.valid("query") || { limit: 10, skip: 0 }
 
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
@@ -111,9 +117,9 @@ export async function getUsersAllPayments(c: Context) {
   return c.json(paidUsers)
 }
 
-export async function getUsersByCreatedBy(c: Context) {
+export async function getUsersByCreatedBy(c: zContext<{ query: typeof usersCreatedBySchema }>) {
+  const { limit, skip, createdAtToday, createdBy } = c.req.valid("query") || { limit: 10, skip: 0 }
   const { _id } = c.get("user")
-  const { limit, skip, createdAtToday, createdBy } = c.req.query()
 
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
@@ -247,11 +253,8 @@ export async function getAdmins(c: Context) {
   return c.json(admins)
 }
 
-export async function createAdmin(c: Context) {
-  const { email, password, ...rest } = await c.req.json()
-
-  if (!email && !rest?.contactDetails?.mobile) return c.json({ message: "Email or Mobile is required" }, 400)
-  if (!password) return c.json({ message: "Password shouldn't be empty" }, 400)
+export async function createAdmin(c: zContext<{ json: typeof adminCreateSchema }>) {
+  const { email, password, ...rest } = c.req.valid("json")
 
   const findBy: Record<string, any> = {}
   if (email && rest?.contactDetails?.mobile) {
@@ -289,9 +292,9 @@ export async function createAdmin(c: Context) {
   return c.json({ message: "Admin created successfully" })
 }
 
-export async function updateAdmin(c: Context) {
-  const { _id } = c.req.param()
-  const rest = await c.req.json()
+export async function updateAdmin(c: zContext<{ json: typeof adminUpdateSchema, param: typeof _idParamSchema }>) {
+  const { _id } = c.req.valid("param")
+  const rest = c.req.valid("json")
 
   if (rest.password) {
     rest.password = await hashPassword(rest.password)

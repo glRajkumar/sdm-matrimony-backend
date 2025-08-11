@@ -165,3 +165,12 @@ export const adminSchema = z.object({
       path: ["email"],
     }
   )
+
+export const skipLimitSchema = z.object({
+  skip: z.coerce.number().optional().default(0),
+  limit: z.coerce.number().optional().default(10),
+}).optional()
+
+export const _idParamSchema = z.object({
+  _id: z.string(),
+})
