@@ -1,5 +1,8 @@
 import type { Context } from 'hono';
 
+import type { _idParamSchema, imgUploadSchema, matchedUsersSchema, skipLimitSchema, updateProfileSchema, userIdSchema } from '../validations/index.js';
+import type { zContext } from '../types/index.js';
+
 import { getImgUrl, deleteImg } from '../services/index.js';
 import { UserAccess, User } from '../models/index.js';
 
@@ -25,8 +28,8 @@ async function checkUserAccess(user: any, _id: string) {
   return !!hasUnlockedAccess
 }
 
-export const getUserDetails = async (c: Context) => {
-  const { _id } = c.req.param()
+export const getUserDetails = async (c: zContext<{ param: typeof _idParamSchema }>) => {
+  const { _id } = c.req.valid("param")
   const user = c.get("user")
 
   const hasFullAccess = await checkUserAccess(user, _id)
@@ -81,9 +84,10 @@ export const getPartnerPreferences = async (c: Context) => {
   return c.json(payload)
 }
 
-export const getMatches = async (c: Context) => {
-  const { limit, skip, ...rest } = c.req.query()
+export const getMatches = async (c: zContext<{ query: typeof matchedUsersSchema }>) => {
+  const { limit, skip, ...rest } = c.req.valid("query") || { limit: 10, skip: 0 }
   const { _id } = c.get("user")
+
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
 
@@ -143,13 +147,14 @@ export const getMatches = async (c: Context) => {
   return c.json(final)
 }
 
-export const getLikesList = async (c: Context) => {
-  const { limit, skip, type = 'liked' } = c.req.query()
+export const getLikesList = async (c: zContext<{ query: typeof skipLimitSchema }>) => {
+  const { limit, skip } = c.req.valid("query") || { limit: 10, skip: 0 }
   const { _id } = c.get("user")
 
   const numLimit = Number(limit || 10)
   const numSkip = Number(skip || 0)
 
+  const type = 'liked'
   const list = await User.findOne({ _id })
     .select(type)
     .populate({
@@ -190,9 +195,11 @@ export const getUnlockedProfiles = async (c: Context) => {
   return c.json(payload)
 }
 
-export const addLiked = async (c: Context) => {
+export const addLiked = async (c: zContext<{ json: typeof userIdSchema }>) => {
+  const { userId } = c.req.valid("json")
   const { _id } = c.get("user")
-  const { userId, type = "liked" } = await c.req.json()
+
+  const type = "liked"
   const updateObj: any = { $push: { [type]: userId } }
   // const otherType = type === "liked" ? "disliked" : "liked"
   // updateObj.$pull = { [otherType]: userId }
@@ -200,16 +207,18 @@ export const addLiked = async (c: Context) => {
   return c.json({ message: `User added to ${type} list successfully` })
 }
 
-export const removeLiked = async (c: Context) => {
+export const removeLiked = async (c: zContext<{ json: typeof userIdSchema }>) => {
+  const { userId } = c.req.valid("json")
   const { _id } = c.get("user")
-  const { userId, type } = await c.req.json()
+
+  const type = "liked"
   await User.updateOne({ _id }, { $pull: { [type]: userId } })
   return c.json({ message: `User removed from ${type} list successfully` })
 }
 
-export const updateProfile = async (c: Context) => {
+export const updateProfile = async (c: zContext<{ json: typeof updateProfileSchema }>) => {
+  const payload = c.req.valid("json")
   const user = c.get("user")
-  const payload = await c.req.json()
 
   const _id = user.role === "user" ? user._id : payload._id
   await User.updateOne({ _id }, payload)
@@ -217,14 +226,12 @@ export const updateProfile = async (c: Context) => {
   return c.json({ message: "User details updated successfully" })
 }
 
-export const imgUpload = async (c: Context) => {
+export const imgUpload = async (c: zContext<{ form: typeof imgUploadSchema }>) => {
+  const formData = c.req.valid("form")
   const user = c.get('user')
-  const formData = await c.req.formData()
 
-  const isProfilePic = formData.get("isProfilePic") === "true"
-  const images = formData.getAll("images")
-
-  if (!images || (Array.isArray(images) && images.length === 0)) return c.json({ message: 'No images found' }, 400)
+  const isProfilePic = formData.isProfilePic
+  const images = formData.images
 
   const uploadedImages = await Promise.all(images.map(async (image) => await getImgUrl(image)))
 
@@ -238,20 +245,20 @@ export const imgUpload = async (c: Context) => {
     updateQuery.profileImg = uploadedImages[0]
   }
 
-  const _id = user.role === "user" ? user._id : formData.get("_id")
+  const _id = user.role === "user" ? user._id : formData._id
   await User.updateOne({ _id }, updateQuery)
 
   return c.json({ message: 'User image uploaded successfully' })
 }
 
-export const imgDelete = async (c: Context) => {
-  const { _id } = c.req.param()
+export const imgDelete = async (c: zContext<{ param: typeof _idParamSchema }>) => {
+  const { _id } = c.req.valid("param")
   await deleteImg(_id)
   return c.json({ message: 'Image deleted successfully' })
 }
 
-export const unlockProfile = async (c: Context) => {
-  const { _id } = await c.req.json()
+export const unlockProfile = async (c: zContext<{ json: typeof _idParamSchema }>) => {
+  const { _id } = c.req.valid("json")
   const user = c.get("user")
 
   const hasFullAccess = await checkUserAccess(user, _id)

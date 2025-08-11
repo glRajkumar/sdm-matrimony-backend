@@ -15,6 +15,9 @@ export const emailSchema = z.email("Invalid email address")
 export const mobileSchema = z.string().regex(/^\d{10}$/, "Must be a valid 10-digit number")
 export const emailOrMobileSchema = z.union([emailSchema, mobileSchema], { error: "Please enter valid email or mobile number" })
 
+export const ageRangeEnum = z.enum(["below_25", "25_30", "30_40", "above_40"], "Invalid Age Range")
+export const salaryRangeEnum = z.enum(["below_20000", "20000_30000", "30000_40000", "40000_50000", "above_50000"], "Invalid Salary Range")
+
 export const passwordSchema = z.string("Password is required")
   .min(6, "Password must be at least 6 characters")
   .max(18, "Password must be at most 18 characters")

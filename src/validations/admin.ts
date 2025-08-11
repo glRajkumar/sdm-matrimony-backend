@@ -3,7 +3,7 @@ import z from "zod";
 import {
   approvalStatusEnum, educationEnum, emailSchema, genderEnum,
   maritalStatusEnum, mobileSchema, nakshatraEnum, rasiEnum,
-  userSchema
+  userSchema, ageRangeEnum, salaryRangeEnum,
 } from "./general.js";
 import { enumQuery } from "./custom-validate.js";
 
@@ -19,8 +19,8 @@ export const findUsersSchema = z.object({
   isMarried: z.coerce.boolean().optional(),
   profession: z.string().optional(),
   minSalary: z.coerce.number().optional(),
-  ageRange: z.enum(["below_25", "25_30", "30_40", "above_40"], "Invalid Age Range").optional(),
-  salaryRange: z.enum(["below_20000", "20000_30000", "30000_40000", "40000_50000", "above_50000"], "Invalid Salary Range").optional(),
+  ageRange: ageRangeEnum.optional(),
+  salaryRange: salaryRangeEnum.optional(),
   rasi: enumQuery(rasiEnum).optional(),
   lagna: enumQuery(nakshatraEnum).optional(),
   caste: enumQuery(z.string()).optional(),
