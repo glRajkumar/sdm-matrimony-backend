@@ -1,5 +1,5 @@
-import { zValidator as zv } from "@hono/zod-validator";
 import type { ValidationTargets } from "hono";
+import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 
 function formatErrors(error: z.ZodError) {
@@ -17,11 +17,11 @@ function formatErrors(error: z.ZodError) {
   return messages
 }
 
-export const zValidate = <T extends z.ZodType, Target extends keyof ValidationTargets>(
+export const zv = <T extends z.ZodType, Target extends keyof ValidationTargets>(
   target: Target,
   schema: T
 ) =>
-  zv(target, schema, (result, c) => {
+  zValidator(target, schema, (result, c) => {
     if (!result.success) {
       const messages = formatErrors(result.error as any)
       const message = Object.entries(messages).map(([key, value]) => `${key}: ${value}`).join("; ")

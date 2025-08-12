@@ -9,7 +9,7 @@ import {
 
 import {
   skipLimitSchema, adminCreateSchema, adminUpdateSchema, usersCreatedBySchema,
-  _idParamSchema, zValidate,
+  _idParamSchema, zv,
 } from "../validations/index.js";
 
 import authMiddleware from "../middlewares/auth.js";
@@ -21,14 +21,14 @@ superAdminRoutes.use(authMiddleware)
 superAdminRoutes.use(roleCheck(["super-admin"]))
 
 superAdminRoutes
-  .get("/users/paid", zValidate("query", skipLimitSchema), getPaidUsers)
-  .get("/users/assisted-subscribed", zValidate("query", skipLimitSchema), getAssistedSubscribedUsers)
-  .get("/users/all-payments", zValidate("query", skipLimitSchema), getUsersAllPayments)
-  .get("/users/created-by", zValidate("query", usersCreatedBySchema), getUsersByCreatedBy)
+  .get("/users/paid", zv("query", skipLimitSchema), getPaidUsers)
+  .get("/users/assisted-subscribed", zv("query", skipLimitSchema), getAssistedSubscribedUsers)
+  .get("/users/all-payments", zv("query", skipLimitSchema), getUsersAllPayments)
+  .get("/users/created-by", zv("query", usersCreatedBySchema), getUsersByCreatedBy)
   .get("/users-stats/created-per-admin", getUserCreationStatsPerAdmin)
   .get("/users-stats/created-today", getUserCreationStatsToday)
   .get("/admins", getAdmins)
-  .post("/admin", zValidate("json", adminCreateSchema), createAdmin)
-  .put("/admin/:_id", zValidate("param", _idParamSchema), zValidate("json", adminUpdateSchema), updateAdmin)
+  .post("/admin", zv("json", adminCreateSchema), createAdmin)
+  .put("/admin/:_id", zv("param", _idParamSchema), zv("json", adminUpdateSchema), updateAdmin)
 
 export default superAdminRoutes

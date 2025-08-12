@@ -8,7 +8,7 @@ import {
 import {
   findUsersSchema, findUserSchema, skipLimitSchema,
   createUsersSchema, userMarriedToSchema, updateUserSchema,
-  zValidate,
+  zv,
 } from "../validations/index.js";
 
 import authMiddleware from "../middlewares/auth.js";
@@ -20,11 +20,11 @@ adminRoutes.use(authMiddleware)
 adminRoutes.use(roleCheck(["admin", "super-admin"]))
 
 adminRoutes
-  .get("/users", zValidate("query", findUsersSchema), getUsers)
-  .get("/users/married", zValidate("query", skipLimitSchema), getMarriedUsers)
-  .get("/user/find", zValidate("query", findUserSchema), findUser)
-  .post("/users", zValidate("json", createUsersSchema), createUsers)
-  .post("/user/married-to", zValidate("json", userMarriedToSchema), userMarriedTo)
-  .put("/user", zValidate("json", updateUserSchema), updateUser)
+  .get("/users", zv("query", findUsersSchema), getUsers)
+  .get("/users/married", zv("query", skipLimitSchema), getMarriedUsers)
+  .get("/user/find", zv("query", findUserSchema), findUser)
+  .post("/users", zv("json", createUsersSchema), createUsers)
+  .post("/user/married-to", zv("json", userMarriedToSchema), userMarriedTo)
+  .put("/user", zv("json", updateUserSchema), updateUser)
 
 export default adminRoutes
