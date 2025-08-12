@@ -7,13 +7,13 @@ Authorization: {{token}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
 ------WebKitFormBoundary
-Content-Disposition: form-data; name="images"; filename="sample1.png"
+Content-Disposition: form-data; name="images"; filename="female.jpg"
 Content-Type: image/png
 
-< ./sample1.png
+< ./imgs/female.jpg
 ------WebKitFormBoundary
-Content-Disposition: form-data; name="images"; filename="1.jpg"
+Content-Disposition: form-data; name="images"; filename="male.jpg"
 Content-Type: image/jpg
 
-< ./male.jpg
+< ./imgs/male.jpg
 ------WebKitFormBoundary--

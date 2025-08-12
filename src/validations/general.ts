@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { approvalStatuses, educationLevels, genders, maritalStatuses, nakshatra, plans, raasi, roles } from '../utils/enums.js';
 
 export const approvalStatusEnum = z.enum(approvalStatuses, { error: "Invalid Approval Status" })
@@ -177,3 +178,14 @@ export const skipLimitSchema = z.object({
 export const _idParamSchema = z.object({
   _id: z.string("ID is required"),
 })
+
+const acceptedImages = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/avif"]
+const maxSize = 5 * 1024 * 1024
+
+export const imgFileSchema = z.instanceof(File, { message: "Please upload a valid image" })
+  .refine(file => acceptedImages.includes(file.type), {
+    message: "Only .jpg, .jpeg, .png, .webp, .avif formats are supported"
+  })
+  .refine(file => file.size <= maxSize, {
+    message: "Max file size is 5MB"
+  })

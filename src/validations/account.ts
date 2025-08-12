@@ -1,5 +1,9 @@
 import { z } from 'zod';
-import { adminSchema, emailOrMobileSchema, passwordSchema, roleEnum, userSchema } from './general.js';
+
+import {
+  adminSchema, emailOrMobileSchema, imgFileSchema,
+  passwordSchema, roleEnum, userSchema
+} from './general.js';
 import { tokenEnums } from '../utils/enums.js';
 
 export const loginSchema = z.object({
@@ -33,7 +37,7 @@ export const resetPassSchema = z.object({
 })
 
 export const registerImageSchema = z.object({
-  image: z.instanceof(File, { message: "Image file is required" }),
+  image: imgFileSchema,
 })
 
 export const verifyAccountSchema = z.object({

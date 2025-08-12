@@ -2,7 +2,7 @@ import z from "zod";
 
 import {
   educationEnum, maritalStatusEnum, nakshatraEnum, rasiEnum,
-  ageRangeEnum, salaryRangeEnum, userSchema,
+  ageRangeEnum, salaryRangeEnum, userSchema, imgFileSchema,
 } from "./general.js";
 import { enumQuery } from "./custom-validate.js";
 
@@ -53,12 +53,11 @@ export const updateProfileSchema = userSchema.omit({
     }).optional(),
   })
 
-
 export const imgUploadSchema = z.object({
   _id: z.string().optional(),
   isProfilePic: z.coerce.boolean().optional(),
   images: z.preprocess(
     (val) => Array.isArray(val) ? val : [val],
-    z.array(z.instanceof(File, { message: "Please upload a valid image" })).min(1, "At least one image is required")
+    z.array(imgFileSchema).min(1, "At least one image is required")
   ),
 })

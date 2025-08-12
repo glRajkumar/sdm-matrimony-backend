@@ -144,7 +144,7 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 Content-Disposition: form-data; name="image"; filename="1.jpg"
 Content-Type: image/jpg
 
-< ./male.jpg
+< ./imgs/male.jpg
 ------WebKitFormBoundary--
 
 

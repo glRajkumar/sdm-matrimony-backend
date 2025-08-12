@@ -83,7 +83,7 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 Content-Disposition: form-data; name="images"; filename="1.jpg"
 Content-Type: image/jpg
 
-< ./male.jpg
+< ./imgs/male.jpg
 ------WebKitFormBoundary
 Content-Disposition: form-data; name="isProfilePic"
 
@@ -100,12 +100,12 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 Content-Disposition: form-data; name="images"; filename="1.jpg"
 Content-Type: image/jpg
 
-< ./male.jpg
+< ./imgs/male.jpg
 ------WebKitFormBoundary
 Content-Disposition: form-data; name="images"; filename="2.jpg"
 Content-Type: image/jpg
 
-< ./female.jpg
+< ./imgs/female.jpg
 ------WebKitFormBoundary--
 
 

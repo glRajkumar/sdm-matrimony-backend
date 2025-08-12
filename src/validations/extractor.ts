@@ -1,6 +1,7 @@
 import { z } from "zod";
 
+import { imgFileSchema } from "./general.js";
+
 export const extractImageSchema = z.object({
-  images: z.array(z.instanceof(File, { message: "Images are required" }))
-    .length(2, "Exactly two images are required"),
+  images: z.array(imgFileSchema).length(2, "Exactly two images are required"),
 })
