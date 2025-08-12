@@ -12,11 +12,7 @@ import {
   updateProfileSchema, userIdSchema, zv,
 } from "../validations/index.js";
 
-import authMiddleware from "../middlewares/auth.js";
-
 const userRoutes = new Hono()
-
-userRoutes.use(authMiddleware)
 
 userRoutes
   .get("/matches", zv("query", matchedUsersSchema), getMatches)

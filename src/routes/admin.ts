@@ -11,12 +11,10 @@ import {
   zv,
 } from "../validations/index.js";
 
-import authMiddleware from "../middlewares/auth.js";
 import roleCheck from "../middlewares/role-check.js";
 
 const adminRoutes = new Hono()
 
-adminRoutes.use(authMiddleware)
 adminRoutes.use(roleCheck(["admin", "super-admin"]))
 
 adminRoutes

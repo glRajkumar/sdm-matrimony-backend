@@ -40,7 +40,7 @@ async function getUser(_id: string, role: string) {
 const authMiddleware = createMiddleware(async (c, next) => {
   try {
     const token = c.req.header("Authorization")?.replace('Bearer ', '')
-    if (!token) return c.json({ message: 'No token provided' }, 400)
+    if (!token) return c.json({ message: 'Unauthorized' }, 401)
 
     const { _id, role, type } = await verifyToken(token, tokenEnums.accessToken)
 

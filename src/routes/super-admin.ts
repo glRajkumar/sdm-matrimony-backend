@@ -12,12 +12,10 @@ import {
   _idParamSchema, zv,
 } from "../validations/index.js";
 
-import authMiddleware from "../middlewares/auth.js";
 import roleCheck from "../middlewares/role-check.js";
 
 const superAdminRoutes = new Hono()
 
-superAdminRoutes.use(authMiddleware)
 superAdminRoutes.use(roleCheck(["super-admin"]))
 
 superAdminRoutes
