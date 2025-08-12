@@ -56,6 +56,9 @@ export const updateProfileSchema = userSchema.omit({
 
 export const imgUploadSchema = z.object({
   _id: z.string().optional(),
-  isProfilePic: z.boolean().optional(),
-  images: z.array(z.instanceof(File, { message: "Images are required" })),
+  isProfilePic: z.coerce.boolean().optional(),
+  images: z.preprocess(
+    (val) => Array.isArray(val) ? val : [val],
+    z.array(z.instanceof(File, { message: "Please upload a valid image" })).min(1, "At least one image is required")
+  ),
 })

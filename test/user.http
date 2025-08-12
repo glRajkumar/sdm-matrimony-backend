@@ -17,7 +17,7 @@ GET {{host}}/partner-preferences
 Authorization: {{token}}
 
 
-### getMathces ?limit=4&skip=0&ageRange=above_40&rasi=Aries&lagna=Aries&maritalStatus=Married&isBlocked=false&isDeleted=false&minSalary=10000&minQualification=Bachelor&profession=Software Engineer&motherTongue=["Hindi","English"]
+### getMathces ?limit=4&skip=0&ageRange=above_40&rasi=Aries&lagna=Aries&maritalStatus=Single&isBlocked=false&isDeleted=false&minSalary=10000&minQualification=Bachelor&profession=Software Engineer&motherTongue=["Hindi","English"]
 GET {{host}}/matches
 Authorization: {{token}}
 
@@ -38,26 +38,24 @@ Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "userId": "688a1171e775c818c4d99d15",
-  "type": "liked"
+  "userId": "688a1171e775c818c4d99d15"
 }
 
 
 ### remove Like/disLike
 POST {{host}}/removeliked
 Authorization: {{token}}
-Content-Type: application/json`
+Content-Type: application/json
 
 {
-  "userId": "67ce9f504ae2647f21bde5c0",
-  "type": "liked"
+  "userId": "67ce9f504ae2647f21bde5c0"
 }
 
 
 ### update profile details
 PUT {{host}}/profile
 Authorization: {{token}}
-Content-Type: application/json`
+Content-Type: application/json
 
 {
   "fullName": "Raj kumar",

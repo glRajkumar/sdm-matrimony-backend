@@ -1,4 +1,4 @@
-import { educationLevels } from "./enums.js";
+import { approvalStatuses, educationLevels, genders, maritalStatuses, raasi } from "./enums.js";
 
 function strOrArr(by: string | string[], possibleLen: number) {
   const conBy = typeof by === "string" ?
@@ -35,7 +35,7 @@ export function getFilterObj(obj: Record<string, any>) {
   }
 
   if (approvalStatus) {
-    const approvalStatusFilter = strOrArr(approvalStatus, 3)
+    const approvalStatusFilter = strOrArr(approvalStatus, approvalStatuses.length)
     if (approvalStatusFilter) {
       filter.approvalStatus = approvalStatusFilter
     }
@@ -45,7 +45,7 @@ export function getFilterObj(obj: Record<string, any>) {
   }
 
   if (gender) {
-    const genderFilter = strOrArr(gender, 2)
+    const genderFilter = strOrArr(gender, genders.length)
     if (genderFilter) {
       filter.gender = genderFilter
     }
@@ -56,7 +56,7 @@ export function getFilterObj(obj: Record<string, any>) {
   }
 
   if (maritalStatus) {
-    const maritalStatusFilter = strOrArr(maritalStatus, 4)
+    const maritalStatusFilter = strOrArr(maritalStatus, maritalStatuses.length)
     if (maritalStatusFilter) {
       filter.maritalStatus = maritalStatusFilter
     }
@@ -124,14 +124,14 @@ export function getFilterObj(obj: Record<string, any>) {
   }
 
   if (rasi && rasi !== "Any") {
-    const rasiFilter = strOrArr(rasi, 12)
+    const rasiFilter = strOrArr(rasi, raasi.length)
     if (rasiFilter) {
       filter["vedicHoroscope.rasi"] = rasiFilter
     }
   }
 
   if (lagna && lagna !== "Any") {
-    const lagnaFilter = strOrArr(lagna, 12)
+    const lagnaFilter = strOrArr(lagna, raasi.length)
     if (lagnaFilter) {
       filter["vedicHoroscope.lagna"] = lagnaFilter
     }

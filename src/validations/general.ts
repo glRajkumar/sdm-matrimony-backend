@@ -175,5 +175,5 @@ export const skipLimitSchema = z.object({
 }).optional()
 
 export const _idParamSchema = z.object({
-  _id: z.string(),
+  _id: z.string("ID is required"),
 })

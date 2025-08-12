@@ -29,7 +29,7 @@ userRoutes
   .post("/removeliked", zValidate("json", userIdSchema), removeLiked)
   .post("/unlock", zValidate("json", _idParamSchema), unlockProfile)
   .put("/profile", zValidate("json", updateProfileSchema), updateProfile)
-  .put("/images", zValidate("json", imgUploadSchema), imgUpload)
+  .put("/images", zValidate("form", imgUploadSchema), imgUpload)
   .delete("/image/:_id", zValidate("param", _idParamSchema), imgDelete)
 
 export default userRoutes
