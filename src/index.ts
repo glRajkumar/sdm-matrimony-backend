@@ -1,10 +1,12 @@
 import { serve } from '@hono/node-server';
 
+import { secureHeaders } from 'hono/secure-headers';
+import { compress } from 'hono/compress';
 import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
-// import { csrf } from 'hono/csrf';
 import { Hono } from 'hono';
 
+import createRateLimiter from './middlewares/rate-limit.js';
 import migrationRoutes from './routes/migration.js';
 import fakerRoutes from './routes/faker.js';
 
@@ -18,21 +20,25 @@ import userRoutes from './routes/user.js';
 import { connectMongo, connectRedis } from './services/index.js';
 import { env } from './utils/enums.js';
 
-const app = new Hono().basePath("api")
-
-app.use(logger())
-app.use(cors({ origin: env.FRONTEND_URL, credentials: true }))
-// app.use(csrf({ origin: env.FRONTEND_URL }))
-
 try {
   await Promise.all([connectMongo(), connectRedis()])
 } catch (error) {
   process.exit(1)
 }
 
-app.get("/health", c => c.json({ status: "ok" }))
+const app = new Hono().basePath("api")
+
+app.use(logger())
+app.use(cors({ origin: env.FRONTEND_URL, credentials: true }))
+app.use(secureHeaders())
+app.use(compress())
 
 app.route("/account", accountRoutes)
+
+app.use(createRateLimiter())
+
+app.get("/health", c => c.json({ status: "ok" }))
+
 app.route("/user", userRoutes)
 app.route("/admin", adminRoutes)
 app.route("/super-admin", superAdminRoutes)

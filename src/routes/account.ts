@@ -13,20 +13,24 @@ import {
   zValidate,
 } from "../validations/index.js";
 
+import createRateLimiter from "../middlewares/rate-limit.js";
 import authMiddleware from "../middlewares/auth.js";
+
+const rl = createRateLimiter({ limit: 5, windowMs: 60 * 1000 })
 
 const accountRoutes = new Hono()
 
 accountRoutes
-  .post("/login", zValidate("json", loginSchema), login)
-  .post("/register", zValidate("json", registerSchema), register)
-  .post("/access-token", zValidate("cookie", refreshTokenSchema), accessToken)
-  .post("/forgot-pass", zValidate("json", forgotPassSchema), forgetPass)
-  .post("/reset-pass", zValidate("json", resetPassSchema), resetPass)
-  .post("/register-image", zValidate("form", registerImageSchema), imgUpload)
-  .post("/verify", zValidate("json", verifyAccountSchema), verifyAccount)
+  .post("/login", rl, zValidate("json", loginSchema), login)
+  .post("/register", rl, zValidate("json", registerSchema), register)
+  .post("/access-token", rl, zValidate("cookie", refreshTokenSchema), accessToken)
+  .post("/forgot-pass", rl, zValidate("json", forgotPassSchema), forgetPass)
+  .post("/reset-pass", rl, zValidate("json", resetPassSchema), resetPass)
+  .post("/register-image", rl, zValidate("form", registerImageSchema), imgUpload)
+  .post("/verify", rl, zValidate("json", verifyAccountSchema), verifyAccount)
 
 accountRoutes.use(authMiddleware)
+accountRoutes.use(createRateLimiter())
 
 accountRoutes
   .get("/me", me)
