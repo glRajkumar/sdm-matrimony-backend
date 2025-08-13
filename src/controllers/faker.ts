@@ -5,12 +5,15 @@ import {
   rand, toCollection,
 } from "@ngneat/falso";
 
+import castesMap from "../assets/caste-map.json" with { type: "json" };
+import castes from "../assets/main-castes.json" with { type: "json" };
+
 import {
   approvalStatuses, maritalStatuses, genders,
-  nakshatra, raasi, castes, religions,
+  nakshatra, raasi, religions,
   professions, educationLevels, languages,
   proffessionalSectors,
-} from '../utils/index.js';
+} from "../utils/index.js";
 
 const generateRandomUser = () => {
   const gender = rand(genders)
@@ -24,6 +27,10 @@ const generateRandomUser = () => {
   const sector = rand(proffessionalSectors)
   const profession = sector === "Unemployed" ? "Unemployed" : rand(professions)
   const salary = sector === "Unemployed" ? 0 : randNumber({ min: 10000, max: 150000 })
+
+  const caste = rand(castes)
+  const found = castesMap[caste as keyof typeof castesMap] || []
+  const subCaste = rand(found) || ""
 
   return {
     fullName: randFullName({ gender: gender.toLowerCase() as "male" | "female" }),
@@ -68,8 +75,9 @@ const generateRandomUser = () => {
     partnerPreferences: {
       minAge,
       maxAge,
+      caste,
+      subCaste,
       religion: rand(religions),
-      caste: rand(castes),
       minSalary: randNumber({ min: 30000, max: 100000 }),
       minQualification: rand(educationLevels),
       profession: rand(professions),
@@ -81,10 +89,11 @@ const generateRandomUser = () => {
     otherDetails: {
       motherTongue: rand(languages),
       houseType: rand(['Own', 'Lease', 'Rental']),
+      religion: rand(religions),
       height: randNumber({ min: 150, max: 200 }),
       color: randWord(),
-      caste: rand(castes),
-      religion: rand(religions),
+      subCaste,
+      caste,
     },
   };
 };
