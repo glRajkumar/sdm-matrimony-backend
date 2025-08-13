@@ -123,6 +123,7 @@ const userSchema = new Schema({
     maxAge: Number,
     religion: String,
     caste: String,
+    subCaste: String,
     minSalary: Number,
     minQualification: String,
     sector: String,
@@ -143,6 +144,7 @@ const userSchema = new Schema({
     height: Number,
     color: String,
     caste: String,
+    subCaste: String,
   },
 
   isDeleted: {

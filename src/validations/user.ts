@@ -19,6 +19,7 @@ export const matchedUsersSchema = z.object({
   rasi: enumQuery(rasiEnum).optional(),
   lagna: enumQuery(nakshatraEnum).optional(),
   caste: enumQuery(z.string()).optional(),
+  subCaste: enumQuery(z.string()).optional(),
   religion: enumQuery(z.string()).optional(),
   motherTongue: enumQuery(z.string()).optional(),
   maritalStatus: enumQuery(maritalStatusEnum).optional(),
