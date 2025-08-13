@@ -1,7 +1,21 @@
 import { approvalStatuses, educationLevels, genders, maritalStatuses, raasi } from "./enums.js";
 
+function escapeRegex(text: string) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function regexQuery(val: string | string[], regex: boolean = false) {
+  if (!regex) return typeof val === "string" ? val : { $in: val }
+
+  const pattern = Array.isArray(val)
+    ? val.map(escapeRegex).join("|")
+    : escapeRegex(val)
+
+  return { $regex: pattern, $options: "i" }
+}
+
 function strOrArr(by: string | string[], possibleLen: number) {
-  const conBy = typeof by === "string" ?
+  const parsed = typeof by === "string" ?
     by?.includes("[")
       ? JSON.parse(by)
       : by.includes(",")
@@ -9,10 +23,20 @@ function strOrArr(by: string | string[], possibleLen: number) {
         : by
     : by
 
-  if (typeof conBy === "string") return conBy
+  if (typeof parsed === "string") return parsed
 
-  if (Array.isArray(conBy) && conBy.length > 0 && conBy.length < possibleLen) {
-    return { $in: conBy }
+  if (Array.isArray(parsed) && parsed.length > 0 && parsed.length < possibleLen) {
+    return parsed
+  }
+
+  return false
+}
+
+const setFilter = (filter: Record<string, any>, key: string, value: any, possibleLen = Infinity, regex = false) => {
+  const parsed = strOrArr(value, possibleLen)
+  if (parsed && parsed !== "Any") {
+    filter[key] = regexQuery(parsed, regex)
+    return true
   }
 
   return false
@@ -34,32 +58,23 @@ export function getFilterObj(obj: Record<string, any>) {
     isMarried: isMarried ?? false,
   }
 
-  if (approvalStatus) {
-    const approvalStatusFilter = strOrArr(approvalStatus, approvalStatuses.length)
-    if (approvalStatusFilter) {
-      filter.approvalStatus = approvalStatusFilter
-    }
-    else {
-      delete filter.approvalStatus
-    }
-  }
-
-  if (gender) {
-    const genderFilter = strOrArr(gender, genders.length)
-    if (genderFilter) {
-      filter.gender = genderFilter
-    }
-  }
-
-  if (isBlocked || isDeleted) {
+  const approvalStatusApplied = setFilter(filter, "approvalStatus", approvalStatus, approvalStatuses.length)
+  if (approvalStatus && !approvalStatusApplied) {
     delete filter.approvalStatus
   }
 
-  if (maritalStatus) {
-    const maritalStatusFilter = strOrArr(maritalStatus, maritalStatuses.length)
-    if (maritalStatusFilter) {
-      filter.maritalStatus = maritalStatusFilter
-    }
+  setFilter(filter, "gender", gender, genders.length)
+  setFilter(filter, "maritalStatus", maritalStatus, maritalStatuses.length)
+  setFilter(filter, "vedicHoroscope.rasi", rasi, raasi.length)
+  setFilter(filter, "vedicHoroscope.lagna", lagna, raasi.length)
+  setFilter(filter, "otherDetails.caste", caste, Infinity, true)
+  setFilter(filter, "otherDetails.religion", religion, Infinity, true)
+  setFilter(filter, "otherDetails.motherTongue", motherTongue, Infinity, true)
+  setFilter(filter, "proffessionalDetails.sector", sector)
+  setFilter(filter, "proffessionalDetails.profession", profession)
+
+  if (isBlocked || isDeleted) {
+    delete filter.approvalStatus
   }
 
   if (salaryRange) {
@@ -87,35 +102,17 @@ export function getFilterObj(obj: Record<string, any>) {
     }
   }
 
-  if (sector && sector !== "Any") {
-    filter["proffessionalDetails.sector"] = strOrArr(sector, Infinity)
-  }
-
-  if (profession && profession !== "Any") {
-    filter["proffessionalDetails.profession"] = strOrArr(profession, Infinity)
-  }
+  const today = new Date()
+  const y = today.getFullYear()
+  const m = today.getMonth()
+  const d = today.getDate()
 
   if (ageRange) {
-    const currentDate = new Date()
-    const currYear = currentDate.getFullYear()
-    const currMonth = currentDate.getMonth()
-    const currDate = currentDate.getDate()
-
     const ageList: any = {
-      'below_25': {
-        $gte: new Date(currYear - 25, currMonth, currDate),
-      },
-      '25_30': {
-        $gte: new Date(currYear - 30, currMonth, currDate),
-        $lt: new Date(currYear - 25, currMonth, currDate)
-      },
-      '30_40': {
-        $gte: new Date(currYear - 40, currMonth, currDate),
-        $lt: new Date(currYear - 30, currMonth, currDate)
-      },
-      'above_40': {
-        $lt: new Date(currYear - 40, currMonth, currDate)
-      },
+      'below_25': { $gte: new Date(y - 25, m, d) },
+      '25_30': { $gte: new Date(y - 30, m, d), $lt: new Date(y - 25, m, d) },
+      '30_40': { $gte: new Date(y - 40, m, d), $lt: new Date(y - 30, m, d) },
+      'above_40': { $lt: new Date(y - 40, m, d) },
     };
 
     if (ageList[ageRange]) {
@@ -123,63 +120,12 @@ export function getFilterObj(obj: Record<string, any>) {
     }
   }
 
-  if (rasi && rasi !== "Any") {
-    const rasiFilter = strOrArr(rasi, raasi.length)
-    if (rasiFilter) {
-      filter["vedicHoroscope.rasi"] = rasiFilter
-    }
-  }
-
-  if (lagna && lagna !== "Any") {
-    const lagnaFilter = strOrArr(lagna, raasi.length)
-    if (lagnaFilter) {
-      filter["vedicHoroscope.lagna"] = lagnaFilter
-    }
-  }
-
-  if (caste && caste !== "Any") {
-    const casteFilter = strOrArr(caste, Infinity)
-    if (casteFilter) {
-      filter["otherDetails.caste"] = casteFilter
-    }
-  }
-
-  if (religion && religion !== "Any") {
-    const religionFilter = strOrArr(religion, Infinity)
-    if (religionFilter) {
-      filter["otherDetails.religion"] = religionFilter
-    }
-  }
-
-  if (motherTongue && motherTongue !== "Any") {
-    const motherTongueFilter = strOrArr(motherTongue, Infinity)
-    if (motherTongueFilter) {
-      filter["otherDetails.motherTongue"] = motherTongueFilter
-    }
-  }
-
   if (minAge) {
-    const currentDate = new Date()
-    const currYear = currentDate.getFullYear()
-    const currMonth = currentDate.getMonth()
-    const currDate = currentDate.getDate()
-
-    filter.dob = {
-      ...filter.dob,
-      $lte: new Date(currYear - minAge, currMonth, currDate)
-    }
+    filter.dob = { ...filter.dob, $lte: new Date(y - minAge, m, d) }
   }
 
   if (maxAge) {
-    const currentDate = new Date()
-    const currYear = currentDate.getFullYear()
-    const currMonth = currentDate.getMonth()
-    const currDate = currentDate.getDate()
-
-    filter.dob = {
-      ...filter.dob,
-      $gte: new Date(currYear - maxAge, currMonth, currDate)
-    }
+    filter.dob = { ...filter.dob, $gte: new Date(y - maxAge, m, d) }
   }
 
   if (createdBy) {
