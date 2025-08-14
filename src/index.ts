@@ -1,5 +1,7 @@
+import { serveStatic } from '@hono/node-server/serve-static';
 import { serve } from '@hono/node-server';
 
+import { HTTPException } from 'hono/http-exception';
 import { secureHeaders } from 'hono/secure-headers';
 import { compress } from 'hono/compress';
 import { logger } from 'hono/logger';
@@ -34,6 +36,21 @@ app.use(cors({ origin: env.FRONTEND_URL, credentials: true }))
 app.use(secureHeaders())
 app.use(compress())
 
+app.use("/static/*",
+  serveStatic({
+    root: "./src/assets",
+    rewriteRequestPath: (path) => path.replace(/^\/api\/static/, ""),
+    onFound: (_, c) => {
+      c.header('Cache-Control', `public, max-age=${60 * 60 * 5}`)
+    },
+    onNotFound: () => {
+      throw new HTTPException(404, {
+        res: new Response(JSON.stringify({ message: "File not found" }), { status: 404 })
+      })
+    },
+  })
+)
+
 app.route("/account", accountRoutes)
 
 app.use(createRateLimiter())
@@ -54,6 +71,7 @@ app.route("/super-admin", superAdminRoutes)
 app.notFound(c => c.json({ message: 'Route not found' }, 404))
 
 app.onError((err, c) => {
+  if (err instanceof HTTPException) return err.getResponse()
   console.log(err)
   return c.json({ message: err?.message || "Internal sever eror" }, 500)
 })
