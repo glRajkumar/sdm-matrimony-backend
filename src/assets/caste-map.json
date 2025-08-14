@@ -4,7 +4,7 @@
     "Yadav"
   ],
   "Achari": [
-    "Kongu Vellala",
+    "Kongu Vellalar",
     "Vishwakarma"
   ],
   "Ad Dharmi": [
@@ -52,6 +52,7 @@
     "Pollar",
     "Poraya",
     "Sakkeliar",
+    "SC",
     "Thachar",
     "Thombar",
     "Uppara",
@@ -872,11 +873,12 @@
     "Kulalan",
     "Kullalar",
     "Kuyavar",
-    "Manbanachettiyar",
+    "Manbana",
     "Manjapudur",
     "Nattukottai",
     "Nayakkar",
-    "Nesauchittiyar",
+    "Nesau",
+    "Ottar",
     "Padaiyachi",
     "Pannirandam",
     "Sanathaliar",
@@ -887,16 +889,13 @@
     "Soliya",
     "Soneya",
     "Telugu",
-    "Telunguchettiyar",
-    "Thelugu",
     "Tholuva",
     "Vaaniga",
     "Valayar",
     "Vaniar",
     "Vaniba",
-    "Vaniya",
     "Vaniyar",
-    "Vellachettiyar"
+    "Vella"
   ],
   "Chetty": [
     "Coirchetty",
@@ -924,6 +923,7 @@
   "Christian": [
     "Catholic",
     "Cpm",
+    "CSI",
     "Dravida",
     "Latin",
     "Latin Catholic",
@@ -1053,7 +1053,7 @@
     "Chetti",
     "Ghiyaiu",
     "Harijan",
-    "Kongu Vellala",
+    "Kongu Vellalar",
     "Menon",
     "Panicker",
     "Pankar",
@@ -1157,7 +1157,7 @@
     "Hellar",
     "Keailiya",
     "Kongu",
-    "Kongu Vellala",
+    "Kongu Vellalar",
     "Krumbar",
     "Kurambar",
     "Kuramo",
@@ -2113,13 +2113,13 @@
   "Mali": [
     "Bhagat",
     "Bhoi",
-    "Dokanimali",
+    "Dokani",
     "Gametia",
     "Kachchi",
     "Kol",
     "Kosare",
     "Malakar",
-    "Phulakatamali",
+    "Phulakata",
     "Phulkata",
     "Phulmali",
     "Saini",
@@ -2236,26 +2236,25 @@
     "Vadayar",
     "Valayar"
   ],
-  "Mothaliar": [
+  "Mudaliyar": [
+    "Agamudaiyar",
+    "Arcodu",
     "Asari",
     "Benguthen",
+    "Kaicooly",
     "Kaigonar",
+    "Kaikolan",
     "Karkala",
     "Keralamuthali",
     "Keralamuythali Yar",
     "Naidu",
-    "Sangunthan",
-    "Sengunthamudaliyar"
-  ],
-  "Mudaliyar": [
-    "Kaicooly",
-    "Kaikolan",
-    "Sangunthan",
+    "Saiva Pillai",
     "Sengundar",
-    "Senguntha",
     "Soliya",
     "Thondi",
-    "Thondimandala"
+    "Thondimandala",
+    "Thuluva Vellalar",
+    "Veerakodi Vellalar"
   ],
   "Mughal": [
     "Beg",
@@ -2269,9 +2268,8 @@
     "Kola",
     "Kolar",
     "Kolha",
-    "Kolmunda",
-    "Oraonmunda",
-    "Oriyamunda"
+    "Orao",
+    "Oriya"
   ],
   "Muppar": [
     "Kallar",
@@ -2404,20 +2402,18 @@
     "Chanar",
     "Gramani",
     "Hindu",
-    "Hindunadar",
     "Kamraj",
-    "Kongu Nadar",
+    "Kongu",
     "Lattuan",
     "Marama",
     "Marameri",
-    "Maramerinadar",
     "Maramerinaikar",
     "Maramynar",
     "Maravar",
     "Nayakkar",
     "Pallar",
     "Pananarayanarayer",
-    "R.C.Nadar",
+    "R.C",
     "Saanan",
     "Sacuar",
     "Sanar",
@@ -2473,8 +2469,10 @@
     "Thotti"
   ],
   "Naidu": [
+    "Badhma Vellalar",
+    "Balija",
     "Cheruai",
-    "Chettynaidu",
+    "Chetty",
     "Gavar",
     "Jangam",
     "Kamalar",
@@ -2485,7 +2483,7 @@
     "Kevara",
     "Mraamars",
     "Muthiriyar",
-    "Palginaidu",
+    "Palgi",
     "Pallar",
     "Pattaraju",
     "Ravara",
@@ -2494,7 +2492,6 @@
     "Vadugan",
     "Valayar",
     "Yadava",
-    "Yadava Naidu",
     "Yagili"
   ],
   "Naik": [
@@ -2514,7 +2511,6 @@
     "Krishnanvagai",
     "Kuravar",
     "Marameri",
-    "Maramerinaikar",
     "Naidu",
     "Nayakkar",
     "Padaiyachi",
@@ -2546,8 +2542,7 @@
     "Picari",
     "Pillai",
     "Pothuwal",
-    "R.C.Nadar",
-    "Roman Catholic",
+    "R.C",
     "Sunni",
     "Syrian",
     "Thiya",
@@ -2557,7 +2552,6 @@
     "Veluthedathu",
     "Vilakikrishnan",
     "Vilakit",
-    "Vilakithala",
     "Vilakkithala",
     "Vllakiam"
   ],
@@ -2567,9 +2561,9 @@
   ],
   "Nanjil": [
     "Mudali",
-    "Nattu Vellala",
-    "pillai",
-    "Vellala"
+    "Nattu Vellalar",
+    "Pillai",
+    "Vellalar"
   ],
   "Napit": [
     "Barendra",
@@ -2646,7 +2640,7 @@
   ],
   "Pandaram": [
     "Andi",
-    "Kongu Vellala"
+    "Kongu Vellalar"
   ],
   "Pandithar": [
     "Barbar",
@@ -2734,14 +2728,13 @@
     "Soliya",
     "Theva",
     "Tholuva",
-    "Tholuvavellalar",
+    "Tholuva Vellalar",
     "Thullam",
     "Veeragul",
     "Veerakodai",
     "Veeravellar",
-    "Vellala",
     "Vellalar",
-    "Veragudivellalar"
+    "Veragudi Vellalar"
   ],
   "Pingari": [
     "Golla",
@@ -2904,10 +2897,10 @@
   "Reddy": [
     "Kamma",
     "Kapu",
-    "Kondareddy",
+    "Konda",
     "Paknak",
-    "Velamakapu",
-    "Velamareddy"
+    "Velama",
+    "Velamakapu"
   ],
   "Sadgope": [
     "Bhunja",
@@ -2957,8 +2950,8 @@
     "Bital",
     "Boar",
     "Dehri",
-    "Desaisanthal",
-    "Deswalisanthal",
+    "Desai",
+    "Deswali",
     "Handi",
     "Hansda",
     "Hemram",
@@ -3088,7 +3081,7 @@
   ],
   "Sozhia": [
     "Chetty",
-    "Vellala"
+    "Vellalar"
   ],
   "Sudhi": [
     "Sahu",
@@ -3136,9 +3129,9 @@
   ],
   "Tanti": [
     "Chasa",
-    "Galatanti",
+    "Gala",
     "Hansi",
-    "Hasantanti",
+    "Hasan",
     "Matibansa",
     "Rarhi",
     "Sikhiria"
@@ -3194,7 +3187,6 @@
   ],
   "Thevar": [
     "Agamudaiyar",
-    "Akamudayar",
     "Alagamudai",
     "Ambalam",
     "Gurkal",
@@ -3339,7 +3331,6 @@
     "Karkathavellalar",
     "Kongu",
     "Kongu Gounder",
-    "Kongu Vellala",
     "Kurumbar",
     "Kuyavar",
     "Marameri",
@@ -3356,7 +3347,6 @@
     "Soneya",
     "Sozhiya",
     "Tholuva",
-    "Tholuvavellalar",
     "Thondai Mandala",
     "Thuluva",
     "Tulva",
@@ -3387,10 +3377,8 @@
   "Vysya": [
     "Adimulam",
     "Arya",
-    "Arya Vysya",
     "Aryavysa",
     "Ayira",
-    "Ayira Vysya",
     "Brahman",
     "Cheemala",
     "Dudekula",
@@ -3436,7 +3424,9 @@
   "Yadavar": [
     "Ganar",
     "Gonar",
-    "Konar"
+    "Konar",
+    "Tamil",
+    "Telugu"
   ],
   "Others": [
     "Abbal Mirasi",
