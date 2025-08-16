@@ -36,6 +36,7 @@
   "Adidravida": [
     ".Pallar",
     "Aravdur",
+    "Asari",
     "Barbar",
     "Chalavadi",
     "Harijan",
@@ -52,6 +53,7 @@
     "Pollar",
     "Poraya",
     "Sakkeliar",
+    "Samabavar",
     "SC",
     "Thachar",
     "Thombar",
@@ -178,33 +180,18 @@
     "Pathar",
     "Thachaasari"
   ],
-  "Athidravida": [
-    "Asari",
-    "Palar",
-    "Pallar",
-    "Parayar",
-    "Pollar",
-    "Sakkeliar",
-    "Samabavar",
-    "Valayar"
-  ],
   "Badai": [
-    "Harijan",
-    "Jangada"
-  ],
-  "Badhai": [
     "Chaurasia",
+    "Harijan",
+    "Jangada",
+    "Kharada",
+    "Maghiya",
     "Mistry",
     "Nishad",
     "Panchal",
     "Panwari",
     "Sharma",
     "Vishwakarma"
-  ],
-  "Badhei": [
-    "Choursia",
-    "Kharada",
-    "Maghiya"
   ],
   "Bagdi": [
     "Daratia",
@@ -3428,7 +3415,7 @@
     "Tamil",
     "Telugu"
   ],
-  "Others": [
+  "Other": [
     "Abbal Mirasi",
     "Adikarnataka Holeya",
     "Agamudaiyar Seruai",

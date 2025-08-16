@@ -1,4 +1,5 @@
-import { approvalStatuses, educationLevels, genders, maritalStatuses, raasi } from "./enums.js";
+import educationLevels from "../assets/v1/education-levels.json" with { type: "json" };
+import { approvalStatuses, genders, maritalStatuses } from "./enums.js";
 
 function escapeRegex(text: string) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -65,8 +66,8 @@ export function getFilterObj(obj: Record<string, any>) {
 
   setFilter(filter, "gender", gender, genders.length)
   setFilter(filter, "maritalStatus", maritalStatus, maritalStatuses.length)
-  setFilter(filter, "vedicHoroscope.rasi", rasi, raasi.length)
-  setFilter(filter, "vedicHoroscope.lagna", lagna, raasi.length)
+  setFilter(filter, "vedicHoroscope.rasi", rasi, 12)
+  setFilter(filter, "vedicHoroscope.lagna", lagna, 12)
   setFilter(filter, "otherDetails.caste", caste, Infinity, true)
   setFilter(filter, "otherDetails.religion", religion, Infinity, true)
   setFilter(filter, "otherDetails.motherTongue", motherTongue, Infinity, true)

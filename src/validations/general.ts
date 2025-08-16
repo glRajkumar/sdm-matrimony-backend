@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-import { approvalStatuses, educationLevels, genders, maritalStatuses, nakshatra, plans, raasi, roles } from '../utils/enums.js';
+import educationLevels from "../assets/v1/education-levels.json" with { type: "json" };
+import nakshatra from "../assets/v1/nakshatra.json" with { type: "json" };
+import raasi from "../assets/v1/raasi.json" with { type: "json" };
+
+import { approvalStatuses, genders, maritalStatuses, plans, roles } from '../utils/enums.js';
 
 export const approvalStatusEnum = z.enum(approvalStatuses, { error: "Invalid Approval Status" })
 export const maritalStatusEnum = z.enum(maritalStatuses, { error: "Invalid Marital Status" })

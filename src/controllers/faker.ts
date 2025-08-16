@@ -5,15 +5,17 @@ import {
   rand, toCollection,
 } from "@ngneat/falso";
 
-import castesMap from "../assets/caste-map.json" with { type: "json" };
-import castes from "../assets/main-castes.json" with { type: "json" };
+import educationLevels from "../assets/v1/education-levels.json" with { type: "json" };
+import professions from "../assets/v1/professions.json" with { type: "json" };
+import religions from "../assets/v1/religions.json" with { type: "json" };
+import languages from "../assets/v1/languages.json" with { type: "json" };
+import castesMap from "../assets/v1/caste-map.json" with { type: "json" };
+import nakshatra from "../assets/v1/nakshatra.json" with { type: "json" };
+import sectors from "../assets/v1/sectors.json" with { type: "json" };
+import castes from "../assets/v1/castes.json" with { type: "json" };
+import raasi from "../assets/v1/raasi.json" with { type: "json" };
 
-import {
-  approvalStatuses, maritalStatuses, genders,
-  nakshatra, raasi, religions,
-  professions, educationLevels, languages,
-  proffessionalSectors,
-} from "../utils/index.js";
+import { approvalStatuses, maritalStatuses, genders } from "../utils/index.js";
 
 const generateRandomUser = () => {
   const gender = rand(genders)
@@ -24,7 +26,7 @@ const generateRandomUser = () => {
   const maxAge = randNumber({ min: minAge, max: 45 })
 
   const profileImg = `https://randomuser.me/api/portraits/med/${gender === "Male" ? "men" : "women"}/${randNumber({ min: 1, max: 99 })}.jpg`
-  const sector = rand(proffessionalSectors)
+  const sector = rand(sectors)
   const profession = sector === "Unemployed" ? "Unemployed" : rand(professions)
   const salary = sector === "Unemployed" ? 0 : randNumber({ min: 10000, max: 150000 })
 
@@ -64,9 +66,9 @@ const generateRandomUser = () => {
     },
     approvalStatus: rand(approvalStatuses),
     vedicHoroscope: {
-      nakshatra: rand(nakshatra),
-      rasi: rand(raasi),
-      lagna: rand(raasi),
+      nakshatra: rand(nakshatra).split(" (")[0],
+      rasi: rand(raasi).split(" (")[0],
+      lagna: rand(raasi).split(" (")[0],
       // dashaPeriod: randWord(),
       // placeOfBirth: randStreetAddress(),
       // timeOfBirth: `${randNumber({ min: 1, max: 12 })}:${randNumber({ min: 0, max: 59 })} ${randWord({ length: 1, dictionary: ['AM', 'PM'] })[0]}`,

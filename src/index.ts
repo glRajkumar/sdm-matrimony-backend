@@ -40,8 +40,10 @@ app.use("/static/*",
   serveStatic({
     root: "./src/assets",
     rewriteRequestPath: (path) => path.replace(/^\/api\/static/, ""),
-    onFound: (_, c) => {
-      c.header('Cache-Control', `public, max-age=${60 * 60 * 5}`)
+    onFound: (path, c) => {
+      if (!path.includes("latest.json")) {
+        c.header('Cache-Control', `public, max-age=${60 * 60 * 24 * 10}`) // 10 days
+      }
     },
     onNotFound: () => {
       throw new HTTPException(404, {

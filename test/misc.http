@@ -11,4 +11,4 @@ Content-Type: application/json
 
 
 #### get static files
-GET {{host}}/static/main-castes.json
+GET {{host}}/static/v1/castes.json
