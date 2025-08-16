@@ -178,6 +178,8 @@ export const getLikesList = async (c: zContext<{ query: typeof skipLimitSchema }
 export const getUnlockedProfiles = async (c: Context) => {
   const { _id, currentPlan } = c.get("user")
 
+  if (!currentPlan) return c.json([])
+
   const list = await UserAccess.find({ viewer: _id, payment: currentPlan._id })
     .select("viewed")
     .populate({
