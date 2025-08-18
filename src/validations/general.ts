@@ -13,8 +13,8 @@ export const genderEnum = z.enum(genders, { error: "Invalid Gender" })
 export const roleEnum = z.enum(roles, { error: "Invalid Role" })
 export const planEnum = z.enum(plans, { error: "Invalid Plan" })
 
-export const nakshatraEnum = z.enum(nakshatra, { error: "Invalid Nakshatra" })
-export const rasiEnum = z.enum(raasi, { error: "Invalid Rasi/Lagna" })
+export const nakshatraEnum = z.enum(nakshatra.map(e => e.split(" (")[0]), { error: "Invalid Nakshatra" })
+export const rasiEnum = z.enum(raasi.map(e => e.split(" (")[0]), { error: "Invalid Rasi/Lagna" })
 
 export const emailSchema = z.email("Invalid email address")
 export const mobileSchema = z.string().regex(/^\d{10}$/, "Must be a valid 10-digit number")
