@@ -13,6 +13,7 @@ import {
   registerSchema, loginSchema, refreshTokenSchema,
   forgotPassSchema, resetPassSchema, updatePasswordSchema,
   resendVerifyEmailSchema, verifyAccountSchema, registerImageSchema,
+  emailSchemaObj, mobileSchemaObj,
 } from '../validations/index.js';
 
 import { welcome, resendVerifyEmail as resendVerifyEmailTemp, forgotPass } from '../mail-templates/index.js';
@@ -355,4 +356,42 @@ export const logout = async (c: zContext<{ cookie: typeof refreshTokenSchema }>)
 
   deleteRefreshTokenCookie(c)
   return c.json({ message: 'User logged out successfully' })
+}
+
+export const emailUpdate = async (c: zContext<{ json: typeof emailSchemaObj }>) => {
+  const { email } = c.req.valid("json")
+  const user = c.get("user")
+
+  const Model = getModel(user.role)
+
+  const isAlreadyExists = await Model.findOne({ email }).select("_id email").lean()
+  if (isAlreadyExists) return c.json({ message: "Email already exists" })
+
+  await Model.updateOne({ _id: user._id }, { email, isVerified: false })
+
+  const { subject, html } = await resendVerifyEmailTemp(user._id.toString(), user.role)
+  await transporter.sendMail({
+    to: email,
+    from: env.EMAIL_ID,
+    subject,
+    html
+  })
+
+  return c.json({ message: "Email updated successfully" })
+}
+
+export const mobileUpdate = async (c: zContext<{ json: typeof mobileSchemaObj }>) => {
+  const { mobile } = c.req.valid("json")
+  const user = c.get("user")
+
+  const Model = getModel(user.role)
+
+  const isAlreadyExists = await Model.findOne({ "contactDetails.mobile": mobile }).select("_id contactDetails.mobile").lean()
+  if (isAlreadyExists) return c.json({ message: "Mobile number already exists" })
+
+  await Model.updateOne({ _id: user._id }, {
+    "contactDetails.mobile": mobile
+  })
+
+  return c.json({ message: "Mobile number updated successfully" })
 }

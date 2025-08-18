@@ -4,13 +4,14 @@ import {
   login, logout, me, register, forgetPass, resetPass,
   imgUpload, approvalStatusRefresh, accessToken,
   verifyAccount, resendVerifyEmail, updatePassword,
+  emailUpdate, mobileUpdate,
 } from "../controllers/account.js";
 
 import {
   registerSchema, loginSchema, refreshTokenSchema,
   forgotPassSchema, resetPassSchema, updatePasswordSchema,
   resendVerifyEmailSchema, verifyAccountSchema, registerImageSchema,
-  zv,
+  emailSchemaObj, mobileSchemaObj, zv,
 } from "../validations/index.js";
 
 import createRateLimiter from "../middlewares/rate-limit.js";
@@ -35,8 +36,10 @@ accountRoutes.use(createRateLimiter())
 accountRoutes
   .get("/me", me)
   .get("/check-approval-status", approvalStatusRefresh)
-  .post("/update-password", zv("json", updatePasswordSchema), updatePassword)
   .post("/resend-verify-email", zv("json", resendVerifyEmailSchema), resendVerifyEmail)
   .post("/logout", zv("cookie", refreshTokenSchema), logout)
+  .put("/password", zv("json", updatePasswordSchema), updatePassword)
+  .put("/mobile", zv("json", mobileSchemaObj), mobileUpdate)
+  .put("/email", zv("json", emailSchemaObj), emailUpdate)
 
 export default accountRoutes

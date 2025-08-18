@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 import {
   adminSchema, emailOrMobileSchema, imgFileSchema,
-  passwordSchema, roleEnum, userSchema
+  passwordSchema, roleEnum, userSchema,
+  emailSchema, mobileSchema,
 } from './general.js';
 import { tokenEnums } from '../utils/enums.js';
 
@@ -57,4 +58,12 @@ export const updatePasswordSchema = z.object({
 
 export const resendVerifyEmailSchema = z.object({
   email: emailOrMobileSchema,
+})
+
+export const emailSchemaObj = z.object({
+  email: emailSchema
+})
+
+export const mobileSchemaObj = z.object({
+  mobile: mobileSchema
 })

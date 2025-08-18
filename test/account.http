@@ -2,6 +2,16 @@
 @token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTQwNDA0NzUsIl9pZCI6IjY4OGEwYmI5MmNmMDBjMjQ1ZWU2YTFkZiIsInJvbGUiOiJ1c2VyIiwiYXBwcm92YWxTdGF0dXMiOiJhcHByb3ZlZCJ9.ibQNTjrVT0-bi79oL4-BH0iLqqtyozisVD3EKinLRwg
 
 
+### user details
+GET {{host}}/check-approval-status
+Authorization: {{token}}
+
+
+### user details
+GET {{host}}/me
+Authorization: {{token}}
+
+
 ### register - user
 POST {{host}}/register
 Content-Type: application/json
@@ -148,18 +158,14 @@ Content-Type: image/jpg
 ------WebKitFormBoundary--
 
 
-### user details
-GET {{host}}/check-approval-status
+### logout
+POST {{host}}/logout
 Authorization: {{token}}
-
-
-### user details
-GET {{host}}/me
-Authorization: {{token}}
+Content-Type: application/json
 
 
 ### update password
-POST {{host}}/update-password
+PUT {{host}}/password
 Content-Type: application/json
 Authorization: {{token}}
 
@@ -169,7 +175,22 @@ Authorization: {{token}}
 }
 
 
-### logout
-POST {{host}}/logout
+### email update
+PUT {{host}}/email
 Authorization: {{token}}
 Content-Type: application/json
+
+{
+  "email": "raj@gmail.com"
+}
+
+
+### mobile update
+PUT {{host}}/mobile
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "mobile": "9876543210"
+}
+
