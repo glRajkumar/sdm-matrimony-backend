@@ -9,6 +9,8 @@ import { hashPassword, getFilterObj } from "../utils/index.js";
 import { redisClient } from "../services/connect-redis.js";
 import { User } from "../models/index.js";
 
+const userSelect = "_id fullName email contactDetails.mobile profileImg dob gender maritalStatus otherDetails.caste otherDetails.subCaste proffessionalDetails.salary"
+
 export async function getUsers(c: zContext<{ query: typeof findUsersSchema }>) {
   const queries = c.req.valid("query") || { limit: 10, skip: 0 }
   const filters = getFilterObj(queries)
@@ -17,7 +19,7 @@ export async function getUsers(c: zContext<{ query: typeof findUsersSchema }>) {
   const numSkip = Number(queries?.skip || 0)
 
   const fullList = await User.find(filters)
-    .select("_id fullName email contactDetails.mobile profileImg gender dob maritalStatus proffessionalDetails.salary approvalStatus")
+    .select(userSelect + " approvalStatus")
     .limit(numLimit)
     .skip(numSkip)
     .sort({ createdAt: -1 })
@@ -32,14 +34,13 @@ export async function getMarriedUsers(c: zContext<{ query: typeof skipLimitSchem
   const numLimit = Number(queries?.limit || 10)
   const numSkip = Number(queries?.skip || 0)
 
-  const select = "_id fullName email profileImg dob proffessionalDetails.salary marriedTo marriedOn"
   const marriedUsers = await User.find({
     marriedTo: { $exists: true },
     isMarried: true,
     gender: "Male"
   })
-    .select(select)
-    .populate("marriedTo", select.replace(" marriedTo marriedOn", ""))
+    .select(userSelect + " marriedTo marriedOn")
+    .populate("marriedTo", userSelect)
     .limit(numLimit)
     .skip(numSkip)
     .lean()
@@ -68,7 +69,7 @@ export async function findUser(c: zContext<{ query: typeof findUserSchema }>) {
   }, {})
 
   const user = await User.find(filters)
-    .select("_id fullName email profileImg dob gender maritalStatus proffessionalDetails.salary")
+    .select(userSelect)
     .lean()
 
   return c.json(user)
