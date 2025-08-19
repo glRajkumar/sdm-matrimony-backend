@@ -4,7 +4,7 @@ import {
   imgUpload, getUserDetails, getMatches, getLikesList,
   addLiked, removeLiked, updateProfile, imgDelete,
   getPartnerPreferences, getUnlockedProfiles, unlockProfile,
-  getAccountInfo,
+  getCurrentPlan,
 } from "../controllers/user.js";
 
 import {
@@ -16,7 +16,7 @@ const userRoutes = new Hono()
 
 userRoutes
   .get("/matches", zv("query", matchedUsersSchema), getMatches)
-  .get("/account-info", getAccountInfo)
+  .get("/current-plan", getCurrentPlan)
   .get("/likes-list", zv("query", skipLimitSchema), getLikesList)
   .get("/profile/:_id", zv("param", _idParamSchema), getUserDetails)
   .get("/partner-preferences", getPartnerPreferences)

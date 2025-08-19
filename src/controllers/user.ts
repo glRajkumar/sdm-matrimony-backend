@@ -48,11 +48,11 @@ export const getUserDetails = async (c: zContext<{ param: typeof _idParamSchema 
   return c.json(userDetails)
 }
 
-export const getAccountInfo = async (c: Context<Env>) => {
+export const getCurrentPlan = async (c: Context<Env>) => {
   const { _id } = c.get("user")
 
   const user = await User.findById(_id)
-    .select("email isVerified currentPlan")
+    .select("email currentPlan")
     .populate("currentPlan", "amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths")
     .lean()
 
@@ -62,7 +62,7 @@ export const getAccountInfo = async (c: Context<Env>) => {
   })
 
   const payload = {
-    ...user,
+    ...(user?.currentPlan || {}),
     unlockedCount,
   }
 

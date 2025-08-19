@@ -7,8 +7,8 @@ GET {{host}}/profile/688a0b802cf00c245ee6a12b
 Authorization: {{token}}
 
 
-### getAccountInfo
-GET {{host}}/account-info
+### get current plan
+GET {{host}}/current-plan
 Authorization: {{token}}
 
 
