@@ -12,6 +12,11 @@ GET {{host}}/me
 Authorization: {{token}}
 
 
+### user details
+GET {{host}}/user-deatils-mini
+Authorization: {{token}}
+
+
 ### register - user
 POST {{host}}/register
 Content-Type: application/json

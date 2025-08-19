@@ -325,6 +325,27 @@ export const me = async (c: Context<Env>) => {
   return c.json(userDetail)
 }
 
+export const meMini = async (c: Context<Env>) => {
+  const user = c.get('user')
+
+  const base = "_id role email fullName contactDetails.mobile isVerified"
+  let userDetail = null
+
+  if (user?.role === "user") {
+    userDetail = await User.findById(user._id)
+      .select(`${base} gender currentPlan`)
+      .populate("currentPlan", "subscribedTo expiryDate")
+      .lean()
+
+  } else {
+    userDetail = await Admin.findById(user._id)
+      .select(base)
+      .lean()
+  }
+
+  return c.json(userDetail)
+}
+
 export const updatePassword = async (c: zContext<{ json: typeof updatePasswordSchema }>) => {
   const { oldPassword, newPassword } = c.req.valid("json")
   const { _id, role } = c.get('user')

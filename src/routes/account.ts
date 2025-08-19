@@ -4,7 +4,7 @@ import {
   login, logout, me, register, forgetPass, resetPass,
   imgUpload, approvalStatusRefresh, accessToken,
   verifyAccount, resendVerifyEmail, updatePassword,
-  emailUpdate, mobileUpdate,
+  emailUpdate, mobileUpdate, meMini,
 } from "../controllers/account.js";
 
 import {
@@ -35,6 +35,7 @@ accountRoutes.use(createRateLimiter())
 
 accountRoutes
   .get("/me", me)
+  .get("/user-deatils-mini", meMini)
   .get("/check-approval-status", approvalStatusRefresh)
   .post("/resend-verify-email", zv("json", resendVerifyEmailSchema), resendVerifyEmail)
   .post("/logout", zv("cookie", refreshTokenSchema), logout)
