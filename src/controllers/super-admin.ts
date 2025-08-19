@@ -151,7 +151,7 @@ export async function getUsersByCreatedBy(c: zContext<{ query: typeof usersCreat
   return c.json(users)
 }
 
-export async function getUserCreationStatsPerAdmin(c: Context) {
+export async function getUserCreationStatsPerAdmin(c: Context<Env>) {
   const result = await User.aggregate([
     {
       $match: {
@@ -202,7 +202,7 @@ export async function getUserCreationStatsPerAdmin(c: Context) {
   return c.json(result);
 }
 
-export async function getUserCreationStatsToday(c: Context) {
+export async function getUserCreationStatsToday(c: Context<Env>) {
   const result = await User.aggregate([
     {
       $match: {
@@ -245,7 +245,7 @@ export async function getUserCreationStatsToday(c: Context) {
   return c.json(result)
 }
 
-export async function getAdmins(c: Context) {
+export async function getAdmins(c: Context<Env>) {
   const admins = await Admin.find()
     .select("_id fullName email isDeleted contactDetails")
     .lean()

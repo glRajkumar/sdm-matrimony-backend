@@ -248,7 +248,7 @@ export const imgUpload = async (c: zContext<{ form: typeof registerImageSchema }
   return c.json({ url })
 }
 
-export const approvalStatusRefresh = async (c: Context) => {
+export const approvalStatusRefresh = async (c: Context<Env>) => {
   const { role, _id } = c.get('user')
 
   let user: any = null
@@ -306,7 +306,7 @@ export const approvalStatusRefresh = async (c: Context) => {
   return c.json(output)
 }
 
-export const me = async (c: Context) => {
+export const me = async (c: Context<Env>) => {
   const user = c.get('user')
 
   let userDetail = null

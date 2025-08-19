@@ -48,7 +48,7 @@ export const getUserDetails = async (c: zContext<{ param: typeof _idParamSchema 
   return c.json(userDetails)
 }
 
-export const getAccountInfo = async (c: Context) => {
+export const getAccountInfo = async (c: Context<Env>) => {
   const { _id } = c.get("user")
 
   const user = await User.findById(_id)
@@ -69,7 +69,7 @@ export const getAccountInfo = async (c: Context) => {
   return c.json(payload)
 }
 
-export const getPartnerPreferences = async (c: Context) => {
+export const getPartnerPreferences = async (c: Context<Env>) => {
   const { _id } = c.get("user")
 
   const user = await User.findById(_id)
@@ -175,8 +175,8 @@ export const getLikesList = async (c: zContext<{ query: typeof skipLimitSchema }
   return c.json(list?.[type] || [])
 }
 
-export const getUnlockedProfiles = async (c: Context) => {
-  const { _id, currentPlan } = c.get("user")
+export const getUnlockedProfiles = async (c: Context<Env>) => {
+  const { _id, currentPlan } = c.get("user") as userVarT
 
   if (!currentPlan) return c.json([])
 
@@ -261,7 +261,7 @@ export const imgDelete = async (c: zContext<{ param: typeof _idParamSchema }>) =
 
 export const unlockProfile = async (c: zContext<{ json: typeof _idParamSchema }>) => {
   const { _id } = c.req.valid("json")
-  const user = c.get("user")
+  const user = c.get("user") as userVarT
 
   const hasFullAccess = await checkUserAccess(user, _id)
   if (hasFullAccess) return c.json({ message: "You have full access to this profile already" })

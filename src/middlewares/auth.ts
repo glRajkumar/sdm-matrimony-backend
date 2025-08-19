@@ -5,7 +5,7 @@ import { tokenEnums, verifyToken } from '../utils/index.js';
 import { redisClient } from '../services/index.js';
 import { Admin, User } from '../models/index.js';
 
-async function getUser(_id: string, role: string) {
+async function getUser(_id: string, role: string): Promise<userVarT | adminVarT | null> {
   const redisKey = `${role}:${_id}`
 
   let user: any = await redisClient.get(redisKey)
@@ -49,7 +49,7 @@ const authMiddleware = createMiddleware(async (c, next) => {
     let user = await getUser(_id as string, role as string)
     if (!user) return c.json({ message: 'User not found' }, 400)
 
-    if (user.isDeleted || user.isBlocked) return c.json({ message: 'Access denied' }, 400)
+    if (user.isDeleted || (user.role === "user" && user.isBlocked)) return c.json({ message: 'Access denied' }, 400)
 
     c.set("user", user)
 

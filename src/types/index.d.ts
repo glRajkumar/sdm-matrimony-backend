@@ -2,7 +2,7 @@ import type { Context, ValidationTargets } from "hono";
 import type { z } from "zod";
 
 type zContext<Targets extends Partial<Record<keyof ValidationTargets, z.ZodTypeAny>>> = Context<
-  any,
+  Env,
   "",
   {
     out: {
