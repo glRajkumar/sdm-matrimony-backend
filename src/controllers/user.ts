@@ -53,7 +53,7 @@ export const getCurrentPlan = async (c: Context<Env>) => {
 
   const user = await User.findById(_id)
     .select("email currentPlan")
-    .populate("currentPlan", "amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths")
+    .populate("currentPlan", "amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths createdAt")
     .lean()
 
   const unlockedCount = await UserAccess.countDocuments({
