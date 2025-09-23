@@ -46,7 +46,7 @@ export const createOrder = async (c: zContext<{ json: typeof createOrderSchema }
   }
 
   const options = {
-    amount: 10000,
+    amount: amount * 100,
     currency: "INR",
     notes,
   }

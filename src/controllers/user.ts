@@ -73,12 +73,13 @@ export const getPartnerPreferences = async (c: Context<Env>) => {
   const { _id } = c.get("user")
 
   const user = await User.findById(_id)
-    .select("partnerPreferences otherDetails.caste")
+    .select("partnerPreferences otherDetails.caste dob")
     .lean()
 
   const payload = {
     ...user?.partnerPreferences,
-    caste: user?.partnerPreferences?.caste || (user?.otherDetails?.caste === "Don't wish to specify" ? "Any" : user?.otherDetails?.caste)
+    caste: user?.partnerPreferences?.caste || (user?.otherDetails?.caste === "Don't wish to specify" ? "Any" : user?.otherDetails?.caste),
+    dob: user?.dob,
   }
 
   return c.json(payload)
