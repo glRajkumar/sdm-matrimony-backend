@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 import {
   educationEnum, maritalStatusEnum, nakshatraEnum, rasiEnum,
@@ -47,7 +47,7 @@ export const updateProfileSchema = userSchema.omit({
   contactDetails: true,
 })
   .partial()
-  .extend({
+  .safeExtend({
     _id: z.string().optional(),
     contactDetails: z.object({
       address: z.string().optional(),

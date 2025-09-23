@@ -19,7 +19,7 @@
     "ollama": "^0.5.16",
     "razorpay": "^2.9.6",
     "redis": "^5.7.0",
-    "zod": "^4.0.17"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@ngneat/falso": "^7.4.0",

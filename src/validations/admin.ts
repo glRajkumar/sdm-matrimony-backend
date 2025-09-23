@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 import {
   approvalStatusEnum, educationEnum, emailSchema, genderEnum,
@@ -59,13 +59,14 @@ export const userMarriedToSchema = z.object({
   marriedOn: z.iso.datetime("Invalid Date"),
 })
 
-export const updateUserSchema = userSchema.omit({
-  email: true,
-  password: true,
-  role: true,
-})
+export const updateUserSchema = userSchema
+  .omit({
+    email: true,
+    password: true,
+    role: true,
+  })
   .partial()
-  .extend({
+  .safeExtend({
     _id: z.string("User ID is required"),
     approvalStatus: approvalStatusEnum.optional(),
     isBlocked: z.coerce.boolean().optional(),
