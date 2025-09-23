@@ -37,7 +37,7 @@ export const getUserDetails = async (c: zContext<{ param: typeof _idParamSchema 
   let select = "-refreshTokens -password -liked -verifiyOtp -role -brokerAppointed -approvalStatus -email"
 
   if (!hasFullAccess) {
-    select += " -contactDetails -vedicHoroscope.vedicHoroscopePic"
+    select += " -contactDetails -vedicHoroscope.vedicHoroscopePic -vedicHoroscope.nakshatra -vedicHoroscope.rasi -vedicHoroscope.lagna"
   }
 
   const userDetails = await User.findOne({ _id })
