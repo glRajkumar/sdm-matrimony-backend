@@ -3,7 +3,7 @@ import Razorpay from 'razorpay';
 import type { createOrderSchema, verifyPaymentSchema } from '../validations/payment.js';
 import type { zContext } from '../types/index.js';
 
-import { env, planPrices, planValidityMonths, type plansT } from '../utils/enums.js';
+import { env, planPrices, planValidityMonths, profilesCount, type plansT } from '../utils/enums.js';
 import { Payment, User } from '../models/index.js';
 import { redisClient } from '../services/connect-redis.js';
 
@@ -16,12 +16,12 @@ export const createOrder = async (c: zContext<{ json: typeof createOrderSchema }
   const { _id } = c.get("user")
   const {
     subscribedTo = "basic",
-    noOfProfilesCanView = 50,
+    noOfProfilesCanView = 30,
     isAssisted = false,
     assistedMonths = 0
   } = c.req.valid("json")
 
-  let amount = planPrices[subscribedTo as plansT]
+  let amount = planPrices[subscribedTo]
 
   const notes: any = {
     user_id: _id,
@@ -31,12 +31,13 @@ export const createOrder = async (c: zContext<{ json: typeof createOrderSchema }
     assistedMonths,
   }
 
-  if (noOfProfilesCanView > 50) {
-    if (noOfProfilesCanView === 999) {
-      // Unlimited
-      amount += 20_000
-    } else {
-      amount += ((noOfProfilesCanView - 50) / 50) * 1_000
+  if (noOfProfilesCanView === 999) {
+    // Unlimited
+    amount += 20_000
+  } else {
+    const added = noOfProfilesCanView - profilesCount[subscribedTo]
+    if (added >= 50) {
+      amount += (added / 50) * 1_000
     }
   }
 

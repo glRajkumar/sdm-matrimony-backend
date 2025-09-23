@@ -266,12 +266,14 @@ export const unlockProfile = async (c: zContext<{ json: typeof _idParamSchema }>
   const hasFullAccess = await checkUserAccess(user, _id)
   if (hasFullAccess) return c.json({ message: "You have full access to this profile already" })
 
-  const unlockedCount = await UserAccess.countDocuments({
-    viewer: user._id,
-    payment: user.currentPlan._id
-  })
+  if (user.currentPlan.noOfProfilesCanView !== 999) {
+    const unlockedCount = await UserAccess.countDocuments({
+      viewer: user._id,
+      payment: user.currentPlan._id
+    })
 
-  if (unlockedCount >= user.currentPlan.noOfProfilesCanView) return c.json({ message: "You have reached the limit of unlocked profiles" }, 400)
+    if (unlockedCount >= user.currentPlan.noOfProfilesCanView) return c.json({ message: "You have reached the limit of unlocked profiles" }, 400)
+  }
 
   await UserAccess.create({
     viewer: user._id,

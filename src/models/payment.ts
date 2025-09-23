@@ -20,7 +20,7 @@ const paymentSchema = new Schema({
 
   noOfProfilesCanView: {
     type: Number,
-    default: 50,
+    default: 30,
   },
 
   isAssisted: {
