@@ -33,17 +33,7 @@ const paymentSchema = new Schema({
     default: 0,
   },
 
-  paymentId: {
-    type: String,
-    required: true,
-  },
-
   orderId: {
-    type: String,
-    required: true,
-  },
-
-  razorpayPaymentSignature: {
     type: String,
     required: true,
   },

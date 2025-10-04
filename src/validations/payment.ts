@@ -14,7 +14,6 @@ export const verifyPaymentSchema = z.object({
   noOfProfilesCanView: z.number("Number of profiles is required"),
   isAssisted: z.boolean("Is assisted is required"),
   assistedMonths: z.number("Assisted months is required"),
-  paymentId: z.string("Payment ID is required"),
+  merchantOrderId: z.string("Merchant Order ID is required"),
   orderId: z.string("Order ID is required"),
-  razorpayPaymentSignature: z.string("Razorpay payment signature is required"),
 })

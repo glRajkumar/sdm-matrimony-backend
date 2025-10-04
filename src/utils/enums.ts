@@ -20,6 +20,10 @@ export const env = {
 
   RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID || "",
   RAZORPAY_SECRET: process.env.RAZORPAY_SECRET || "",
+
+  PHONE_PAY_CLIENT_ID: process.env.PHONE_PAY_CLIENT_ID || "",
+  PHONE_PAY_SECRET: process.env.PHONE_PAY_SECRET || "",
+
 } as const
 
 export type token_types = "accessToken" | "verifyToken" | "refreshToken"
@@ -62,4 +66,15 @@ export const profilesCount: Record<plansT, number> = {
   gold: 50,
   diamond: 70,
   platinum: 90,
+}
+
+const isProduction = env.NODE_ENV === "production"
+const phonePayBaseUrl = isProduction
+  ? "https://api.phonepe.com/apis"
+  : "https://api-preprod.phonepe.com/apis/pg-sandbox"
+
+export const phonepayEndpoints = {
+  getAccessToke: `${phonePayBaseUrl}${isProduction ? "/identity-manager" : ""}/v1/oauth/token`,
+  createOrder: `${phonePayBaseUrl}${isProduction ? "/pg" : ""}/checkout/v2/pay`,
+  orderStatus: (merchId: string) => `${phonePayBaseUrl}${isProduction ? "/pg" : ""}/checkout/v2/order/${merchId}/status`
 }
