@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/super-admin
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTQ1NDcxNDIsIl9pZCI6IjY4OTQyZWRhYjRkYzlmYWIxZjRjMDI1OSIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.bNflhnhqLf4JPeNzwEmCP5ekh3Fol0TwrbOcQo3SGxw
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTk3NTAyODMsIl9pZCI6IjY4OTQyZWRhYjRkYzlmYWIxZjRjMDI1OSIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.2mq72PQzSf_NzA7xBNUervYWzQDUDkNEEpzlBpIKWn4
 
 
 ### paid users --- limit=4&skip=20

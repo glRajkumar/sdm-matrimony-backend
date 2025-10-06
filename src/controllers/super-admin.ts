@@ -210,13 +210,20 @@ export async function getUserCreationStatsToday(c: Context<Env>) {
           $gte: new Date(new Date().setHours(0, 0, 0, 0)),
           $lt: new Date(new Date().setHours(23, 59, 59, 999)),
         },
-        createdBy: { $ne: null }
-      }
+      },
     },
     {
       $group: {
         _id: {
           createdBy: "$createdBy",
+        },
+        users: {
+          $push: {
+            _id: '$_id',
+            fullName: '$fullName',
+            profileImg: '$profileImg',
+            maritalStatus: '$maritalStatus',
+          },
         },
         count: { $sum: 1 }
       }
@@ -230,14 +237,18 @@ export async function getUserCreationStatsToday(c: Context<Env>) {
       }
     },
     {
-      $unwind: "$adminDetails"
+      $unwind: {
+        path: "$adminDetails",
+        preserveNullAndEmptyArrays: true,
+      }
     },
     {
       $project: {
         _id: "$_id.createdBy",
         fullName: "$adminDetails.fullName",
         email: "$adminDetails.email",
-        created: "$count"
+        created: "$count",
+        users: 1,
       }
     }
   ])
