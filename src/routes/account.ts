@@ -22,7 +22,7 @@ const rl = createRateLimiter({ limit: 5, windowMs: 60 * 1000 })
 const accountRoutes = new Hono()
 
 accountRoutes
-  .get("/exists", rl, zv("query", forgotPassSchema), exists)
+  .get("/exists", createRateLimiter(), zv("query", forgotPassSchema), exists)
   .post("/login", rl, zv("json", loginSchema), login)
   .post("/register", rl, zv("json", registerSchema), register)
   .post("/access-token", rl, zv("cookie", refreshTokenSchema), accessToken)
