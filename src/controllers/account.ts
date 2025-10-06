@@ -21,6 +21,16 @@ import { welcome, resendVerifyEmail as resendVerifyEmailTemp, forgotPass } from 
 import { getImgUrl, transporter } from '../services/index.js';
 import { Admin, User, getModel } from '../models/index.js';
 
+export const exists = async (c: zContext<{ query: typeof forgotPassSchema }>) => {
+  const { email, role = "user" } = c.req.valid("query")
+
+  const findBy = isEmail(email) ? { email } : { "contactDetails.mobile": email }
+  const Model = getModel(role)
+
+  const isExists = await Model.findOne(findBy).select("_id email").lean()
+  return c.json({ isExists: !!isExists })
+}
+
 export const register = async (c: zContext<{ json: typeof registerSchema }>) => {
   const { email, password, role = "user", ...rest } = c.req.valid("json")
 

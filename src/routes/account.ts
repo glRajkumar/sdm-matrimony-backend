@@ -4,7 +4,7 @@ import {
   login, logout, me, register, forgetPass, resetPass,
   imgUpload, approvalStatusRefresh, accessToken,
   verifyAccount, resendVerifyEmail, updatePassword,
-  emailUpdate, mobileUpdate, meMini,
+  emailUpdate, mobileUpdate, meMini, exists,
 } from "../controllers/account.js";
 
 import {
@@ -22,6 +22,7 @@ const rl = createRateLimiter({ limit: 5, windowMs: 60 * 1000 })
 const accountRoutes = new Hono()
 
 accountRoutes
+  .get("/exists", rl, zv("query", forgotPassSchema), exists)
   .post("/login", rl, zv("json", loginSchema), login)
   .post("/register", rl, zv("json", registerSchema), register)
   .post("/access-token", rl, zv("cookie", refreshTokenSchema), accessToken)

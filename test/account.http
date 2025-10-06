@@ -17,13 +17,18 @@ GET {{host}}/user-deatils-mini
 Authorization: {{token}}
 
 
+### user exists
+GET {{host}}/exists?email=7550246069
+Authorization: {{token}}
+
+
 ### register - user
 POST {{host}}/register
 Content-Type: application/json
 
 {
   "fullName": "Raj kumar",
-  "email": "foniy64530@0tires.com",
+  "email": "yhtggg@0ires.com",
   "password": "12345678",
   "role": "user",
   "gender": "Male",
@@ -38,7 +43,8 @@ Content-Type: application/json
     "salary": 80030
   },
   "contactDetails": {
-    "address": "680 Nguyen Cliffs\nNew Amy, IL 82099"
+    "address": "680 Nguyen Cliffs\nNew Amy, IL 82099",
+    "mobile": "7550246069"
   },
   "familyDetails": {
     "fatherName": "Aaron",
