@@ -1,3 +1,4 @@
+import axios from 'axios';
 
 import type { createOrderSchema, verifyPaymentSchema } from '../validations/payment.js';
 import type { zContext } from '../types/index.js';
@@ -66,39 +67,26 @@ export const createOrder = async (c: zContext<{ json: typeof createOrderSchema }
 
   const authJson = await getToken()
   const merchantOrderId = `Tx-${Date.now()}`
-  const orderBody = JSON.stringify({
+  const orderBody = {
     "merchantOrderId": merchantOrderId,
     "amount": 1 * 100,
-    "expireAfter": 60 * 60 * 10,
+    "expireAfter": 3600,
     "metaInfo": {
       "udf1": JSON.stringify(notes),
     },
     "paymentFlow": {
       "type": "PG_CHECKOUT",
-      "message": "Payment message used for collect requests",
-      "merchantUrls": {
-        "redirectUrl": "http://localhost:3000/payment"
-      }
+      "message": "Payment message used for collect requests"
+    }
+  }
+
+  const { data } = await axios.post(phonepayEndpoints.createOrder, orderBody, {
+    headers: {
+      "Authorization": `${authJson.token_type} ${authJson.access_token}`
     }
   })
 
-  const res2 = await fetch(phonepayEndpoints.createOrder, {
-    method: 'POST',
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `${authJson.token_type} ${authJson.access_token}`
-    },
-    body: orderBody
-  })
-
-  if (!res2.ok) {
-    throw new Error("Error on creating order", {
-      cause: { status: res2.status, statusText: res2.statusText }
-    })
-  }
-
-  const json2 = await res2.json()
-  return c.json({ ...json2, amount, merchantOrderId })
+  return c.json({ ...data, amount, merchantOrderId })
 }
 
 export const verifyPayment = async (c: zContext<{ json: typeof verifyPaymentSchema }>) => {
@@ -114,23 +102,14 @@ export const verifyPayment = async (c: zContext<{ json: typeof verifyPaymentSche
   const authJson = await getToken()
 
   const url = phonepayEndpoints.orderStatus(merchantOrderId)
-  const res = await fetch(url, {
-    method: 'GET',
+  const { data } = await axios.get(url, {
     headers: {
-      "Content-Type": "application/json",
       "Authorization": `${authJson.token_type} ${authJson.access_token}`
     }
   })
-
-  if (!res.ok) {
-    throw new Error("Error on getting order status", {
-      cause: { status: res.status, statusText: res.statusText }
-    })
-  }
-
-  const json = await res.json()
-  if (json.state !== "COMPLETED") {
-    return c.json({ message: json?.errorContext?.description || json?.message }, 400)
+  console.log("data", data)
+  if (data.state !== "COMPLETED") {
+    return c.json({ message: data?.errorContext?.description || data?.message }, 400)
   }
 
   const payment = await Payment.create({
