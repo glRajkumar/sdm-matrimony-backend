@@ -7,7 +7,13 @@ import { env, phonepayEndpoints, planPrices, planValidityMonths, profilesCount, 
 import { Payment, User } from '../models/index.js';
 import { redisClient } from '../services/connect-redis.js';
 
+let cachedToken = ""
+let tokenExpiry = Date.now()
+
 async function getToken() {
+  const bufferTime = 2 * 60 * 1000 // 2min
+  if (cachedToken && Date.now() < tokenExpiry - bufferTime) return cachedToken
+
   const requestBodyJson: any = {
     client_id: env.PHONE_PAY_CLIENT_ID,
     client_secret: env.PHONE_PAY_SECRET,
@@ -17,19 +23,13 @@ async function getToken() {
 
   const requestBody = new URLSearchParams(requestBodyJson).toString()
 
-  const res = await fetch(phonepayEndpoints.getAccessToke, {
-    method: 'POST',
+  const { data } = await axios.post(phonepayEndpoints.getAccessToke, requestBody, {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: requestBody
   })
 
-  if (!res.ok) {
-    throw new Error("Error on creating order", {
-      cause: { status: res.status, statusText: res.statusText }
-    })
-  }
-
-  return await res.json()
+  cachedToken = data.access_token
+  tokenExpiry = data.expires_at * 1000
+  return cachedToken
 }
 
 export const createOrder = async (c: zContext<{ json: typeof createOrderSchema }>) => {
@@ -65,11 +65,12 @@ export const createOrder = async (c: zContext<{ json: typeof createOrderSchema }
     amount += assistedMonths * 10_000
   }
 
-  const authJson = await getToken()
-  const merchantOrderId = `Tx-${Date.now()}`
+  const authToken = await getToken()
+
+  const merchantOrderId = `Tx-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`
   const orderBody = {
     "merchantOrderId": merchantOrderId,
-    "amount": 1 * 100,
+    "amount": amount * 100,
     "expireAfter": 3600,
     "metaInfo": {
       "udf1": JSON.stringify(notes),
@@ -81,9 +82,7 @@ export const createOrder = async (c: zContext<{ json: typeof createOrderSchema }
   }
 
   const { data } = await axios.post(phonepayEndpoints.createOrder, orderBody, {
-    headers: {
-      "Authorization": `${authJson.token_type} ${authJson.access_token}`
-    }
+    headers: { "Authorization": `O-Bearer ${authToken}` }
   })
 
   return c.json({ ...data, amount, merchantOrderId })
@@ -99,15 +98,13 @@ export const verifyPayment = async (c: zContext<{ json: typeof verifyPaymentSche
 
   const expiryDate = new Date(Date.now() + planValidityMonths[body.subscribedTo as plansT] * 24 * 60 * 60 * 1000)
 
-  const authJson = await getToken()
+  const authToken = await getToken()
 
   const url = phonepayEndpoints.orderStatus(merchantOrderId)
   const { data } = await axios.get(url, {
-    headers: {
-      "Authorization": `${authJson.token_type} ${authJson.access_token}`
-    }
+    headers: { "Authorization": `O-Bearer ${authToken}` }
   })
-  console.log("data", data)
+
   if (data.state !== "COMPLETED") {
     return c.json({ message: data?.errorContext?.description || data?.message }, 400)
   }
