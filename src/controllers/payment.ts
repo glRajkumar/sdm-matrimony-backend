@@ -3,7 +3,7 @@ import axios from 'axios';
 import type { createOrderSchema, verifyPaymentSchema } from '../validations/payment.js';
 import type { zContext } from '../types/index.js';
 
-import { env, phonepayEndpoints, planPrices, planValidityMonths, profilesCount, type plansT } from '../utils/enums.js';
+import { assistedPrices, env, extraProfiles, phonepayEndpoints, planPrices, planValidityMonths, profilesCount, type plansT } from '../utils/enums.js';
 import { Payment, User } from '../models/index.js';
 import { redisClient } from '../services/connect-redis.js';
 
@@ -53,16 +53,16 @@ export const createOrder = async (c: zContext<{ json: typeof createOrderSchema }
 
   if (noOfProfilesCanView === 999) {
     // Unlimited
-    amount += 20_000
+    amount += extraProfiles[999]
   } else {
     const added = noOfProfilesCanView - profilesCount[subscribedTo]
-    if (added >= 50) {
-      amount += (added / 50) * 1_000
+    if (added > 0) {
+      amount += extraProfiles[added]
     }
   }
 
   if (isAssisted) {
-    amount += assistedMonths * 10_000
+    amount += assistedPrices[assistedMonths]
   }
 
   const authToken = await getToken()
@@ -77,7 +77,10 @@ export const createOrder = async (c: zContext<{ json: typeof createOrderSchema }
     },
     "paymentFlow": {
       "type": "PG_CHECKOUT",
-      "message": "Payment message used for collect requests"
+      "message": "Payment message used for collect requests",
+      "merchantUrls": {
+        "redirectUrl": `${env.FRONTEND_URL}/user/payment`
+      }
     }
   }
 
@@ -96,7 +99,7 @@ export const verifyPayment = async (c: zContext<{ json: typeof verifyPaymentSche
     body.assistedMonths = 0
   }
 
-  const expiryDate = new Date(Date.now() + planValidityMonths[body.subscribedTo as plansT] * 24 * 60 * 60 * 1000)
+  const expiryDate = new Date(new Date().setMonth(new Date().getMonth() + planValidityMonths[body.subscribedTo as plansT]))
 
   const authToken = await getToken()
 
