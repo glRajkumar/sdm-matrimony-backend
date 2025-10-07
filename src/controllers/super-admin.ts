@@ -3,6 +3,7 @@ import type { Context } from "hono";
 import type {
   skipLimitSchema, adminCreateSchema, adminUpdateSchema,
   usersCreatedBySchema, _idParamSchema,
+  usersCreationsStatsSchema,
 } from "../validations/index.js";
 import type { zContext } from "../types/index.js";
 
@@ -202,13 +203,18 @@ export async function getUserCreationStatsPerAdmin(c: Context<Env>) {
   return c.json(result);
 }
 
-export async function getUserCreationStatsToday(c: Context<Env>) {
+export async function getUserCreationStats(c: zContext<{ query: typeof usersCreationsStatsSchema }>) {
+  const { date } = c.req.valid("query")
+
+  const start = new Date(new Date(date).setHours(0, 0, 0, 0))
+  const end = new Date(new Date(date).setHours(23, 59, 59, 999))
+
   const result = await User.aggregate([
     {
       $match: {
         createdAt: {
-          $gte: new Date(new Date().setHours(0, 0, 0, 0)),
-          $lt: new Date(new Date().setHours(23, 59, 59, 999)),
+          $gte: start,
+          $lt: end,
         },
       },
     },

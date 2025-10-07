@@ -3,13 +3,13 @@ import { Hono } from "hono";
 import {
   getPaidUsers, getAssistedSubscribedUsers, getUsersAllPayments,
   getUsersByCreatedBy, getUserCreationStatsPerAdmin,
-  getUserCreationStatsToday, getAdmins, createAdmin,
+  getUserCreationStats, getAdmins, createAdmin,
   updateAdmin,
 } from "../controllers/super-admin.js";
 
 import {
   skipLimitSchema, adminCreateSchema, adminUpdateSchema, usersCreatedBySchema,
-  _idParamSchema, zv,
+  _idParamSchema, zv, usersCreationsStatsSchema,
 } from "../validations/index.js";
 
 import roleCheck from "../middlewares/role-check.js";
@@ -24,7 +24,7 @@ superAdminRoutes
   .get("/users/all-payments", zv("query", skipLimitSchema), getUsersAllPayments)
   .get("/users/created-by", zv("query", usersCreatedBySchema), getUsersByCreatedBy)
   .get("/users-stats/created-per-admin", getUserCreationStatsPerAdmin)
-  .get("/users-stats/created-today", getUserCreationStatsToday)
+  .get("/users-stats/created", zv("query", usersCreationsStatsSchema), getUserCreationStats)
   .get("/admins", getAdmins)
   .post("/admin", zv("json", adminCreateSchema), createAdmin)
   .put("/admin/:_id", zv("param", _idParamSchema), zv("json", adminUpdateSchema), updateAdmin)
