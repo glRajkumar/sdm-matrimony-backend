@@ -68,12 +68,16 @@ export const register = async (c: zContext<{ json: typeof registerSchema }>) => 
 
   if (email && isEmail(email)) {
     const { subject, html } = await welcome(user._id.toString(), user.role)
-    transporter.sendMail({
-      to: email,
-      from: env.EMAIL_ID,
-      subject,
-      html,
-    })
+    try {
+      await transporter.sendMail({
+        to: email,
+        from: env.EMAIL_ID,
+        subject,
+        html,
+      })
+    } catch (error) {
+      console.log("welcome mail error", error)
+    }
   }
 
   return c.json({ message: 'User saved successfully' })
@@ -181,12 +185,16 @@ export async function forgetPass(c: zContext<{ json: typeof forgotPassSchema }>)
 
   if (isEmail(email)) {
     const { subject, html } = forgotPass(verifiyOtp)
-    await transporter.sendMail({
-      to: email,
-      from: env.EMAIL_ID,
-      subject,
-      html
-    })
+    try {
+      await transporter.sendMail({
+        to: email,
+        from: env.EMAIL_ID,
+        subject,
+        html
+      })
+    } catch (error) {
+      console.log("forgot-pass", error)
+    }
   }
 
   return c.json({ message: "Passkey sent to email successfully" })
@@ -240,12 +248,16 @@ export async function resendVerifyEmail(c: zContext<{ json: typeof resendVerifyE
   if (!user) return c.json({ message: 'User not found' }, 400)
 
   const { subject, html } = await resendVerifyEmailTemp(user._id.toString(), user.role)
-  await transporter.sendMail({
-    to: email,
-    from: env.EMAIL_ID,
-    subject,
-    html
-  })
+  try {
+    await transporter.sendMail({
+      to: email,
+      from: env.EMAIL_ID,
+      subject,
+      html
+    })
+  } catch (error) {
+    console.log("resend-verify", error)
+  }
 
   return c.json({ message: "Verification email sent successfully" })
 }
@@ -401,12 +413,16 @@ export const emailUpdate = async (c: zContext<{ json: typeof emailSchemaObj }>) 
   await Model.updateOne({ _id: user._id }, { email, isVerified: false })
 
   const { subject, html } = await resendVerifyEmailTemp(user._id.toString(), user.role)
-  await transporter.sendMail({
-    to: email,
-    from: env.EMAIL_ID,
-    subject,
-    html
-  })
+  try {
+    await transporter.sendMail({
+      to: email,
+      from: env.EMAIL_ID,
+      subject,
+      html
+    })
+  } catch (error) {
+    console.log("resend-verify", error)
+  }
 
   return c.json({ message: "Email updated successfully" })
 }
