@@ -229,6 +229,8 @@ export async function getUserCreationStats(c: zContext<{ query: typeof usersCrea
             fullName: '$fullName',
             profileImg: '$profileImg',
             maritalStatus: '$maritalStatus',
+            isDeleted: '$isDeleted',
+            isBlocked: '$isBlocked',
           },
         },
         count: { $sum: 1 }
