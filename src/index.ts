@@ -74,7 +74,7 @@ app.notFound(c => c.json({ message: 'Route not found' }, 404))
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) return err.getResponse()
-  console.log(err)
+  if (env.NODE_ENV === "development") console.log(err)
   return c.json({ message: err?.message || "Internal sever eror" }, 500)
 })
 

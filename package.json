@@ -12,18 +12,17 @@
     "@hono/zod-validator": "^0.7.2",
     "axios": "^1.12.2",
     "bcryptjs": "^3.0.2",
+    "bullmq": "^5.61.0",
     "cloudinary": "^2.7.0",
     "hono": "^4.8.5",
     "hono-rate-limiter": "^0.4.2",
     "mongoose": "^8.16.4",
-    "nodemailer": "^6.10.1",
     "redis": "^5.7.0",
     "zod": "^4.1.11"
   },
   "devDependencies": {
     "@ngneat/falso": "^7.4.0",
     "@types/node": "^20.19.8",
-    "@types/nodemailer": "^6.4.17",
     "dotenv": "^16.6.1",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"

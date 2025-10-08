@@ -5,8 +5,7 @@ import type { zContext } from '../types/index.js';
 import {
   setRefreshTokenCookie, deleteRefreshTokenCookie,
   comparePasswords, hashPassword, tokenEnums,
-  generateOtp, getToken, verifyToken,
-  isEmail, env,
+  generateOtp, getToken, verifyToken, isEmail,
 } from '../utils/index.js';
 
 import {
@@ -16,10 +15,9 @@ import {
   emailSchemaObj, mobileSchemaObj,
 } from '../validations/index.js';
 
-import { welcome, resendVerifyEmail as resendVerifyEmailTemp, forgotPass } from '../mail-templates/index.js';
-
-import { getImgUrl, transporter } from '../services/index.js';
 import { Admin, User, getModel } from '../models/index.js';
+import { getImgUrl } from '../services/index.js';
+import { queue } from '../services/queue.js';
 
 export const exists = async (c: zContext<{ query: typeof forgotPassSchema }>) => {
   const { email, role = "user" } = c.req.valid("query")
@@ -67,12 +65,11 @@ export const register = async (c: zContext<{ json: typeof registerSchema }>) => 
   await user.save()
 
   if (email && isEmail(email)) {
-    const { subject, html } = await welcome(user._id.toString(), user.role)
-    transporter.sendMail({
-      to: email,
-      from: env.EMAIL_ID,
-      subject,
-      html,
+    queue.add("mail", {
+      email,
+      type: "welcome",
+      role: user.role,
+      _id: user._id.toString(),
     })
   }
 
@@ -180,12 +177,10 @@ export async function forgetPass(c: zContext<{ json: typeof forgotPassSchema }>)
   await Model.updateOne({ _id: user._id }, { verifiyOtp })
 
   if (isEmail(email)) {
-    const { subject, html } = forgotPass(verifiyOtp)
-    await transporter.sendMail({
-      to: email,
-      from: env.EMAIL_ID,
-      subject,
-      html
+    queue.add("mail", {
+      email,
+      type: "forgot-pass",
+      otp: verifiyOtp,
     })
   }
 
@@ -239,12 +234,11 @@ export async function resendVerifyEmail(c: zContext<{ json: typeof resendVerifyE
   const user = await Model.findOne({ email }).select("_id role").lean()
   if (!user) return c.json({ message: 'User not found' }, 400)
 
-  const { subject, html } = await resendVerifyEmailTemp(user._id.toString(), user.role)
-  await transporter.sendMail({
-    to: email,
-    from: env.EMAIL_ID,
-    subject,
-    html
+  queue.add("mail", {
+    email,
+    _id: user._id.toString(),
+    role: user.role,
+    type: "resend-verify-mail",
   })
 
   return c.json({ message: "Verification email sent successfully" })
@@ -400,12 +394,11 @@ export const emailUpdate = async (c: zContext<{ json: typeof emailSchemaObj }>) 
 
   await Model.updateOne({ _id: user._id }, { email, isVerified: false })
 
-  const { subject, html } = await resendVerifyEmailTemp(user._id.toString(), user.role)
-  await transporter.sendMail({
-    to: email,
-    from: env.EMAIL_ID,
-    subject,
-    html
+  queue.add("mail", {
+    email,
+    type: "resend-verify-mail",
+    role: user.role,
+    _id: user._id.toString(),
   })
 
   return c.json({ message: "Email updated successfully" })
