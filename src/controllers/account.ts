@@ -127,7 +127,7 @@ export const login = async (c: zContext<{ json: typeof loginSchema }>) => {
     email: user.email,
     fullName: user.fullName,
     approvalStatus: user.approvalStatus,
-    mobile: user.contactDetails.mobile,
+    mobile: user?.contactDetails?.mobile,
   }
 
   if (role === "user") {
