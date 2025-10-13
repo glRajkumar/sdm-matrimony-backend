@@ -8,6 +8,8 @@ import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
 import { Hono } from 'hono';
 
+import mongoose from 'mongoose';
+
 import createRateLimiter from './middlewares/rate-limit.js';
 import authMiddleware from './middlewares/auth.js';
 
@@ -20,7 +22,7 @@ import adminRoutes from './routes/admin.js';
 import fakerRoutes from './routes/faker.js';
 import userRoutes from './routes/user.js';
 
-import { connectMongo, connectRedis } from './services/index.js';
+import { connectMongo, connectRedis, redisClient } from './services/index.js';
 import { env } from './utils/enums.js';
 
 try {
@@ -84,4 +86,27 @@ console.log(`Server is running on http://localhost:${port}`)
 serve({
   fetch: app.fetch,
   port
+})
+
+process.on('SIGINT', async () => {
+  console.log('Shutting down gracefully...')
+  try {
+    await Promise.all([
+      mongoose.connection.close(),
+      redisClient.quit()
+    ])
+    console.log('Database connections closed')
+    process.exit(0)
+
+  } catch (err) {
+    console.error('Error during shutdown:', err)
+    process.exit(1)
+  }
+})
+
+process.on('SIGTERM', async () => {
+  console.log('SIGTERM received, shutting down...')
+  await mongoose.connection.close()
+  await redisClient.quit()
+  process.exit(0)
 })
