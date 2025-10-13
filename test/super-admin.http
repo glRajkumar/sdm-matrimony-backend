@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/super-admin
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NTk4MTU5MTAsIl9pZCI6IjY4OTQyZWRhYjRkYzlmYWIxZjRjMDI1OSIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.S349MqtQOmBLR2_9onGzB8_5_4WBT1pb6ONfK9JVUZc
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NjAzNTI4MjUsIl9pZCI6IjY4OTQyZWRhYjRkYzlmYWIxZjRjMDI1OSIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.ecCgnoiX8vlagj2F4Y1KhP0mtMyatMxqpd6-AdYOMSE
 
 
 ### paid users --- limit=4&skip=20
@@ -37,6 +37,11 @@ GET {{host}}/admins
 Authorization: {{token}}
 
 
+### get not invited users --- limit=4&skip=20
+GET {{host}}/users/not-invited
+Authorization: {{token}}
+
+
 ### create admin
 POST {{host}}/admin
 Authorization: {{token}}
@@ -58,3 +63,9 @@ Content-Type: application/json
   "fullName": "Vasan",
   "isDeleted": false
 }
+
+
+### update invited
+PUT {{host}}/user/invite/689b0532e047974273a48789
+Authorization: {{token}}
+

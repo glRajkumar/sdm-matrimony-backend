@@ -177,6 +177,11 @@ const userSchema = new Schema({
     ref: 'Payment'
   },
 
+  invited: {
+    type: Boolean,
+    default: false,
+  }
+
 }, { timestamps: true })
 
 userSchema.pre('validate', function (next) {

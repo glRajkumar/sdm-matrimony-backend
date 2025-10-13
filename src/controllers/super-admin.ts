@@ -272,6 +272,34 @@ export async function getAdmins(c: Context<Env>) {
   return c.json(admins)
 }
 
+export async function getNotInvitedUsers(c: zContext<{ query: typeof skipLimitSchema }>) {
+  const { limit, skip } = c.req.valid("query") || { limit: 50, skip: 0 }
+
+  const numLimit = Number(limit || 50)
+  const numSkip = Number(skip || 0)
+
+  const users = await User.find({
+    $and: [
+      { $or: [{ email: { $exists: false } }, { email: null }] },
+      { $or: [{ invited: { $exists: false } }, { invited: false }] }
+    ]
+  })
+    .select("_id fullName email profileImg contactDetails.mobile dob")
+    .limit(numLimit)
+    .skip(numSkip)
+    .lean()
+
+  return c.json(users)
+}
+
+export async function updateInvited(c: zContext<{ param: typeof _idParamSchema }>) {
+  const { _id } = c.req.valid("param")
+
+  await User.updateOne({ _id }, { invited: true })
+
+  return c.json({ message: "User invited successfully" })
+}
+
 export async function createAdmin(c: zContext<{ json: typeof adminCreateSchema }>) {
   const { email, password, ...rest } = c.req.valid("json")
 

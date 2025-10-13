@@ -4,7 +4,7 @@ import {
   getPaidUsers, getAssistedSubscribedUsers, getUsersAllPayments,
   getUsersByCreatedBy, getUserCreationStatsPerAdmin,
   getUserCreationStats, getAdmins, createAdmin,
-  updateAdmin,
+  updateAdmin, getNotInvitedUsers, updateInvited,
 } from "../controllers/super-admin.js";
 
 import {
@@ -26,7 +26,9 @@ superAdminRoutes
   .get("/users-stats/created-per-admin", getUserCreationStatsPerAdmin)
   .get("/users-stats/created", zv("query", usersCreationsStatsSchema), getUserCreationStats)
   .get("/admins", getAdmins)
+  .get("/users/not-invited", zv("query", skipLimitSchema), getNotInvitedUsers)
   .post("/admin", zv("json", adminCreateSchema), createAdmin)
   .put("/admin/:_id", zv("param", _idParamSchema), zv("json", adminUpdateSchema), updateAdmin)
+  .put("/user/invite/:_id", zv("param", _idParamSchema), updateInvited)
 
 export default superAdminRoutes
