@@ -8,7 +8,9 @@ import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
 import { Hono } from 'hono';
 
+import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
+import path from 'path';
 
 import createRateLimiter from './middlewares/rate-limit.js';
 import authMiddleware from './middlewares/auth.js';
@@ -31,6 +33,12 @@ try {
   process.exit(1)
 }
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const assestPath = env.NODE_ENV === "production"
+  ? path.resolve(__dirname, "assets")
+  : "./src/assets"
+
 const app = new Hono().basePath("api")
 
 app.use(logger())
@@ -40,7 +48,7 @@ app.use(compress())
 
 app.use("/static/*",
   serveStatic({
-    root: "./src/assets",
+    root: assestPath,
     rewriteRequestPath: (path) => path.replace(/^\/api\/static/, ""),
     onFound: (path, c) => {
       if (!path.includes("latest.json")) {
@@ -99,7 +107,7 @@ process.on('SIGINT', async () => {
     process.exit(0)
 
   } catch (err) {
-    console.error('Error during shutdown:', err)
+    // console.error('Error during shutdown:', err)
     process.exit(1)
   }
 })
