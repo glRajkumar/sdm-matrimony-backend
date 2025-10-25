@@ -37,7 +37,7 @@ async function getUser(_id: string, role: string): Promise<userVarT | adminVarT 
   return null
 }
 
-const authMiddleware = createMiddleware(async (c, next) => {
+const authMiddleware = createMiddleware<any>(async (c, next) => {
   try {
     const token = c.req.header("Authorization")?.replace('Bearer ', '')
     if (!token) return c.json({ message: 'Unauthorized' }, 401)

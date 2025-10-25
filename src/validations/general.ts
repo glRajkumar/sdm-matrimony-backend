@@ -8,7 +8,7 @@ import { approvalStatuses, genders, maritalStatuses, plans, roles } from '../uti
 
 export const approvalStatusEnum = z.enum(approvalStatuses, { error: "Invalid Approval Status" })
 export const maritalStatusEnum = z.enum(maritalStatuses, { error: "Invalid Marital Status" })
-export const educationEnum = z.enum(educationLevels, { error: "Invalid Education" })
+export const educationEnum = z.enum(["Any", ...educationLevels], { error: "Invalid Education" })
 export const genderEnum = z.enum(genders, { error: "Invalid Gender" })
 export const roleEnum = z.enum(roles, { error: "Invalid Role" })
 export const planEnum = z.enum(plans, { error: "Invalid Plan" })
@@ -88,19 +88,19 @@ export const otherDetailsSchema = z.object({
   motherTongue: z.string().optional(),
   houseType: z.string().optional(),
   religion: z.string().optional(),
-  height: z.number().optional(),
+  height: z.preprocess(val => !val ? undefined : val, z.coerce.number().optional()).optional(),
   color: z.string().optional(),
   caste: z.string().optional(),
   subCaste: z.string().optional(),
 }).optional()
 
 export const partnerPreferencesSchema = z.object({
-  minAge: z.number().min(18, "Minimum age must be at least 18").optional(),
-  maxAge: z.number().min(18, "Maximum age must be at least 18").optional(),
+  minAge: z.preprocess(val => !val ? undefined : val, z.coerce.number().min(18, "Minimum age must be at least 18").optional()).optional(),
+  maxAge: z.preprocess(val => !val ? undefined : val, z.coerce.number().min(18, "Maximum age must be at least 18").optional()).optional(),
   minQualification: educationEnum.optional(),
   sector: z.string().optional(),
   profession: z.string().optional(),
-  minSalary: z.number().optional(),
+  minSalary: z.preprocess(val => !val ? undefined : val, z.coerce.number().optional()).optional(),
   religion: z.string().optional(),
   caste: z.string().optional(),
   subCaste: z.string().optional(),
