@@ -8,7 +8,7 @@ import { UserAccess, User } from '../models/index.js';
 
 import { getFilterObj } from '../utils/index.js';
 
-const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails otherDetails currentPlan isVerified"
+const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails.highestQualification proffessionalDetails.profession otherDetails.caste otherDetails.subCaste currentPlan isVerified"
 const currentPlanSelectFields = "-_id subscribedTo expiryDate"
 
 async function checkUserAccess(user: any, _id: string) {
