@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { approvalStatuses, genders, maritalStatuses } from '../utils/enums.js';
+import { MIN_AGE, isValidDob } from '../utils/index.js';
 
 const userSchema = new Schema({
   fullName: {
@@ -62,6 +63,10 @@ const userSchema = new Schema({
   dob: {
     type: Date,
     required: true,
+    validate: {
+      validator: isValidDob,
+      message: `User must be at least ${MIN_AGE} years old`,
+    },
   },
 
   contactDetails: {

@@ -8,7 +8,7 @@ import { UserAccess, User } from '../models/index.js';
 
 import { getFilterObj } from '../utils/index.js';
 
-const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails otherDetails currentPlan isVerified"
+const userSelectFields = "_id fullName profileImg maritalStatus gender dob proffessionalDetails.highestQualification proffessionalDetails.profession otherDetails.caste otherDetails.subCaste currentPlan isVerified"
 const currentPlanSelectFields = "-_id subscribedTo expiryDate"
 
 async function checkUserAccess(user: any, _id: string) {
@@ -44,6 +44,17 @@ export const getUserDetails = async (c: zContext<{ param: typeof _idParamSchema 
     .select(select)
     .populate("currentPlan", currentPlanSelectFields)
     .lean()
+
+  if (user.role === "user") {
+    const currentUser = await User.findById(user._id).select("gender").lean()
+
+    if (currentUser?.gender === "Male" && userDetails?.otherDetails?.caste === "14 oor kaikolar mudaliyar") {
+      userDetails.contactDetails = {
+        ...userDetails?.contactDetails,
+        mobile: "restricted"
+      }
+    }
+  }
 
   return c.json(userDetails)
 }
