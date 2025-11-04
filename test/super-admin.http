@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/super-admin
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NjAzNTI4MjUsIl9pZCI6IjY4OTQyZWRhYjRkYzlmYWIxZjRjMDI1OSIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.ecCgnoiX8vlagj2F4Y1KhP0mtMyatMxqpd6-AdYOMSE
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NjIyNjg3NDIsIl9pZCI6IjY4ZjhjNzQ2NGU2MzQxZTc4MDEyMTVhZiIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.lZDw4jORtzsV9F6aC0oQRnMoD1o9YBjUrezwGmt7Bfg
 
 
 ### paid users --- limit=4&skip=20
@@ -22,13 +22,13 @@ GET {{host}}/users/created-by?createdBy=68942a49660c9ca1bf10293c
 Authorization: {{token}}
 
 
-### users created per admin
-GET {{host}}/users-stats/created-per-admin
+### users count by group by date or caste
+GET {{host}}/users/grouped-by-admin/count?type=caste
 Authorization: {{token}}
 
 
-### users created today
-GET {{host}}/users-stats/created?date=2025-10-07
+### users count by date or caste
+GET {{host}}/users/grouped/count?date=2025-10-07
 Authorization: {{token}}
 
 

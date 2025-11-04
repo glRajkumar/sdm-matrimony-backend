@@ -3,7 +3,8 @@ import type { Context } from "hono";
 import type {
   skipLimitSchema, adminCreateSchema, adminUpdateSchema,
   usersCreatedBySchema, _idParamSchema,
-  usersCreationsStatsSchema,
+  usersGroupedCountSchema,
+  usersGroupedByAdminCountSchema,
 } from "../validations/index.js";
 import type { zContext } from "../types/index.js";
 
@@ -152,71 +153,95 @@ export async function getUsersByCreatedBy(c: zContext<{ query: typeof usersCreat
   return c.json(users)
 }
 
-export async function getUserCreationStatsPerAdmin(c: Context<Env>) {
+export async function getUsersGroupedByAdminCount(c: zContext<{ query: typeof usersGroupedByAdminCountSchema }>) {
+  const { type } = c.req.valid("query")
+
+  const groupKey =
+    type === "date"
+      ? { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } }
+      : "$otherDetails.caste"
+
   const result = await User.aggregate([
-    {
-      $match: {
-        createdBy: { $ne: null }
-      }
-    },
     {
       $group: {
         _id: {
-          createdBy: "$createdBy",
-          date: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } }
+          createdBy: { $ifNull: ["$createdBy", null] },
+          key: {
+            $ifNull: [groupKey, "Unknown"],
+          },
         },
-        count: { $sum: 1 }
-      }
+        count: { $sum: 1 },
+      },
     },
     {
       $group: {
         _id: "$_id.createdBy",
-        dailyCounts: {
+        counts: {
           $push: {
-            k: "$_id.date",
-            v: "$count"
-          }
-        }
-      }
+            k: "$_id.key",
+            v: "$count",
+          },
+        },
+      },
     },
     {
       $lookup: {
         from: "admins",
         localField: "_id",
         foreignField: "_id",
-        as: "adminDetails"
-      }
+        as: "adminDetails",
+      },
     },
     {
-      $unwind: "$adminDetails"
+      $unwind: {
+        path: "$adminDetails",
+        preserveNullAndEmptyArrays: true,
+      },
     },
     {
       $project: {
-        _id: "$_id",
+        _id: 1,
         fullName: "$adminDetails.fullName",
         email: "$adminDetails.email",
-        dates: { $arrayToObject: "$dailyCounts" }
-      }
-    }
-  ]);
+        data: {
+          $arrayToObject: {
+            $filter: {
+              input: "$counts",
+              as: "item",
+              cond: {
+                $and: [
+                  { $ne: ["$$item.k", null] },
+                  { $ne: ["$$item.k", undefined] },
+                ],
+              },
+            },
+          },
+        },
+      },
+    },
+  ])
 
-  return c.json(result);
+  return c.json(result)
 }
 
-export async function getUserCreationStats(c: zContext<{ query: typeof usersCreationsStatsSchema }>) {
-  const { date } = c.req.valid("query")
+export async function getUsersGroupedCount(c: zContext<{ query: typeof usersGroupedCountSchema }>) {
+  const { date, caste } = c.req.valid("query")
 
-  const start = new Date(new Date(date).setHours(0, 0, 0, 0))
-  const end = new Date(new Date(date).setHours(23, 59, 59, 999))
+  const match = {
+    ...(date && {
+      createdAt: {
+        $gte: new Date(new Date(date).setHours(0, 0, 0, 0)),
+        $lt: new Date(new Date(date).setHours(23, 59, 59, 999)),
+      },
+    }),
+    ...(caste && {
+      "otherDetails.caste": caste,
+    }),
+  }
 
   const result = await User.aggregate([
     {
-      $match: {
-        createdAt: {
-          $gte: start,
-          $lt: end,
-        },
-      },
+      $match: match,
     },
     {
       $group: {

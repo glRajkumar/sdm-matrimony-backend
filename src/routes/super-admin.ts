@@ -2,14 +2,14 @@ import { Hono } from "hono";
 
 import {
   getPaidUsers, getAssistedSubscribedUsers, getUsersAllPayments,
-  getUsersByCreatedBy, getUserCreationStatsPerAdmin,
-  getUserCreationStats, getAdmins, createAdmin,
+  getUsersByCreatedBy, getUsersGroupedByAdminCount,
+  getUsersGroupedCount, getAdmins, createAdmin,
   updateAdmin, getNotInvitedUsers, updateInvited,
 } from "../controllers/super-admin.js";
 
 import {
   skipLimitSchema, adminCreateSchema, adminUpdateSchema, usersCreatedBySchema,
-  _idParamSchema, zv, usersCreationsStatsSchema,
+  _idParamSchema, zv, usersGroupedCountSchema, usersGroupedByAdminCountSchema,
 } from "../validations/index.js";
 
 import roleCheck from "../middlewares/role-check.js";
@@ -23,8 +23,8 @@ superAdminRoutes
   .get("/users/assisted-subscribed", zv("query", skipLimitSchema), getAssistedSubscribedUsers)
   .get("/users/all-payments", zv("query", skipLimitSchema), getUsersAllPayments)
   .get("/users/created-by", zv("query", usersCreatedBySchema), getUsersByCreatedBy)
-  .get("/users-stats/created-per-admin", getUserCreationStatsPerAdmin)
-  .get("/users-stats/created", zv("query", usersCreationsStatsSchema), getUserCreationStats)
+  .get("/users/grouped-by-admin/count", zv("query", usersGroupedByAdminCountSchema), getUsersGroupedByAdminCount)
+  .get("/users/grouped/count", zv("query", usersGroupedCountSchema), getUsersGroupedCount)
   .get("/admins", getAdmins)
   .get("/users/not-invited", zv("query", skipLimitSchema), getNotInvitedUsers)
   .post("/admin", zv("json", adminCreateSchema), createAdmin)
