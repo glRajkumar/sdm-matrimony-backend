@@ -5,6 +5,7 @@ import nakshatra from "../assets/v1/nakshatra.json" with { type: "json" };
 import raasi from "../assets/v1/raasi.json" with { type: "json" };
 
 import { approvalStatuses, genders, maritalStatuses, plans, roles } from '../utils/enums.js';
+import { MIN_AGE, isValidDob } from '../utils/index.js';
 
 export const approvalStatusEnum = z.enum(approvalStatuses, { error: "Invalid Approval Status" })
 export const maritalStatusEnum = z.enum(maritalStatuses, { error: "Invalid Marital Status" })
@@ -155,6 +156,13 @@ export const userSchema = z.object({
     {
       message: "Either email or mobile is required",
       path: ["email"],
+    }
+  )
+  .refine(
+    (data) => isValidDob(data.dob),
+    {
+      message: `User must be at least ${MIN_AGE} years old`,
+      path: ["dob"],
     }
   )
 

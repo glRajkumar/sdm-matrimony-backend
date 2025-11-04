@@ -1,6 +1,6 @@
 import {
   randFullName, randEmail, randPassword, randNumber,
-  randPastDate, randPhoneNumber, randStreetAddress,
+  randPhoneNumber, randStreetAddress, randBetweenDate,
   randCompanyName, randWord, randBoolean, randText,
   rand, toCollection,
 } from "@ngneat/falso";
@@ -12,7 +12,7 @@ import languages from "../assets/v1/languages.json" with { type: "json" };
 import castesMap from "../assets/v1/caste-map.json" with { type: "json" };
 import nakshatra from "../assets/v1/nakshatra.json" with { type: "json" };
 import sectors from "../assets/v1/sectors.json" with { type: "json" };
-import castes from "../assets/v1/castes.json" with { type: "json" };
+import castes from "../assets/v2/castes.json" with { type: "json" };
 import raasi from "../assets/v1/raasi.json" with { type: "json" };
 import latest from "../assets/latest.json" with { type: "json" };
 
@@ -35,16 +35,21 @@ const generateRandomUser = () => {
   const found = castesMap[caste as keyof typeof castesMap] || []
   const subCaste = rand(found) || ""
 
+  const now = new Date()
+  const minDOB = new Date(now.getFullYear() - 40, now.getMonth(), now.getDate())
+  const maxDOB = new Date(now.getFullYear() - 21, now.getMonth(), now.getDate())
+  const dob = randBetweenDate({ from: minDOB, to: maxDOB })
+
   return {
-    fullName: randFullName({ gender: gender.toLowerCase() as "male" | "female" }),
+    fullName: randFullName({ gender: gender.toLowerCase() as "male" | "female", withAccents: false }),
     email: randEmail(),
     password: randPassword(),
     maritalStatus: rand(maritalStatuses),
     isMarried: randBoolean(),
     gender,
-    dob: randPastDate({ years: 30 }),
+    dob,
     contactDetails: {
-      mobile: randPhoneNumber(),
+      mobile: randPhoneNumber({ countryCode: "IN" }),
       address: randStreetAddress(),
     },
     profileImg,
@@ -57,8 +62,8 @@ const generateRandomUser = () => {
       salary,
     },
     familyDetails: {
-      fatherName: randFullName({ gender: 'male' }),
-      motherName: randFullName({ gender: 'female' }),
+      fatherName: randFullName({ gender: 'male', withAccents: false }),
+      motherName: randFullName({ gender: 'female', withAccents: false }),
       noOfBrothers,
       noOfSisters,
       birthOrder,
@@ -91,10 +96,10 @@ const generateRandomUser = () => {
     },
     otherDetails: {
       motherTongue: rand(languages),
-      houseType: rand(['Own', 'Lease', 'Rental']),
+      // houseType: rand(['Own', 'Lease', 'Rental']),
       religion: rand(religions),
-      height: randNumber({ min: 150, max: 200 }),
-      color: randWord(),
+      // height: randNumber({ min: 150, max: 200 }),
+      // color: randWord(),
       subCaste,
       caste,
     },
