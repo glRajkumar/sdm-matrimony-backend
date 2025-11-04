@@ -18,9 +18,15 @@ export const usersGroupedCountSchema = z.object({
     }
   )
 
+export const usersGroupedListSchema = usersGroupedCountSchema.safeExtend({
+  skip: z.coerce.number().optional().default(0),
+  limit: z.coerce.number().optional().default(50),
+  createdBy: z.string().optional(),
+})
+
 export const usersCreatedBySchema = z.object({
   skip: z.coerce.number().optional().default(0),
-  limit: z.coerce.number().optional().default(10),
+  limit: z.coerce.number().optional().default(50),
   createdAtToday: z.coerce.boolean().optional(),
   createdBy: z.string().optional(),
 }).optional()

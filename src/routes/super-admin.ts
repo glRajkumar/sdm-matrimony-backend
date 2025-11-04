@@ -2,7 +2,7 @@ import { Hono } from "hono";
 
 import {
   getPaidUsers, getAssistedSubscribedUsers, getUsersAllPayments,
-  getUsersByCreatedBy, getUsersGroupedByAdminCount,
+  getUsersByCreatedBy, getUsersGroupedByAdminCount, getUsersGroupedList,
   getUsersGroupedCount, getAdmins, createAdmin,
   updateAdmin, getNotInvitedUsers, updateInvited,
 } from "../controllers/super-admin.js";
@@ -10,6 +10,7 @@ import {
 import {
   skipLimitSchema, adminCreateSchema, adminUpdateSchema, usersCreatedBySchema,
   _idParamSchema, zv, usersGroupedCountSchema, usersGroupedByAdminCountSchema,
+  usersGroupedListSchema,
 } from "../validations/index.js";
 
 import roleCheck from "../middlewares/role-check.js";
@@ -25,6 +26,7 @@ superAdminRoutes
   .get("/users/created-by", zv("query", usersCreatedBySchema), getUsersByCreatedBy)
   .get("/users/grouped-by-admin/count", zv("query", usersGroupedByAdminCountSchema), getUsersGroupedByAdminCount)
   .get("/users/grouped/count", zv("query", usersGroupedCountSchema), getUsersGroupedCount)
+  .get("/users/grouped/list", zv("query", usersGroupedListSchema), getUsersGroupedList)
   .get("/admins", getAdmins)
   .get("/users/not-invited", zv("query", skipLimitSchema), getNotInvitedUsers)
   .post("/admin", zv("json", adminCreateSchema), createAdmin)

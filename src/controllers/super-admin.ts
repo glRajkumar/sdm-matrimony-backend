@@ -5,6 +5,7 @@ import type {
   usersCreatedBySchema, _idParamSchema,
   usersGroupedCountSchema,
   usersGroupedByAdminCountSchema,
+  usersGroupedListSchema,
 } from "../validations/index.js";
 import type { zContext } from "../types/index.js";
 
@@ -281,10 +282,37 @@ export async function getUsersGroupedCount(c: zContext<{ query: typeof usersGrou
         fullName: "$adminDetails.fullName",
         email: "$adminDetails.email",
         created: "$count",
-        users: 1,
       }
     }
   ])
+
+  return c.json(result)
+}
+
+export async function getUsersGroupedList(c: zContext<{ query: typeof usersGroupedListSchema }>) {
+  const { date, caste, limit, skip, createdBy } = c.req.valid("query")
+
+  const match = {
+    ...(date && {
+      createdAt: {
+        $gte: new Date(new Date(date).setHours(0, 0, 0, 0)),
+        $lt: new Date(new Date(date).setHours(23, 59, 59, 999)),
+      },
+    }),
+    ...(caste && {
+      "otherDetails.caste": caste,
+    }),
+    createdBy: createdBy || null,
+  }
+
+  const numLimit = Number(limit || 50)
+  const numSkip = Number(skip || 0)
+
+  const result = await User.find(match)
+    .select("fullName profileImg maritalStatus isDeleted isBlocked")
+    .limit(numLimit)
+    .skip(numSkip)
+    .lean()
 
   return c.json(result)
 }
