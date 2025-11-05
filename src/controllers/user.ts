@@ -45,14 +45,10 @@ export const getUserDetails = async (c: zContext<{ param: typeof _idParamSchema 
     .populate("currentPlan", currentPlanSelectFields)
     .lean()
 
-  if (user.role === "user") {
-    const currentUser = await User.findById(user._id).select("gender").lean()
-
-    if (currentUser?.gender === "Male" && userDetails?.otherDetails?.caste === "14 oor kaikolar mudaliyar") {
-      userDetails.contactDetails = {
-        ...userDetails?.contactDetails,
-        mobile: "restricted"
-      }
+  if (user.role === "user" && userDetails?.otherDetails?.caste === "14 oor kaikolar mudaliyar") {
+    userDetails.contactDetails = {
+      ...userDetails?.contactDetails,
+      mobile: "restricted"
     }
   }
 
