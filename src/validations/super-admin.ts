@@ -10,13 +10,6 @@ export const usersGroupedCountSchema = z.object({
   date: z.string({ error: "Date is required" }).regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format").optional(),
   caste: z.string().optional(),
 })
-  .refine(
-    (data) => (data.date && !data.caste) || (!data.date && data.caste),
-    {
-      message: "Either 'date' or 'caste' must be provided, not both.",
-      path: ["date"],
-    }
-  )
 
 export const usersGroupedListSchema = usersGroupedCountSchema.safeExtend({
   skip: z.coerce.number().optional().default(0),
