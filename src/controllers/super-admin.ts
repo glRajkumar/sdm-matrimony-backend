@@ -1,15 +1,13 @@
 import type { Context } from "hono";
 
 import type {
-  skipLimitSchema, adminCreateSchema, adminUpdateSchema,
-  usersCreatedBySchema, _idParamSchema,
-  usersGroupedCountSchema,
-  usersGroupedByAdminCountSchema,
-  usersGroupedListSchema,
+  skipLimitSchema, adminCreateSchema, adminUpdateSchema, usersCreatedBySchema, _idParamSchema,
+  usersGroupedCountSchema, usersGroupedByAdminCountSchema, usersGroupedListSchema, findUsersSchema,
 } from "../validations/index.js";
 import type { zContext } from "../types/index.js";
 
 import { Payment, User, Admin } from "../models/index.js";
+import { getFilterObj } from "../utils/user-filter-obj.js";
 import { hashPassword } from "../utils/password.js";
 
 const planSelectFields = "_id amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths createdAt"
@@ -325,19 +323,21 @@ export async function getAdmins(c: Context<Env>) {
   return c.json(admins)
 }
 
-export async function getNotInvitedUsers(c: zContext<{ query: typeof skipLimitSchema }>) {
-  const { limit, skip } = c.req.valid("query") || { limit: 50, skip: 0 }
+export async function getNotInvitedUsers(c: zContext<{ query: typeof findUsersSchema }>) {
+  const { limit, skip, ...filters } = c.req.valid("query") || { limit: 50, skip: 0 }
 
   const numLimit = Number(limit || 50)
   const numSkip = Number(skip || 0)
 
-  const users = await User.find({
+  const payload: Record<string, any> = !!filters ? getFilterObj(filters as any) : {
     $and: [
       { $or: [{ email: { $exists: false } }, { email: null }] },
       { $or: [{ invited: { $exists: false } }, { invited: false }] }
-    ]
-  })
-    .select("_id fullName email profileImg contactDetails.mobile dob")
+    ],
+  }
+
+  const users = await User.find(payload)
+    .select("_id fullName email profileImg contactDetails.mobile dob otherDetails.caste")
     .limit(numLimit)
     .skip(numSkip)
     .lean()
