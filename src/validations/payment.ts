@@ -17,3 +17,12 @@ export const verifyPaymentSchema = z.object({
   merchantOrderId: z.string("Merchant Order ID is required"),
   orderId: z.string("Order ID is required"),
 })
+
+export const testCreateOrderSchema = z.object({
+  amount: z.number("Amount is required"),
+})
+
+export const testVerifySchema = z.object({
+  merchantOrderId: z.string("Merchant Order ID is required"),
+  orderId: z.string("Order ID is required"),
+})

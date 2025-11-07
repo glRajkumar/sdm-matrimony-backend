@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import type { createOrderSchema, verifyPaymentSchema } from '../validations/payment.js';
+import type { createOrderSchema, testCreateOrderSchema, testVerifySchema, verifyPaymentSchema } from '../validations/payment.js';
 import type { zContext } from '../types/index.js';
 
 import { assistedPrices, env, extraProfiles, phonepayEndpoints, planPrices, planValidityMonths, profilesCount, type plansT } from '../utils/enums.js';
@@ -135,4 +135,56 @@ export const verifyPayment = async (c: zContext<{ json: typeof verifyPaymentSche
     subscribedTo: payment.subscribedTo,
     expiryDate: payment.expiryDate
   })
+}
+
+export const testCreateOrder = async (c: zContext<{ json: typeof testCreateOrderSchema }>) => {
+  const { _id } = c.get("user")
+  const { amount } = c.req.valid("json")
+
+  const notes: any = {
+    user_id: _id,
+    amount,
+  }
+
+  const authToken = await getToken()
+
+  const merchantOrderId = `Tx-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`
+  const orderBody = {
+    "merchantOrderId": merchantOrderId,
+    "amount": amount * 100,
+    "expireAfter": 3600,
+    "metaInfo": {
+      "udf1": JSON.stringify(notes),
+    },
+    "paymentFlow": {
+      "type": "PG_CHECKOUT",
+      "message": "Payment message used for collect requests",
+      "merchantUrls": {
+        "redirectUrl": `${env.FRONTEND_URL}/super-admin/test-payment`
+      }
+    }
+  }
+
+  const { data } = await axios.post(phonepayEndpoints.createOrder, orderBody, {
+    headers: { "Authorization": `O-Bearer ${authToken}` }
+  })
+
+  return c.json({ ...data, amount, merchantOrderId })
+}
+
+export const testVerifyPayment = async (c: zContext<{ json: typeof testVerifySchema }>) => {
+  const { merchantOrderId, orderId } = c.req.valid("json")
+
+  const authToken = await getToken()
+
+  const url = phonepayEndpoints.orderStatus(merchantOrderId)
+  const { data } = await axios.get(url, {
+    headers: { "Authorization": `O-Bearer ${authToken}` }
+  })
+
+  if (data.state !== "COMPLETED") {
+    return c.json({ message: data?.errorContext?.description || data?.message }, 400)
+  }
+
+  return c.json({ message: `Order with id ${orderId} completed successfully` })
 }
