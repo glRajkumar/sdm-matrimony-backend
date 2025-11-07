@@ -10,6 +10,7 @@ import { enumQuery } from "./custom-validate.js";
 export const findUsersSchema = z.object({
   skip: z.coerce.number().optional().default(0),
   limit: z.coerce.number().optional().default(10),
+  fullName: z.string().optional(),
   minAge: z.coerce.number().optional(),
   maxAge: z.coerce.number().optional(),
   sector: z.string().optional(),
