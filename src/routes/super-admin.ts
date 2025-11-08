@@ -10,7 +10,7 @@ import {
 import {
   skipLimitSchema, adminCreateSchema, adminUpdateSchema, usersCreatedBySchema,
   _idParamSchema, zv, usersGroupedCountSchema, usersGroupedByAdminCountSchema,
-  usersGroupedListSchema,
+  usersGroupedListSchema, findUsersSchema,
 } from "../validations/index.js";
 
 import roleCheck from "../middlewares/role-check.js";
@@ -27,8 +27,8 @@ superAdminRoutes
   .get("/users/grouped-by-admin/count", zv("query", usersGroupedByAdminCountSchema), getUsersGroupedByAdminCount)
   .get("/users/grouped/count", zv("query", usersGroupedCountSchema), getUsersGroupedCount)
   .get("/users/grouped/list", zv("query", usersGroupedListSchema), getUsersGroupedList)
+  .get("/users/not-invited", zv("query", findUsersSchema), getNotInvitedUsers)
   .get("/admins", getAdmins)
-  .get("/users/not-invited", zv("query", skipLimitSchema), getNotInvitedUsers)
   .post("/admin", zv("json", adminCreateSchema), createAdmin)
   .put("/admin/:_id", zv("param", _idParamSchema), zv("json", adminUpdateSchema), updateAdmin)
   .put("/user/invite/:_id", zv("param", _idParamSchema), updateInvited)

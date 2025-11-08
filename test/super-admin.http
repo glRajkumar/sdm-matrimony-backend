@@ -42,7 +42,7 @@ GET {{host}}/admins
 Authorization: {{token}}
 
 
-### get not invited users --- limit=4&skip=20
+### get not invited users --- limit=4&skip=20 any allowed user filter
 GET {{host}}/users/not-invited
 Authorization: {{token}}
 

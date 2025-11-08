@@ -1,5 +1,9 @@
-import educationLevels from "../assets/v1/education-levels.json" with { type: "json" };
+import { z } from "zod";
+
+import type { findUsersSchema } from "../validations/admin.js";
+
 import { approvalStatuses, genders, maritalStatuses } from "./enums.js";
+import educationLevels from "../assets/v1/education-levels.json" with { type: "json" };
 
 function escapeRegex(text: string) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -43,13 +47,15 @@ const setFilter = (filter: Record<string, any>, key: string, value: any, possibl
   return false
 }
 
-export function getFilterObj(obj: Record<string, any>) {
+type objT = z.infer<typeof findUsersSchema>
+
+export function getFilterObj(obj: objT) {
   const {
     gender, isMarried, salaryRange, ageRange, approvalStatus,
     minQualification, sector, profession, minSalary, motherTongue,
     rasi, lagna, maritalStatus, isBlocked, isDeleted,
-    caste, religion, minAge, maxAge, createdBy,
-  } = obj
+    caste, religion, minAge, maxAge, createdBy, fullName,
+  } = obj!
 
   const filter: any = {
     role: 'user',
@@ -62,6 +68,10 @@ export function getFilterObj(obj: Record<string, any>) {
   const approvalStatusApplied = setFilter(filter, "approvalStatus", approvalStatus, approvalStatuses.length)
   if (approvalStatus && !approvalStatusApplied) {
     delete filter.approvalStatus
+  }
+
+  if (fullName) {
+    filter.fullName = regexQuery(fullName, true)
   }
 
   setFilter(filter, "gender", gender, genders.length)
