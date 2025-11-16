@@ -45,14 +45,14 @@ export const getUserDetails = async (c: zContext<{ param: typeof _idParamSchema 
     .populate("currentPlan", currentPlanSelectFields)
     .lean()
 
-  if (user.role === "user" && userDetails?.otherDetails?.caste === "14 oor kaikolar mudaliyar") {
+  if (user.role === "user" && user._id !== _id && userDetails?.otherDetails?.caste === "14 oor kaikolar mudaliyar") {
     userDetails.contactDetails = {
       ...userDetails?.contactDetails,
-      mobile: "restricted"
+      mobile: "restricted",
     }
   }
 
-  return c.json(userDetails)
+  return c.json({ ...userDetails, hasFullAccess })
 }
 
 export const getCurrentPlan = async (c: Context<Env>) => {
