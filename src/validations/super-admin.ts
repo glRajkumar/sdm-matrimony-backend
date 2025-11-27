@@ -45,3 +45,7 @@ export const adminUpdateSchema = adminSchema
     approvalStatus: approvalStatusEnum.optional(),
     isDeleted: z.boolean().optional(),
   })
+
+export const resetPassByAdminSchema = z.object({
+  password: passwordSchema,
+})
