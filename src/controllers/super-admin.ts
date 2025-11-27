@@ -3,6 +3,7 @@ import type { Context } from "hono";
 import type {
   skipLimitSchema, adminCreateSchema, adminUpdateSchema, usersCreatedBySchema, _idParamSchema,
   usersGroupedCountSchema, usersGroupedByAdminCountSchema, usersGroupedListSchema, findUsersSchema,
+  resetPassByAdminSchema,
 } from "../validations/index.js";
 import type { zContext } from "../types/index.js";
 
@@ -403,4 +404,14 @@ export async function updateAdmin(c: zContext<{ json: typeof adminUpdateSchema, 
   await Admin.updateOne({ _id }, rest)
 
   return c.json({ message: "Admin details updated successfully" })
+}
+
+export async function resetPass(c: zContext<{ param: typeof _idParamSchema, json: typeof resetPassByAdminSchema }>) {
+  const { password } = c.req.valid("json")
+  const { _id } = c.req.valid("param")
+
+  const hashedPass = await hashPassword(password)
+  await User.updateOne({ _id }, { password: hashedPass })
+
+  return c.json({ message: "Password reset successfully" })
 }

@@ -1,5 +1,5 @@
 @host = http://localhost:5000/api/super-admin
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NjIyNzA1NzYsIl9pZCI6IjY4ZjhjNzQ2NGU2MzQxZTc4MDEyMTVhZiIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.sIXw5vj74qdbCM5Dy5hHFOFlGQMjknyGfYP_Mtfvj4I
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJleHAiOjE3NjQyMTczNTQsIl9pZCI6IjY4ZjhjNzQ2NGU2MzQxZTc4MDEyMTVhZiIsInJvbGUiOiJzdXBlci1hZG1pbiJ9.kLaBQtnz-Z8d1pkd_vHdmb1s_9uxEBRM9ySPEWtBh98
 
 
 ### paid users --- limit=4&skip=20
@@ -74,3 +74,12 @@ Content-Type: application/json
 PUT {{host}}/user/invite/689b0532e047974273a48789
 Authorization: {{token}}
 
+
+### reset password
+PUT {{host}}/user/password/689b0532e047974273a48789
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "password": "12345678"
+}
