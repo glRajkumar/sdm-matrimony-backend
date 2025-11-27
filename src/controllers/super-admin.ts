@@ -341,6 +341,7 @@ export async function getNotInvitedUsers(c: zContext<{ query: typeof findUsersSc
     .select("_id fullName email profileImg contactDetails.mobile dob otherDetails.caste")
     .limit(numLimit)
     .skip(numSkip)
+    .sort({ createdAt: -1 })
     .lean()
 
   return c.json(users)
