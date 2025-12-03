@@ -11,6 +11,27 @@ import { User } from "../models/index.js";
 
 const userSelect = "_id fullName email contactDetails.mobile profileImg dob gender maritalStatus otherDetails.caste otherDetails.subCaste proffessionalDetails.salary"
 
+function userSelectMap(prefix = "") {
+  return userSelect.split(" ").reduce((prev: any, curr) => {
+    const target = `$${prefix ? `${prefix}.` : ""}${curr}`
+
+    if (curr.includes(".")) {
+      const [key, field] = curr.split(".")
+
+      if (!prev[key]) {
+        prev[key] = {}
+      }
+
+      prev[key][field] = target
+
+    } else {
+      prev[curr] = target
+    }
+
+    return prev
+  }, {})
+}
+
 export async function getUsers(c: zContext<{ query: typeof findUsersSchema }>) {
   const queries = c.req.valid("query") || { limit: 10, skip: 0 }
   const filters = getFilterObj(queries)
@@ -34,16 +55,69 @@ export async function getMarriedUsers(c: zContext<{ query: typeof skipLimitSchem
   const numLimit = Number(queries?.limit || 10)
   const numSkip = Number(queries?.skip || 0)
 
-  const marriedUsers = await User.find({
-    marriedTo: { $exists: true },
-    isMarried: true,
-    gender: "Male"
-  })
-    .select(userSelect + " marriedTo marriedOn")
-    .populate("marriedTo", userSelect)
-    .limit(numLimit)
-    .skip(numSkip)
-    .lean()
+  const marriedUsers = await User.aggregate([
+    {
+      $match: {
+        isMarried: true,
+      },
+    },
+    {
+      $match: {
+        $or: [
+          { gender: 'Male' },
+          { gender: 'Female', marriedTo: { $exists: false } },
+        ],
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'marriedTo',
+        foreignField: '_id',
+        as: 'partner',
+      },
+    },
+    {
+      $unwind: {
+        path: '$partner',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $sort: { updatedAt: -1, _id: 1 }
+    },
+    {
+      $skip: numSkip,
+    },
+    {
+      $limit: numLimit,
+    },
+    {
+      $project: {
+        _id: 0,
+        male: {
+          $cond: {
+            if: { $eq: ['$gender', 'Male'] },
+            then: userSelectMap(),
+            else: '$$REMOVE'
+          }
+        },
+        female: {
+          $cond: {
+            if: { $eq: ['$gender', 'Male'] },
+            then: {
+              $cond: {
+                if: { $eq: ['$partner.gender', 'Female'] },
+                then: userSelectMap("partner"),
+                else: '$$REMOVE'
+              }
+            },
+            else: userSelectMap()
+          }
+        }
+      }
+    }
+  ])
 
   return c.json(marriedUsers)
 }
@@ -66,7 +140,7 @@ export async function findUser(c: zContext<{ query: typeof findUserSchema }>) {
       acc[key] = queries[key]
     }
     return acc
-  }, {})
+  }, { isMarried: false })
 
   const user = await User.find(filters)
     .select(userSelect)
@@ -134,20 +208,32 @@ export async function createUsers(c: zContext<{ json: typeof createUsersSchema }
 export async function userMarriedTo(c: zContext<{ json: typeof userMarriedToSchema }>) {
   const { _id, marriedTo, marriedOn } = c.req.valid("json")
 
-  await User.bulkWrite([
-    {
-      updateOne: {
-        filter: { _id },
-        update: { $set: { marriedTo, isMarried: true, marriedOn } }
-      }
-    },
-    {
+  const payload: any = [{
+    updateOne: {
+      filter: { _id },
+      update: { $set: { isMarried: true } }
+    }
+  }]
+
+  if (marriedTo) {
+    payload[0].updateOne.update.$set.marriedTo = marriedTo
+
+    payload.push({
       updateOne: {
         filter: { _id: marriedTo },
-        update: { $set: { marriedTo: _id, isMarried: true, marriedOn } }
+        update: { $set: { marriedTo: _id, isMarried: true } }
       }
+    })
+  }
+
+  if (marriedOn) {
+    payload[0].updateOne.update.$set.marriedOn = marriedOn
+    if (marriedTo) {
+      payload[1].updateOne.update.$set.marriedOn = marriedOn
     }
-  ])
+  }
+
+  await User.bulkWrite(payload)
 
   return c.json({ message: "User married to updated successfully" })
 }
