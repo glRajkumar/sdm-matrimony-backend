@@ -56,8 +56,8 @@ export const createUsersSchema = z.array(userSchema).min(1, "At least one user i
 
 export const userMarriedToSchema = z.object({
   _id: z.string("User ID is required"),
-  marriedTo: z.string("Married To is required"),
-  marriedOn: z.iso.datetime("Invalid Date"),
+  marriedTo: z.string().optional(),
+  marriedOn: z.iso.datetime("Invalid Date").optional(),
 })
 
 export const updateUserSchema = userSchema

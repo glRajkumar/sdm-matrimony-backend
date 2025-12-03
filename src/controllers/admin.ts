@@ -134,20 +134,32 @@ export async function createUsers(c: zContext<{ json: typeof createUsersSchema }
 export async function userMarriedTo(c: zContext<{ json: typeof userMarriedToSchema }>) {
   const { _id, marriedTo, marriedOn } = c.req.valid("json")
 
-  await User.bulkWrite([
-    {
-      updateOne: {
-        filter: { _id },
-        update: { $set: { marriedTo, isMarried: true, marriedOn } }
-      }
-    },
-    {
+  const payload: any = [{
+    updateOne: {
+      filter: { _id },
+      update: { $set: { isMarried: true } }
+    }
+  }]
+
+  if (marriedTo) {
+    payload[0].updateOne.update.$set.marriedTo = marriedTo
+
+    payload.push({
       updateOne: {
         filter: { _id: marriedTo },
-        update: { $set: { marriedTo: _id, isMarried: true, marriedOn } }
+        update: { $set: { marriedTo: _id, isMarried: true } }
       }
+    })
+  }
+
+  if (marriedOn) {
+    payload[0].updateOne.update.$set.marriedOn = marriedOn
+    if (marriedTo) {
+      payload[1].updateOne.update.$set.marriedOn = marriedOn
     }
-  ])
+  }
+
+  await User.bulkWrite(payload)
 
   return c.json({ message: "User married to updated successfully" })
 }
