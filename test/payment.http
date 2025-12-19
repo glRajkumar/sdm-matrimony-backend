@@ -27,6 +27,5 @@ Content-Type: application/json
   "isAssisted": true,
   "assistedMonths": 2,
   "paymentId": "pay_R38H20PKxSnWEI",
-  "orderId": "order_R38GiDjTIpX9Ip",
-  "razorpayPaymentSignature": "0415a1a4ea95eed0212837d23899ce7531d691dcdc5c5f2838001c0866987676"
+  "orderId": "order_R38GiDjTIpX9Ip"
 }

@@ -59,6 +59,20 @@ Content-Type: application/json
 }
 
 
+### make payment for user
+POST {{host}}/user/payment
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "amount": 40000,
+  "subscribedTo": "diamond",
+  "noOfProfilesCanView": 100,
+  "isAssisted": true,
+  "assistedMonths": 2
+}
+
+
 ### update admin
 PUT {{host}}/admin/68942a49660c9ca1bf10293c
 Authorization: {{token}}

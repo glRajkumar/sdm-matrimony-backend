@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { adminSchema, approvalStatusEnum, passwordSchema } from "./general.js";
+import { adminSchema, approvalStatusEnum, passwordSchema, planEnum } from "./general.js";
 
 export const usersGroupedByAdminCountSchema = z.object({
   type: z.enum(["date", "caste"], { error: "Type must be either date or caste" }).default("date").optional(),
@@ -48,4 +48,13 @@ export const adminUpdateSchema = adminSchema
 
 export const resetPassByAdminSchema = z.object({
   password: passwordSchema,
+})
+
+export const mkePaymentSchema = z.object({
+  _id: z.string("ID is required"),
+  amount: z.number("Amount is required"),
+  subscribedTo: planEnum,
+  noOfProfilesCanView: z.number("Number of profiles is required"),
+  isAssisted: z.boolean("Is assisted is required"),
+  assistedMonths: z.number("Assisted months is required"),
 })

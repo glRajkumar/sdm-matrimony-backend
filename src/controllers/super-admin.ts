@@ -3,13 +3,14 @@ import type { Context } from "hono";
 import type {
   skipLimitSchema, adminCreateSchema, adminUpdateSchema, usersCreatedBySchema, _idParamSchema,
   usersGroupedCountSchema, usersGroupedByAdminCountSchema, usersGroupedListSchema, findUsersSchema,
-  resetPassByAdminSchema,
+  resetPassByAdminSchema, mkePaymentSchema,
 } from "../validations/index.js";
 import type { zContext } from "../types/index.js";
 
 import { Payment, User, Admin } from "../models/index.js";
 import { getFilterObj } from "../utils/user-filter-obj.js";
 import { hashPassword } from "../utils/password.js";
+import { onPaid } from "./payment.js";
 
 const planSelectFields = "_id amount subscribedTo expiryDate noOfProfilesCanView isAssisted assistedMonths createdAt"
 const userSelectFields = "_id fullName email profileImg dob otherDetails.caste otherDetails.subCaste proffessionalDetails.salary"
@@ -415,4 +416,11 @@ export async function resetPass(c: zContext<{ param: typeof _idParamSchema, json
   await User.updateOne({ _id }, { password: hashedPass })
 
   return c.json({ message: "Password reset successfully" })
+}
+
+export async function makePaymentForUser(c: zContext<{ json: typeof mkePaymentSchema }>) {
+  const { _id, ...body } = c.req.valid("json")
+
+  const res = await onPaid({ _id, role: "user" }, { ...body, orderId: `by-admin-${Date.now()}` })
+  return c.json(res)
 }

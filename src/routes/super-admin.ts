@@ -5,12 +5,14 @@ import {
   getUsersByCreatedBy, getUsersGroupedByAdminCount, getUsersGroupedList,
   getUsersGroupedCount, getAdmins, createAdmin,
   updateAdmin, getNotInvitedUsers, updateInvited, resetPass,
+  makePaymentForUser,
 } from "../controllers/super-admin.js";
 
 import {
   skipLimitSchema, adminCreateSchema, adminUpdateSchema, usersCreatedBySchema,
   _idParamSchema, zv, usersGroupedCountSchema, usersGroupedByAdminCountSchema,
   usersGroupedListSchema, findUsersSchema, resetPassByAdminSchema,
+  mkePaymentSchema,
 } from "../validations/index.js";
 
 import roleCheck from "../middlewares/role-check.js";
@@ -30,6 +32,7 @@ superAdminRoutes
   .get("/users/not-invited", zv("query", findUsersSchema), getNotInvitedUsers)
   .get("/admins", getAdmins)
   .post("/admin", zv("json", adminCreateSchema), createAdmin)
+  .post("/user/payment", zv("json", mkePaymentSchema), makePaymentForUser)
   .put("/admin/:_id", zv("param", _idParamSchema), zv("json", adminUpdateSchema), updateAdmin)
   .put("/user/password/:_id", zv("param", _idParamSchema), zv("json", resetPassByAdminSchema), resetPass)
   .put("/user/invite/:_id", zv("param", _idParamSchema), updateInvited)

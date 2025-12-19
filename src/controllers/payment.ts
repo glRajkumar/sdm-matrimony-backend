@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { z } from "zod";
 
 import type { createOrderSchema, testCreateOrderSchema, testVerifySchema, verifyPaymentSchema } from '../validations/payment.js';
 import type { zContext } from '../types/index.js';
@@ -91,26 +92,12 @@ export const createOrder = async (c: zContext<{ json: typeof createOrderSchema }
   return c.json({ ...data, amount, merchantOrderId })
 }
 
-export const verifyPayment = async (c: zContext<{ json: typeof verifyPaymentSchema }>) => {
-  const { _id, role } = c.get("user")
-  const { merchantOrderId, ...body } = c.req.valid("json")
-
+export async function onPaid({ _id, role }: { _id: string, role: string }, body: Omit<z.infer<typeof verifyPaymentSchema>, "merchantOrderId">) {
   if (!body.isAssisted) {
     body.assistedMonths = 0
   }
 
   const expiryDate = new Date(new Date().setMonth(new Date().getMonth() + planValidityMonths[body.subscribedTo as plansT]))
-
-  const authToken = await getToken()
-
-  const url = phonepayEndpoints.orderStatus(merchantOrderId)
-  const { data } = await axios.get(url, {
-    headers: { "Authorization": `O-Bearer ${authToken}` }
-  })
-
-  if (data.state !== "COMPLETED") {
-    return c.json({ message: data?.errorContext?.description || data?.message }, 400)
-  }
 
   const payment = await Payment.create({
     ...body,
@@ -131,10 +118,29 @@ export const verifyPayment = async (c: zContext<{ json: typeof verifyPaymentSche
     }
   })
 
-  return c.json({
+  return {
     subscribedTo: payment.subscribedTo,
     expiryDate: payment.expiryDate
+  }
+}
+
+export const verifyPayment = async (c: zContext<{ json: typeof verifyPaymentSchema }>) => {
+  const { merchantOrderId, ...body } = c.req.valid("json")
+  const { _id, role } = c.get("user")
+
+  const authToken = await getToken()
+
+  const url = phonepayEndpoints.orderStatus(merchantOrderId)
+  const { data } = await axios.get(url, {
+    headers: { "Authorization": `O-Bearer ${authToken}` }
   })
+
+  if (data.state !== "COMPLETED") {
+    return c.json({ message: data?.errorContext?.description || data?.message }, 400)
+  }
+
+  const res = await onPaid({ _id, role }, body)
+  return c.json(res)
 }
 
 export const testCreateOrder = async (c: zContext<{ json: typeof testCreateOrderSchema }>) => {
