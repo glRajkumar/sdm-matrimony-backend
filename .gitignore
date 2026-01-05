@@ -5,3 +5,5 @@ package-lock.json
 /uploads
 /test/sample1.png
 /dist
+.vercel
+.env*.*

@@ -1,5 +1,5 @@
 import { serveStatic } from '@hono/node-server/serve-static';
-import { serve } from '@hono/node-server';
+// import { serve } from '@hono/node-server';
 
 import { HTTPException } from 'hono/http-exception';
 import { secureHeaders } from 'hono/secure-headers';
@@ -9,7 +9,7 @@ import { cors } from 'hono/cors';
 import { Hono } from 'hono';
 
 import { fileURLToPath } from 'url';
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
 import path from 'path';
 
 import createRateLimiter from './middlewares/rate-limit.js';
@@ -24,7 +24,7 @@ import adminRoutes from './routes/admin.js';
 import fakerRoutes from './routes/faker.js';
 import userRoutes from './routes/user.js';
 
-import { connectMongo, connectRedis, redisClient } from './services/index.js';
+import { connectMongo, connectRedis } from './services/index.js'; // , redisClient
 import { env } from './utils/enums.js';
 
 try {
@@ -98,25 +98,25 @@ export default app
 //   port
 // })
 
-process.on('SIGINT', async () => {
-  console.log('Shutting down gracefully...')
-  try {
-    await Promise.all([
-      mongoose.connection.close(),
-      redisClient.quit()
-    ])
-    console.log('Database connections closed')
-    process.exit(0)
+// process.on('SIGINT', async () => {
+//   console.log('Shutting down gracefully...')
+//   try {
+//     await Promise.all([
+//       mongoose.connection.close(),
+//       redisClient.quit()
+//     ])
+//     console.log('Database connections closed')
+//     process.exit(0)
 
-  } catch (err) {
-    // console.error('Error during shutdown:', err)
-    process.exit(1)
-  }
-})
+//   } catch (err) {
+//     // console.error('Error during shutdown:', err)
+//     process.exit(1)
+//   }
+// })
 
-process.on('SIGTERM', async () => {
-  console.log('SIGTERM received, shutting down...')
-  await mongoose.connection.close()
-  await redisClient.quit()
-  process.exit(0)
-})
+// process.on('SIGTERM', async () => {
+//   console.log('SIGTERM received, shutting down...')
+//   await mongoose.connection.close()
+//   await redisClient.quit()
+//   process.exit(0)
+// })
