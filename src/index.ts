@@ -91,10 +91,12 @@ app.onError((err, c) => {
 const port = Number(process.env.PORT || 5000)
 console.log(`Server is running on http://localhost:${port}`)
 
-serve({
-  fetch: app.fetch,
-  port
-})
+export default app
+
+// serve({
+//   fetch: app.fetch,
+//   port
+// })
 
 process.on('SIGINT', async () => {
   console.log('Shutting down gracefully...')
