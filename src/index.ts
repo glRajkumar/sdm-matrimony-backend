@@ -1,5 +1,5 @@
 import { serveStatic } from '@hono/node-server/serve-static';
-// import { serve } from '@hono/node-server';
+import { serve } from '@hono/node-server';
 
 import { HTTPException } from 'hono/http-exception';
 import { secureHeaders } from 'hono/secure-headers';
@@ -91,12 +91,12 @@ app.onError((err, c) => {
 const port = Number(process.env.PORT || 5000)
 console.log(`Server is running on http://localhost:${port}`)
 
-export default app
+// export default app
 
-// serve({
-//   fetch: app.fetch,
-//   port
-// })
+serve({
+  fetch: app.fetch,
+  port
+})
 
 // process.on('SIGINT', async () => {
 //   console.log('Shutting down gracefully...')
