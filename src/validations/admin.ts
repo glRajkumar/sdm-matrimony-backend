@@ -3,9 +3,12 @@ import { z } from "zod";
 import {
   approvalStatusEnum, educationEnum, emailSchema, genderEnum,
   maritalStatusEnum, mobileSchema, nakshatraEnum, rasiEnum,
-  userSchema, ageRangeEnum, salaryRangeEnum,
+  userSchema, ageRangeEnum, salaryRangeEnum, otherDetailsSchema,
+  familyDetailsSchema, vedicHoroscopeSchema, partnerPreferencesSchema,
+  professionalDetailsSchema,
 } from "./general.js";
 import { enumQuery } from "./custom-validate.js";
+import { isValidDob, MIN_AGE } from "../utils/index.js";
 
 export const findUsersSchema = z.object({
   skip: z.coerce.number().optional().default(0),
@@ -60,17 +63,32 @@ export const userMarriedToSchema = z.object({
   marriedOn: z.iso.datetime("Invalid Date").optional(),
 })
 
-export const updateUserSchema = userSchema
-  .omit({
-    email: true,
-    password: true,
-    role: true,
-  })
+export const updateUserSchema = z.object({
+  dob: z.iso.datetime(),
+  gender: genderEnum,
+  fullName: z.string("Name is required").min(3, "Name must be at least 3 characters"),
+  images: z.array(z.url()).optional(),
+  profileImg: z.union([z.url(), z.literal("")]).optional(),
+  otherDetails: otherDetailsSchema,
+  maritalStatus: maritalStatusEnum,
+  familyDetails: familyDetailsSchema,
+  vedicHoroscope: vedicHoroscopeSchema,
+  partnerPreferences: partnerPreferencesSchema,
+  proffessionalDetails: professionalDetailsSchema,
+  contactDetails: z.object({
+    address: z.string().optional(),
+  }).optional(),
+  _id: z.string("User ID is required"),
+  approvalStatus: approvalStatusEnum.optional(),
+  isBlocked: z.coerce.boolean().optional(),
+  isDeleted: z.coerce.boolean().optional(),
+  isMarried: z.coerce.boolean().optional(),
+})
   .partial()
-  .safeExtend({
-    _id: z.string("User ID is required"),
-    approvalStatus: approvalStatusEnum.optional(),
-    isBlocked: z.coerce.boolean().optional(),
-    isDeleted: z.coerce.boolean().optional(),
-    isMarried: z.coerce.boolean().optional(),
-  })
+  .refine(
+    (data) => !data.dob || isValidDob(data.dob),
+    {
+      message: `User must be at least ${MIN_AGE} years old`,
+      path: ["dob"],
+    }
+  )

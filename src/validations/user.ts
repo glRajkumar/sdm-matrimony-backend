@@ -2,9 +2,12 @@ import { z } from "zod";
 
 import {
   educationEnum, maritalStatusEnum, nakshatraEnum, rasiEnum,
-  ageRangeEnum, salaryRangeEnum, userSchema, imgFileSchema,
+  ageRangeEnum, salaryRangeEnum, imgFileSchema,
+  genderEnum, otherDetailsSchema, familyDetailsSchema,
+  vedicHoroscopeSchema, partnerPreferencesSchema, professionalDetailsSchema,
 } from "./general.js";
 import { enumQuery } from "./custom-validate.js";
+import { isValidDob, MIN_AGE } from "../utils/index.js";
 
 export const matchedUsersSchema = z.object({
   skip: z.coerce.number().optional().default(0),
@@ -40,19 +43,31 @@ export const userIdSchema = z.object({
   userId: z.string("User ID is required"),
 })
 
-export const updateProfileSchema = userSchema.omit({
-  email: true,
-  password: true,
-  role: true,
-  contactDetails: true,
+export const updateProfileSchema = z.object({
+  dob: z.iso.datetime(),
+  gender: genderEnum,
+  fullName: z.string("Name is required").min(3, "Name must be at least 3 characters"),
+  images: z.array(z.url()).optional(),
+  profileImg: z.union([z.url(), z.literal("")]).optional(),
+  otherDetails: otherDetailsSchema,
+  maritalStatus: maritalStatusEnum,
+  familyDetails: familyDetailsSchema,
+  vedicHoroscope: vedicHoroscopeSchema,
+  partnerPreferences: partnerPreferencesSchema,
+  proffessionalDetails: professionalDetailsSchema,
+  _id: z.string().optional(),
+  contactDetails: z.object({
+    address: z.string().optional(),
+  }).optional(),
 })
   .partial()
-  .safeExtend({
-    _id: z.string().optional(),
-    contactDetails: z.object({
-      address: z.string().optional(),
-    }).optional(),
-  })
+  .refine(
+    (data) => !data.dob || isValidDob(data.dob),
+    {
+      message: `User must be at least ${MIN_AGE} years old`,
+      path: ["dob"],
+    }
+  )
 
 export const imgUploadSchema = z.object({
   _id: z.string().optional(),
